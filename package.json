@@ -1,0 +1,23 @@
+{
+    "name": "vql",
+    "version": "0.0.1",
+    "main": "dist/index.js",
+    "author": "wxn0brP",
+    "license": "MIT",
+    "type": "module",
+    "scripts": {
+        "build": "tsc && tsc-alias",
+        "test": "node dist/tests/index.js"
+    },
+    "devDependencies": {
+        "@types/node": "^22.12.0",
+        "source-map-support": "^0.5.21",
+        "tsc-alias": "^1.8.10",
+        "typescript": "^5.7.3"
+    },
+    "dependencies": {
+        "@wxn0brp/db": "github:wxn0brP/ValtheraDB#dist",
+        "@wxn0brp/gate-warden": "github:wxn0brP/gate-warden#dist",
+        "winston": "^3.17.0"
+    }
+}
