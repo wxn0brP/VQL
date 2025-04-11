@@ -2,6 +2,7 @@ import { Relation, Valthera } from "@wxn0brp/db";
 import { GateWarden } from '@wxn0brp/gate-warden';
 import { RelationQuery, VQL, VQLQuery, VQLRequest } from "./types/vql";
 import { checkRequestPermission } from "./permissions";
+import validate from "./valid";
 
 export class VQLProcessor {
     private dbInstances: Record<string, Valthera>;
@@ -15,6 +16,7 @@ export class VQLProcessor {
     }
 
     async execute(query: VQL, user: any): Promise<any> {
+        if (!validate(query)) return { err: true, msg: "Invalid query", c: 400 };
         if ("r" in query) {
             return await this.executeRelation(query, user);
         } else {
@@ -65,13 +67,15 @@ export class VQLProcessor {
     }
 
     private async executeRelation(query: RelationQuery, user: any): Promise<any> {
-        throw new Error("Security issue. Not implemented.");
+        if (process.env.NODE_ENV !== "development") {
+            throw new Error("Security issue. Not implemented.");
+        }
         const req = query.r;
 
         if (req.many) {
-            return await this.relation.find(req.path, req.search, req.relations, req.options);
+            return await this.relation.find(req.path, req.search, req.relations, req.select, req.options);
         } else {
-            return await this.relation.findOne(req.path, req.search, req.relations);
+            return await this.relation.findOne(req.path, req.search, req.relations, req.select);
         }
     }
 }

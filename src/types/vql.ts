@@ -1,4 +1,4 @@
-import { DbFindOpts, RelationConfig, Search } from "@wxn0brp/db";
+import { RelationTypes, ValtheraTypes } from "@wxn0brp/db";
 
 export type VQLQuery = {
     find: VQLFind,
@@ -90,11 +90,12 @@ export type VQLRelations = Record<string, VQLFind | VQLFindOne>;
 
 export interface RelationQuery {
     r: {
-        path: string,
-        search: Search,
-        relations: Record<string, RelationConfig>,
+        path: RelationTypes.Path,
+        search: ValtheraTypes.Search,
+        relations: RelationTypes.Relation,
         many?: boolean,
-        options?: DbFindOpts,
+        options?: ValtheraTypes.DbFindOpts,
+        select?: RelationTypes.FieldPath[]
     }
 }
 

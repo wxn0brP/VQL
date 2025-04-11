@@ -18,6 +18,9 @@
     "dependencies": {
         "@wxn0brp/db": "github:wxn0brP/ValtheraDB#dist",
         "@wxn0brp/gate-warden": "github:wxn0brP/gate-warden#dist",
+        "ajv": "^8.17.1",
+        "ajv-formats": "^3.0.1",
+        "typescript-json-schema": "^0.65.1",
         "winston": "^3.17.0"
     }
 }
