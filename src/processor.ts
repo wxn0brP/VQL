@@ -1,13 +1,15 @@
 import { Relation, Valthera } from "@wxn0brp/db";
 import { GateWarden } from '@wxn0brp/gate-warden';
-import { RelationQuery, VQL, VQLQuery, VQLRequest } from "./types/vql";
+import { RelationQuery, VQL, VQLQuery, VQLRawRequest, VQLRequest } from "./types/vql";
 import { checkRequestPermission } from "./permissions";
-import validate from "./valid";
+import { validateRaw, validateVql } from "./valid";
+import { executeSheet } from "./sheet";
 
 export class VQLProcessor {
     private dbInstances: Record<string, Valthera>;
     private gw?: GateWarden<any>;
     private relation: Relation;
+    public preDefinedSheets: Map<string, VQL> = new Map();
 
     constructor(dbInstances: Record<string, Valthera>, gw?: GateWarden<any>) {
         this.dbInstances = dbInstances;
@@ -15,12 +17,19 @@ export class VQLProcessor {
         this.relation = new Relation(dbInstances);
     }
 
-    async execute(query: VQL, user: any): Promise<any> {
-        if (!validate(query)) return { err: true, msg: "Invalid query", c: 400 };
+    async execute(queryRaw: VQLRawRequest, user: any): Promise<any> {
+        if (!validateRaw(queryRaw)) return { err: true, msg: "Invalid query", c: 400 };
+
+        const query = executeSheet(queryRaw, this.preDefinedSheets);
+
+        if (!validateVql(query)) return { err: true, msg: "Invalid query", c: 400 };
+
         if ("r" in query) {
             return await this.executeRelation(query, user);
-        } else {
+        } else if ("d" in query) {
             return await this.executeQuery(query, user);
+        } else {
+            return { err: true, msg: "Invalid query", c: 400 };
         }
     }
 

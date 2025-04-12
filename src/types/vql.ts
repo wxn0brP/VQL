@@ -99,4 +99,9 @@ export interface RelationQuery {
     }
 }
 
-export type VQL = VQLRequest | RelationQuery;
+export interface VQLRef {
+    ref?: string
+}
+
+export type VQL = (VQLRequest | RelationQuery) & VQLRef;
+export type VQLRawRequest = VQL | Required<VQLRef>;

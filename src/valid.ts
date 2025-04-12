@@ -1,6 +1,6 @@
 import Ajv from 'ajv';
 import ajvFormat from "ajv-formats";
-import { VQL } from './types/vql';
+import { VQL, VQLRawRequest } from './types/vql';
 import { existsSync, readFileSync, writeFileSync } from 'fs';
 import { dirname, resolve } from "path";
 
@@ -17,7 +17,7 @@ if (!existsSync(fileUrl)) {
         },
         "./"
     );
-    schema = TJS.generateSchema(program, "VQL", {
+    schema = TJS.generateSchema(program, "VQLRawRequest", {
         required: true
     });
 
@@ -30,14 +30,29 @@ export const ajv = new Ajv({
     allowUnionTypes: true
 });
 ajvFormat(ajv);
-const validateFn = ajv.compile(schema);
 
-function validate(query: VQL) {
-    if (!validateFn(query)) {
-        console.error(validateFn.errors);
+const validRawRequest = ajv.compile(schema);
+
+const modSchema = schema;
+modSchema.anyOf = [
+    {
+        "$ref": "#/definitions/VQL"
+    }
+]
+const validVQL = ajv.compile(modSchema);
+
+export function validateRaw(query: VQLRawRequest) {
+    if (!validRawRequest(query)) {
+        console.error(validRawRequest.errors);
         return false;
     }
     return true;
 }
 
-export default validate;
+export function validateVql(query: VQL) {
+    if (!validVQL(query)) {
+        console.error(validVQL.errors);
+        return false;
+    }
+    return true;
+}
