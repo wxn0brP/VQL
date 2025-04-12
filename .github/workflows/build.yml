@@ -1,0 +1,12 @@
+name: Build
+
+on:
+  push:
+    branches:
+      - main
+
+  workflow_dispatch:
+
+jobs:
+  build:
+    uses: wxn0brP/workflow-dist/.github/workflows/build-ts.yml@main
