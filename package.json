@@ -1,5 +1,5 @@
 {
-    "name": "vql",
+    "name": "@wxn0brp/vql",
     "version": "0.0.1",
     "main": "dist/index.js",
     "author": "wxn0brP",
