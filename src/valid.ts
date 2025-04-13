@@ -1,6 +1,6 @@
 import Ajv from 'ajv';
 import ajvFormat from "ajv-formats";
-import { VQL, VQLRawRequest } from './types/vql';
+import { VQL, VQLR } from './types/vql';
 import { existsSync, readFileSync, writeFileSync } from 'fs';
 import { dirname, resolve } from "path";
 
@@ -41,7 +41,7 @@ modSchema.anyOf = [
 ]
 const validVQL = ajv.compile(modSchema);
 
-export function validateRaw(query: VQLRawRequest) {
+export function validateRaw(query: VQLR) {
     if (!validRawRequest(query)) {
         console.error(validRawRequest.errors);
         return false;

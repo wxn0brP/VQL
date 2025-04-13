@@ -1,9 +1,13 @@
-import { Relation, Valthera } from "@wxn0brp/db";
+import { Relation, RelationTypes, Valthera } from "@wxn0brp/db";
 import { GateWarden } from '@wxn0brp/gate-warden';
-import { RelationQuery, VQL, VQLQuery, VQLRawRequest, VQLRequest } from "./types/vql";
-import { checkRequestPermission } from "./permissions";
+import { RelationQuery, VQL, VQLQuery, VQLR, VQLRequest } from "./types/vql";
+import { checkRelationPermission, checkRequestPermission } from "./permissions";
 import { validateRaw, validateVql } from "./valid";
 import { executeSheet } from "./sheet";
+
+function standardizeRelationRequest(req: RelationTypes.Relation | RelationQuery["r"]) {
+    if (!req.select) req.select = [];
+}
 
 export class VQLProcessor {
     private dbInstances: Record<string, Valthera>;
@@ -17,7 +21,7 @@ export class VQLProcessor {
         this.relation = new Relation(dbInstances);
     }
 
-    async execute(queryRaw: VQLRawRequest, user: any): Promise<any> {
+    async execute(queryRaw: VQLR, user: any): Promise<any> {
         if (!validateRaw(queryRaw)) return { err: true, msg: "Invalid query", c: 400 };
 
         const query = executeSheet(queryRaw, this.preDefinedSheets);
@@ -76,10 +80,12 @@ export class VQLProcessor {
     }
 
     private async executeRelation(query: RelationQuery, user: any): Promise<any> {
-        if (process.env.NODE_ENV !== "development") {
-            throw new Error("Security issue. Not implemented.");
+        if (!await checkRelationPermission(this.gw, user, query)) {
+            throw new Error("Permission denied");
         }
+
         const req = query.r;
+        standardizeRelationRequest(req);
 
         if (req.many) {
             return await this.relation.find(req.path, req.search, req.relations, req.select, req.options);

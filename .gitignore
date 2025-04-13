@@ -6,3 +6,4 @@ yarn.lock
 package-lock.json
 tests
 .suglite_history
+.env

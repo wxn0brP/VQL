@@ -103,5 +103,13 @@ export interface VQLRef {
     ref?: string
 }
 
+type DeepPartial<T> = {
+    [P in keyof T]?: T[P] extends object ? DeepPartial<T[P]> : T[P];
+};
+
 export type VQL = (VQLRequest | RelationQuery) & VQLRef;
-export type VQLRawRequest = VQL | Required<VQLRef>;
+
+export type VQLR =
+    | VQL // Raw VQL
+    | (DeepPartial<VQL> & Required<VQLRef>) // DeepPartial<VQL> + Ref
+    | Required<VQLRef>; // Only Ref

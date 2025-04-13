@@ -1,5 +1,5 @@
 import { deepMerge } from "@wxn0brp/wts-deep-merge";
-import { VQL, VQLRawRequest } from "./types/vql";
+import { VQL, VQLR } from "./types/vql";
 import { RelationTypes } from "@wxn0brp/db";
 
 function trimPath(path: RelationTypes.Path | undefined): RelationTypes.Path | undefined {
@@ -30,7 +30,7 @@ function pathFix(vql: VQL) {
     }
 }
 
-export function executeSheet(query: VQLRawRequest, preDefinedSheets: Map<string, VQL>): VQL {
+export function executeSheet(query: VQLR, preDefinedSheets: Map<string, VQL>): VQL {
     if ("ref" in query) {
         if (preDefinedSheets.has(query.ref)) {
             const ref = preDefinedSheets.get(query.ref);
