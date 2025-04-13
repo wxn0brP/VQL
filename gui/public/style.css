@@ -1,0 +1,118 @@
+:root {
+    --back: #1a1a1a;
+    --txt: #fff;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: var(--back);
+    color: var(--txt);
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    min-height: 100vh;
+    padding-bottom: 35px;
+}
+
+#container {
+    display: flex;
+    width: 100vw;
+}
+
+#tree {
+    width: 300px;
+}
+
+#acl {
+    margin-left: 10px;
+    border-left: 2px solid #999;
+    padding-left: 10px;
+    min-height: calc(100vh - 35px);
+    width: calc(100vw - 575px);
+}
+
+#form {
+    width: 250px;
+}
+
+details {
+    padding-left: 20px;
+    padding-bottom: 5px;
+}
+
+details summary {
+    cursor: pointer;
+}
+
+ul {
+    list-style-type: none;
+    padding-left: 20px;
+    padding-bottom: 5px;
+}
+
+li {
+    cursor: pointer;
+}
+
+li li {
+    border-left: 2px solid #666;
+    padding-left: 2px;
+}
+
+li::before {
+    content: "🔗 ";
+}
+
+table {
+    border-collapse: collapse;
+    margin-bottom: 10px;
+}
+
+th,
+td {
+    border: 1px solid #ccc;
+    padding-block: 5px;
+    padding-inline: 10px;
+    text-align: center;
+}
+
+button,
+input {
+    padding: 5px 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    background-color: var(--back);
+    color: var(--txt);
+    margin-inline: 5px;
+}
+
+form {
+    margin-top: 10px;
+    border: 1px solid #ccc;
+    padding: 3px;
+    border-radius: 3px;
+    width: 100%;
+}
+
+label {
+    margin-left: 5px;
+}
+
+form input,
+form button {
+    margin-block: 5px;
+}
+
+footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: #111;
+    color: var(--txt);
+    padding: 5px;
+    text-align: center;
+}

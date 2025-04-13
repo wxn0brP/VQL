@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VQL Manager Panel</title>
+    <link rel="shortcut icon" href="https://raw.githubusercontent.com/wxn0brP/ValtheraDB/refs/heads/main/logo.svg" type="image/x-icon">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div id="container">
+        <section id="tree">
+            <h2>Tree View</h2>
+            <div id="tree-container"></div>
+        </section>
+        <section id="acl">
+            <div id="acl-container"></div>
+        </section>
+        <section id="form"></section>
+    </div>
+
+    <footer>
+        <label>
+            Hide Path
+            <input type="checkbox" id="hidePath">
+        </label>
+    </footer>
+
+    <script src="/index.js" type="module"></script>
+
+    <script>
+        function removeRule(uid) {
+            const userIdInput = document.querySelector("#userIdInput");
+            if (userIdInput) userIdInput.value = uid || "";
+        }
+    </script>
+</body>
+
+</html>
