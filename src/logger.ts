@@ -1,16 +1,9 @@
-import winston from "winston";
+import { ConsoleTransport, FileTransport, Logger } from "@wxn0brp/wts-logger";
 
-const logger = winston.createLogger({
-    level: 'info',
-    format: winston.format.combine(
-        winston.format.timestamp(),
-        winston.format.printf(info => `${info.timestamp} ${info.level}: ${info.message}`)
-    ),
-    transports: [
-        new winston.transports.Console(),
-        new winston.transports.File({ filename: 'data/execution.log' })
-    ]
-});
+const logger = new Logger([
+    new ConsoleTransport(),
+    new FileTransport("data/execution.log")
+])
 
 export function logLog(instanceName: string, message: any) {
     const logMessage = `[${instanceName}] ${message}`;

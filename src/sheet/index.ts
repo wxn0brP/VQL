@@ -1,5 +1,5 @@
 import { deepMerge } from "@wxn0brp/wts-deep-merge";
-import { VQL, VQLR } from "./types/vql";
+import { VQL, VQLR } from "../types/vql";
 import { RelationTypes } from "@wxn0brp/db";
 
 function trimPath(path: RelationTypes.Path | undefined): RelationTypes.Path | undefined {

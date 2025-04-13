@@ -5,4 +5,4 @@ export default VQLProcessor;
 export {
     ValtheraAdapter
 }
-export * as VQLSheet from "./loadSheets";
+export * as VQLSheet from "./sheet/load";

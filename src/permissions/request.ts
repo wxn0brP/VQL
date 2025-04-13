@@ -1,16 +1,7 @@
 import { GateWarden } from "@wxn0brp/gate-warden";
-import crypto from "crypto";
-import { VQLWardenConfig } from "./config";
-import { PermCRUD } from "./types/perm";
-import { RelationQuery, VQLFind, VQLFindOne, VQLQuery, VQLRequest, VQLUpdate, VQLUpdateOne, VQLUpdateOneOrAdd } from "./types/vql";
-
-export function hashKey(path: any): string {
-    const json = JSON.stringify(path);
-    if (VQLWardenConfig.hidePath)
-        return crypto.createHash("sha256").update(json).digest("hex");
-    else
-        return json;
-}
+import { PermCRUD } from "../types/perm";
+import { VQLFind, VQLFindOne, VQLQuery, VQLRequest, VQLUpdate, VQLUpdateOne, VQLUpdateOneOrAdd } from "../types/vql";
+import { extractPathsFromData, hashKey } from "./utils";
 
 export function extractPaths(query: VQLRequest): {
     db: string,
@@ -69,20 +60,7 @@ export function extractPaths(query: VQLRequest): {
     return permPaths;
 }
 
-export function extractPathsFromData(data: any, stack: string[] = []): { path: string[]; key: string }[] {
-    const paths: { path: string[]; key: string }[] = [];
-    for (const key in data) {
-        const value = data[key];
-        if (typeof value === "object") {
-            paths.push(...extractPathsFromData(value, [...stack, key]));
-        } else {
-            paths.push({ path: stack, key });
-        }
-    }
-    return paths;
-}
-
-function processFieldPath(pathObj: { path: string[]; key: string }): string[] {
+export function processFieldPath(pathObj: { path: string[]; key: string }): string[] {
     let subsetMode = false;
     const processedPath: string[] = [];
 
@@ -139,49 +117,4 @@ export async function checkRequestPermission(gw: GateWarden<any>, user: any, que
 
     // All permissions must be granted
     return results.every(result => result);
-}
-
-export async function checkRelationPermission(
-    gw: GateWarden<any>,
-    user: any,
-    query: RelationQuery
-): Promise<boolean> {
-    const { path, search, relations, select } = query.r;
-
-    // Check permission for the relation field in the parent collection
-    if (!await gw.hasAccess(user.id, hashKey(path), PermCRUD.READ)) {
-        return false;
-    }
-
-    const searchPaths = extractPathsFromData(search || {});
-    for (const searchPath of searchPaths) {        
-        const key = [...path, ...searchPath.path, searchPath.key];
-        const keyHash = hashKey(key);
-        if (!await gw.hasAccess(user.id, keyHash, PermCRUD.READ)) {
-            return false;
-        }
-    }
-
-    // Check select fields permissions
-    if (select) {
-        for (const fieldPath of select) {
-            const key = [...path, fieldPath];
-            const keyHash = hashKey(key);
-            if (!await gw.hasAccess(user.id, keyHash, PermCRUD.READ)) {
-                return false;
-            }
-        }
-    }
-
-    // Check nested relations recursively
-    if (relations) {
-        for (const relationKey in relations) {
-            const r = relations[relationKey];
-            if (!await checkRelationPermission(gw, user, { r } as any)) {
-                return false;
-            }
-        }
-    }
-
-    return true;
 }

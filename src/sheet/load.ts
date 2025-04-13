@@ -1,5 +1,5 @@
 import { existsSync, readdirSync, readFileSync } from "fs";
-import { VQL } from "./types/vql";
+import { VQL } from "../types/vql";
 
 function loadSheet(map: Map<string, VQL>, file: string) {
     if (!existsSync(file)) {
