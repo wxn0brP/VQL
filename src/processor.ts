@@ -5,6 +5,7 @@ import { validateRaw, validateVql } from "./valid";
 import { executeSheet } from "./sheet";
 import { executeQuery } from "./cpu/request";
 import { executeRelation } from "./cpu/relation";
+import { parseStringQuery } from "./cpu/string";
 
 export class VQLProcessor<GW=any> {
     public relation: Relation;
@@ -17,7 +18,11 @@ export class VQLProcessor<GW=any> {
         this.relation = new Relation(dbInstances);
     }
 
-    async execute(queryRaw: VQLR, user: any): Promise<any> {
+    async execute(queryRaw: VQLR | string, user: any): Promise<any> {
+        if (typeof queryRaw === "string") {
+            queryRaw = parseStringQuery(queryRaw);
+        }
+
         if (!validateRaw(queryRaw)) return { err: true, msg: "Invalid query", c: 400 };
 
         const query = executeSheet(queryRaw, this.preDefinedSheets);

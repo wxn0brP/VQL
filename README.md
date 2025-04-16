@@ -37,6 +37,14 @@ const query = {
     },
 };
 
+// Or you can use a string query (simplified)
+const stringQuery = `
+find users (search { age: { $gte: 18 } } ) {
+    name
+    age
+}
+`
+
 // Execute the query
 (async () => {
     try {
