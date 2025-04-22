@@ -1,3 +1,4 @@
+import { VQLConfig } from "../config";
 import { checkRequestPermission } from "../permissions";
 import { VQLProcessor } from "../processor";
 import { VQLQuery, VQLRequest } from "../types/vql";
@@ -9,7 +10,7 @@ export async function executeQuery(cpu: VQLProcessor, query: VQLRequest, user: a
 
     const operation = Object.keys(query.d)[0] as keyof VQLQuery;
 
-    if (!await checkRequestPermission(cpu.gw, user, query)) {
+    if (!VQLConfig.noCheckPermissions && !await checkRequestPermission(cpu.gw, user, query)) {
         throw new Error("Permission denied");
     }
 
