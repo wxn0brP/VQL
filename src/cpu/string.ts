@@ -121,10 +121,11 @@ function parseQuery(query: string): ProcessedQuery {
 }
 
 function tokenize(str: string): string[] {
-    const regex = /([{}()])|([a-zA-Z0-9_]+)|"(.*?)"|'(.*?)'/g;
+    const regex = /\/\/[^\n]*|\/\*[\s\S]*?\*\/|([{}()])|([a-zA-Z0-9_]+)|"(.*?)"|'(.*?)'/g;
     const tokens: string[] = [];
     let match: RegExpExecArray | null;
     while ((match = regex.exec(str))) {
+        if (match[0].startsWith("//") || match[0].startsWith("/*")) continue;
         tokens.push(match[1] || match[2] || match[3] || match[4]);
     }
     return tokens;
