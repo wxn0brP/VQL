@@ -90,11 +90,26 @@ function parseQuery(query: string): ProcessedQuery {
         return { select, relations };
     }
 
+    let db: string | undefined;
+    // db before query
+    if (peek() === "db") {
+        next();
+        db = next();
+    }
+
     // entry point
     const operation = next(); // find
     const name = next();      // table
     const opts = parseOpts(); // (opts)?
     const body = parseBlock();
+
+    // db after query
+    if (peek() === "db") {
+        next();
+        db = next();
+    }
+
+    if (db) opts.db = db;
 
     return {
         operation,

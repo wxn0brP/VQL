@@ -35,7 +35,7 @@ const query = {
     d: {
         find: {
             collection: "users",
-            search: { age: { $gte: 18 } },
+            search: { age: { $gt: 18 } },
             fields: { name: 1, age: 1 },
         },
     },
@@ -43,7 +43,7 @@ const query = {
 
 // Or you can use a string query (simplified)
 const stringQuery = `
-find users (search { age: { $gte: 18 } } ) {
+db myDatabase find users (search { age: { $gt: 18 } } ) {
     name
     age
 }
