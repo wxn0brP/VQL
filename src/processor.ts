@@ -1,5 +1,5 @@
 import { Relation, Valthera } from "@wxn0brp/db";
-import { GateWarden } from '@wxn0brp/gate-warden';
+import { GateWarden } from "@wxn0brp/gate-warden";
 import { VQL, VQLR } from "./types/vql";
 import { validateRaw, validateVql } from "./valid";
 import { executeSheet } from "./sheet";
@@ -13,7 +13,7 @@ export class VQLProcessor<GW=any> {
 
     constructor(
         public dbInstances: Record<string, Valthera>,
-        public gw?: GateWarden<GW>
+        public gw: GateWarden<GW>
     ) {
         this.relation = new Relation(dbInstances);
     }

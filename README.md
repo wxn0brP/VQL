@@ -16,14 +16,18 @@ Here is an example of how to use the `VQLProcessor` to execute a query:
 ```typescript
 import VQLProcessor from "@wxn0brp/vql";
 import { Valthera } from "@wxn0brp/db";
+import { GateWarden } from "@wxn0brp/gate-warden";
 
 // Initialize database instances
 const dbInstances = {
     myDatabase: new Valthera("path/to/database"),
 };
 
+// Initialize Gate Warden
+const gw = new GateWarden("path/to/gate-warden/database");
+
 // Create a VQLProcessor instance
-const processor = new VQLProcessor(dbInstances);
+const processor = new VQLProcessor(dbInstances, gw);
 
 // Define a query
 const query = {
