@@ -1,6 +1,7 @@
 import { checkRequestPermission } from "../permissions";
 import { VQLProcessor } from "../processor";
 import { VQLQuery, VQLRequest } from "../types/vql";
+import { parseSelect } from "./utils";
 
 export async function executeQuery(cpu: VQLProcessor, query: VQLRequest, user: any): Promise<any> {
     if (!query.db || !cpu.dbInstances[query.db]) throw new Error("Invalid DB");
@@ -14,12 +15,12 @@ export async function executeQuery(cpu: VQLProcessor, query: VQLRequest, user: a
 
     if (operation === "find") {
         const params = query.d[operation];
-        const fields = params.fields || {};
-        return db.find(params.collection, params.search, {}, {}, { select: Object.keys(fields).filter(k => !!fields[k]) });
+        const select = parseSelect(params.fields || params.select || {});
+        return db.find(params.collection, params.search, {}, {}, { select });
     } else if (operation === "findOne" || operation === "f") {
         const params = query.d[operation];
-        const fields = params.fields || {};
-        return db.findOne(params.collection, params.search, {}, { select: Object.keys(fields).filter(k => !!fields[k]) });
+        const select = parseSelect(params.fields || params.select || {});
+        return db.findOne(params.collection, params.search, {}, { select });
     } else if (operation === "add") {
         const params = query.d[operation];
         return db.add(params.collection, params.data);

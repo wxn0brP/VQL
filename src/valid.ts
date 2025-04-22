@@ -17,7 +17,7 @@ if (!existsSync(fileUrl)) {
         },
         "./"
     );
-    schema = TJS.generateSchema(program, "VQLRawRequest", {
+    schema = TJS.generateSchema(program, "VQLR", {
         required: true
     });
 
@@ -31,7 +31,7 @@ export const ajv = new Ajv({
 });
 ajvFormat(ajv);
 
-const validRawRequest = ajv.compile(schema);
+const validVQLR = ajv.compile(schema);
 
 const modSchema = schema;
 modSchema.anyOf = [
@@ -42,8 +42,8 @@ modSchema.anyOf = [
 const validVQL = ajv.compile(modSchema);
 
 export function validateRaw(query: VQLR) {
-    if (!validRawRequest(query)) {
-        console.error(validRawRequest.errors);
+    if (!validVQLR(query)) {
+        console.error(validVQLR.errors);
         return false;
     }
     return true;

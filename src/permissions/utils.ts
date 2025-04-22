@@ -1,9 +1,9 @@
 import crypto from "crypto";
-import { VQLWardenConfig } from "../config";
+import { VQLConfig } from "../config";
 
 export function hashKey(path: any): string {
     const json = JSON.stringify(path);
-    if (VQLWardenConfig.hidePath)
+    if (VQLConfig.hidePath)
         return crypto.createHash("sha256").update(json).digest("hex");
     else
         return json;

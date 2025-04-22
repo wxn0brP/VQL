@@ -2,9 +2,10 @@ import { RelationTypes } from "@wxn0brp/db";
 import { VQLProcessor } from "../processor";
 import { RelationQuery } from "../types/vql";
 import { checkRelationPermission } from "../permissions";
+import { parseSelect } from "./utils";
 
 function standardizeRelationRequest(req: RelationTypes.Relation | RelationQuery["r"]) {
-    if (!req.select) req.select = [];
+    req.select = parseSelect(req.select || []);
 }
 
 export async function executeRelation(cpu: VQLProcessor, query: RelationQuery, user: any): Promise<any> {
@@ -15,9 +16,11 @@ export async function executeRelation(cpu: VQLProcessor, query: RelationQuery, u
     const req = query.r;
     standardizeRelationRequest(req);
 
+    const { path, search, relations, select } = req;
+
     if (req.many) {
-        return await cpu.relation.find(req.path, req.search, req.relations, req.select, req.options);
+        return await cpu.relation.find(path, search, relations, select, req.options);
     } else {
-        return await cpu.relation.findOne(req.path, req.search, req.relations, req.select);
+        return await cpu.relation.findOne(path, search, relations, select);
     }
 }

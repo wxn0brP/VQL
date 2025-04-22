@@ -55,6 +55,7 @@ function parseQuery(query: string): ProcessedQuery {
             const opts: Record<string, any> = {};
             while (peek() !== ')') {
                 const key = next();
+                if (key === undefined) throw new Error("String parse error: Bad opts");
                 const val = parseValue();
                 opts[key] = val;
             }
