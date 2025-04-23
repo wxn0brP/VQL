@@ -30,16 +30,39 @@ function pathFix(vql: VQL) {
     }
 }
 
+function replaceVariables(obj: any, variables: Record<string, any>): any {
+    if (typeof obj === "string") {
+        if (obj.startsWith("$")) {
+            return variables[obj.slice(1)] || variables[obj];
+        }
+        return obj;
+    } else if (Array.isArray(obj)) {
+        return obj.map((item: any) => replaceVariables(item, variables));
+    } else if (typeof obj === "object") {
+        const newObj: any = {};
+        for (const key in obj) {
+            newObj[key] = replaceVariables(obj[key], variables);
+        }
+        return newObj;
+    } else {
+        return obj;
+    }
+}
+
 export function executeSheet(query: VQLR, preDefinedSheets: Map<string, VQL>): VQL {
     if ("ref" in query) {
         if (preDefinedSheets.has(query.ref)) {
             const ref = preDefinedSheets.get(query.ref);
-            delete query.ref;
             const merge = deepMerge(query, ref) as VQL;
             pathFix(merge);
-            return merge;
+            query = merge;
         }
         delete query.ref;
+    }
+
+    if ("var" in query) {
+        query = replaceVariables(query, query.var);
+        delete query.var;
     }
 
     return query as VQL;
