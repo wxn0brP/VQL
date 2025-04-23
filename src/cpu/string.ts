@@ -174,6 +174,8 @@ function processRelation(query: ProcessedQuery): VQL {
         throw new Error(`Invalid operation ${operation} for relations`);
     }
 
+    const select = body.select.map(s => [s]);
+
     const relations: RelationTypes.Relation = {};
 
     for (const key in body.relations) {
@@ -183,6 +185,11 @@ function processRelation(query: ProcessedQuery): VQL {
             select: value.select,
             ...(value.opts ? value.opts : {}),
         };
+        if (value.select) {
+            for (const s of value.select) {
+                select.push([key, s]);
+            }
+        }
     }
 
     return {
@@ -191,6 +198,7 @@ function processRelation(query: ProcessedQuery): VQL {
             search: opts.search as any || {},
             relations,
             many: operation === "find",
+            select,
         }
     };
 }
