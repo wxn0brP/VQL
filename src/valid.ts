@@ -20,14 +20,14 @@ if (!existsSync(fileUrl)) {
     schema = TJS.generateSchema(program, "VQLR", {
         required: true
     });
-
     writeFileSync(fileUrl, JSON.stringify(schema));
 } else {
     schema = JSON.parse(readFileSync(fileUrl, "utf-8"));
 }
 
 export const ajv = new Ajv({
-    allowUnionTypes: true
+    allowUnionTypes: true,
+    strict: false
 });
 ajvFormat(ajv);
 
