@@ -9,9 +9,28 @@ function standardizeRelationRequest(req: RelationTypes.Relation | RelationQuery[
     req.select = parseSelect(req.select || []);
 }
 
+function checkDBsExist(cpu: VQLProcessor, req: RelationTypes.Relation | RelationQuery["r"]) {
+    const db = req.path[0];
+
+    if (!db || !cpu.dbInstances[db]) {
+        return { err: true, msg: `Invalid query - db "${db}" not found`, c: 400 };
+    }
+
+    if (req.relations) {
+        for (const relation of Object.values(req.relations)) {
+            const res = checkDBsExist(cpu, relation);
+            if (res.err) return res;
+        }
+    }
+    return { err: false };
+}
+
 export async function executeRelation(cpu: VQLProcessor, query: RelationQuery, user: any): Promise<any> {
+    const checkDb = checkDBsExist(cpu, query.r);
+    if (checkDb.err) return checkDb;
+
     if (!VQLConfig.noCheckPermissions && !await checkRelationPermission(cpu.gw, user, query)) {
-        throw new Error("Permission denied");
+        return { err: true, msg: "Permission denied", c: 403 };
     }
 
     const req = query.r;

@@ -5,13 +5,15 @@ import { VQLQuery, VQLRequest } from "../types/vql";
 import { parseSelect } from "./utils";
 
 export async function executeQuery(cpu: VQLProcessor, query: VQLRequest, user: any): Promise<any> {
-    if (!query.db || !cpu.dbInstances[query.db]) throw new Error("Invalid DB");
+    if (!query.db || !cpu.dbInstances[query.db])
+        return { err: true, msg: `Invalid query - db "${query.db || "undefined"}" not found`, c: 400 };
+    
     const db = cpu.dbInstances[query.db];
 
     const operation = Object.keys(query.d)[0] as keyof VQLQuery;
 
     if (!VQLConfig.noCheckPermissions && !await checkRequestPermission(cpu.gw, user, query)) {
-        throw new Error("Permission denied");
+        return { err: true, msg: "Permission denied", c: 403 };
     }
 
     if (operation === "find") {
