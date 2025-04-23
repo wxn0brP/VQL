@@ -23,7 +23,7 @@ export class VQLProcessor<GW=any> {
             queryRaw = parseStringQuery(queryRaw);
         }
 
-        if (!validateRaw(queryRaw)) return { err: true, msg: "Invalid query", c: 400 };
+        if (!validateRaw(queryRaw)) return { err: true, msg: "Invalid query raw", c: 400 };
 
         const query = executeSheet(queryRaw, this.preDefinedSheets);
 
