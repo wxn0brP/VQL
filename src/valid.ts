@@ -2,7 +2,7 @@ import Ajv from 'ajv';
 import ajvFormat from "ajv-formats";
 import { VQL, VQLR } from './types/vql';
 import { existsSync, readFileSync, writeFileSync } from 'fs';
-import { dirname, resolve } from "path";
+import { dirname } from "path";
 
 const fileUrl = dirname(import.meta.url).replace("file://", "") + "/schema.json";
 let schema = null;
@@ -10,8 +10,9 @@ let schema = null;
 if (!existsSync(fileUrl)) {
     const TJS = await import("typescript-json-schema");
 
+    const typesFile = dirname(import.meta.url).replace("file://", "") + "/types/vql.d.ts";
     const program = TJS.getProgramFromFiles(
-        [resolve("src/types/vql.ts")],
+        [typesFile],
         {
             required: true
         },
