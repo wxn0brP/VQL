@@ -4,7 +4,7 @@ import { VQL, VQLR } from "../types/vql";
 interface ProcessedQuery {
     operation: string;
     name: string;
-    opts?: Record<string, any>;
+    opts: Record<string, any>;
     body: Record<string, any>;
     hasRelations: boolean;
 }
@@ -50,9 +50,9 @@ function parseQuery(query: string): ProcessedQuery {
     }
 
     function parseOpts(): Record<string, any> | undefined {
+        const opts: Record<string, any> = {};
         if (peek() === '(') {
             next(); // skip '('
-            const opts: Record<string, any> = {};
             while (peek() !== ')') {
                 const key = next();
                 if (key === undefined) throw new Error("String parse error: Bad opts");
@@ -62,7 +62,7 @@ function parseQuery(query: string): ProcessedQuery {
             next(); // skip ')'
             return opts;
         }
-        return undefined;
+        return opts;
     }
 
     function parseBlock(): { select: string[]; relations: Record<string, any> } {
@@ -114,7 +114,7 @@ function parseQuery(query: string): ProcessedQuery {
     return {
         operation,
         name,
-        ...(opts && { opts }),
+        opts,
         body,
         hasRelations
     };
