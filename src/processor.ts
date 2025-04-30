@@ -23,11 +23,13 @@ export class VQLProcessor<GW=any> {
             queryRaw = parseStringQuery(queryRaw);
         }
 
-        if (!validateRaw(queryRaw)) return { err: true, msg: "Invalid query raw", c: 400 };
+        const validateRawResult = validateRaw(queryRaw);
+        if (validateRawResult !== true) return validateRawResult;
 
         const query = executeSheet(queryRaw, this.preDefinedSheets);
 
-        if (!validateVql(query)) return { err: true, msg: "Invalid query", c: 400 };
+        const validateVqlResult = validateVql(query);
+        if (validateVqlResult !== true) return validateVqlResult;
 
         if ("r" in query) {
             return await executeRelation(this, query, user);

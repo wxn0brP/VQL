@@ -44,16 +44,14 @@ const validVQL = ajv.compile(modSchema);
 
 export function validateRaw(query: VQLR) {
     if (!validVQLR(query)) {
-        console.error(validVQLR.errors);
-        return false;
+        return { err: true, msg: "Invalid query raw", c: 400, why: validVQLR.errors, ajv: true };
     }
     return true;
 }
 
 export function validateVql(query: VQL) {
     if (!validVQL(query)) {
-        console.error(validVQL.errors);
-        return false;
+        return { err: true, msg: "Invalid query", c: 400, why: validVQL.errors, ajv: true };
     }
     return true;
 }
