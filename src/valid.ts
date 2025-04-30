@@ -1,8 +1,9 @@
-import Ajv from 'ajv';
+import Ajv from "ajv";
 import ajvFormat from "ajv-formats";
-import { VQL, VQLR } from './types/vql';
-import { existsSync, readFileSync, writeFileSync } from 'fs';
+import { VQL, VQLR } from "./types/vql";
+import { existsSync, readFileSync, writeFileSync } from "fs";
 import { dirname } from "path";
+import { VQLConfig } from "./config";
 
 const fileUrl = dirname(import.meta.url).replace("file://", "") + "/schema.json";
 let schema = null;
@@ -44,14 +45,18 @@ const validVQL = ajv.compile(modSchema);
 
 export function validateRaw(query: VQLR) {
     if (!validVQLR(query)) {
-        return { err: true, msg: "Invalid query raw", c: 400, why: validVQLR.errors, ajv: true };
+        let why: any = validVQLR.errors;
+        why = VQLConfig.formatAjv ? ajv.errorsText(why) : why;
+        return { err: true, msg: "Invalid query raw", c: 400, why };
     }
     return true;
 }
 
 export function validateVql(query: VQL) {
     if (!validVQL(query)) {
-        return { err: true, msg: "Invalid query", c: 400, why: validVQL.errors, ajv: true };
+        let why: any = validVQL.errors;
+        why = VQLConfig.formatAjv ? ajv.errorsText(why) : why;
+        return { err: true, msg: "Invalid query", c: 400, why };
     }
     return true;
 }

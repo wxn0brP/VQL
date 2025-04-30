@@ -3,4 +3,5 @@ export const VQLConfig = {
     strictSelect: true,
     strictACL: true,
     noCheckPermissions: false,
+    formatAjv: true,
 }
