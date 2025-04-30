@@ -20,7 +20,11 @@ export class VQLProcessor<GW=any> {
 
     async execute(queryRaw: VQLR | string, user: any): Promise<any> {
         if (typeof queryRaw === "string") {
-            queryRaw = parseStringQuery(queryRaw);
+            try {
+                queryRaw = parseStringQuery(queryRaw);
+            } catch (e) {
+                return { err: true, msg: "Invalid query", c: 400, why: `String query parsing error: ${e.message}` };
+            }
         }
 
         const validateRawResult = validateRaw(queryRaw);
