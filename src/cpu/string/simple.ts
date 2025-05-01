@@ -83,11 +83,13 @@ function buildVQL(db: string, op: string, collection: string, query: Record<stri
             delete query.fields;
         }
 
-        const select = [];
-        for (const [key, val] of Object.entries(query.select || [])) {
-            if (val) select.push(key);
+        if ("select" in query) {
+            const select = [];
+            for (const [key, val] of Object.entries(query.select || [])) {
+                if (val) select.push(key);
+            }
+            query.select = select;
         }
-        query.select = select;
         return {
             db,
             d: {
