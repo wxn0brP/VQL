@@ -1,27 +1,51 @@
-import { Valthera } from "@wxn0brp/db";
-import dbActionC from "@wxn0brp/db/action.js";
-import { MemoryAction } from "@wxn0brp/db/memory.js";
+import type { ValtheraCompatible } from "@wxn0brp/db";
 
-export interface Cfg {
-    collections?: string[];
-    dbAction?: dbActionC;
+type ResolverFn<TArgs extends any[] = any[], TReturn = any> = (...args: TArgs) => Promise<TReturn>;
+
+export interface ValtheraResolver {
+    getCollections?: ResolverFn<[], string[]>;
+    issetCollection?: ResolverFn<[string], boolean>;
+    checkCollection?: ResolverFn<[string], boolean>;
+
+    add?: ResolverFn<[string, any], any>;
+    find?: ResolverFn<[string, any], any[]>;
+    findOne?: ResolverFn<[string, any], any | null>;
+
+    update?: ResolverFn<[string, any, any], boolean>;
+    updateOne?: ResolverFn<[string, any, any], boolean>;
+
+    remove?: ResolverFn<[string, any], boolean>;
+    removeOne?: ResolverFn<[string, any], boolean>;
+
+    removeCollection?: ResolverFn<[string], boolean>;
 }
 
-export abstract class ValtheraAdapter extends Valthera {
-    public collections: string[];
+export function createValtheraAdapter(resolver: ValtheraResolver): ValtheraCompatible {
+    const safe = <T>(fn?: T): T => {
+        if (!fn) throw new Error("Unimplemented method");
+        return fn;
+    };
 
-    constructor (cfg?: Cfg) {
-        super("", {
-            dbAction: cfg?.dbAction || new MemoryAction()
-        });
-        this.collections = cfg?.collections ?? [];
-    }
+    return {
+        getCollections: () => safe(resolver.getCollections!)(),
+        issetCollection: (c) => safe(resolver.issetCollection!)(c),
+        checkCollection: (c) => safe(resolver.checkCollection!)(c),
 
-    async getCollections(): Promise<string[]> {
-        return this.collections;
-    }
+        add: (col, data) => safe(resolver.add!)(col, data),
+        find: (col, search) => safe(resolver.find!)(col, search),
+        findOne: (col, search) => safe(resolver.findOne!)(col, search),
 
-    async issetCollection(collection: string): Promise<boolean> {
-        return this.collections.includes(collection);
-    }
+        update: (col, search, up) => safe(resolver.update!)(col, search, up),
+        updateOne: (col, search, up) => safe(resolver.updateOne!)(col, search, up),
+
+        remove: (col, search) => safe(resolver.remove!)(col, search),
+        removeOne: (col, search) => safe(resolver.removeOne!)(col, search),
+
+        removeCollection: (col) => safe(resolver.removeCollection!)(col),
+
+        c: null,
+        findStream: null,
+        transaction: null,
+        updateOneOrAdd: null
+    };
 }

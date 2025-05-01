@@ -1,4 +1,4 @@
-import { Relation, Valthera } from "@wxn0brp/db";
+import { Relation, ValtheraCompatible } from "@wxn0brp/db";
 import { GateWarden } from "@wxn0brp/gate-warden";
 import { VQL, VQLR } from "./types/vql";
 import { validateRaw, validateVql } from "./valid";
@@ -12,8 +12,8 @@ export class VQLProcessor<GW=any> {
     public preDefinedSheets: Map<string, VQL> = new Map();
 
     constructor(
-        public dbInstances: Record<string, Valthera>,
-        public gw: GateWarden<GW>
+        public dbInstances: Record<string, ValtheraCompatible>,
+        public gw: GateWarden<GW> = null
     ) {
         this.relation = new Relation(dbInstances);
     }

@@ -1,10 +1,10 @@
-import { ValtheraAdapter } from "./apiAbstract";
 import { VQLProcessor } from "./processor";
 import { VQLConfig } from "./config";
+import { createValtheraAdapter } from "./apiAbstract";
 
 export default VQLProcessor;
 export {
-    ValtheraAdapter,
+    createValtheraAdapter,
     VQLConfig
 }
 export * as VQLSheet from "./sheet/load";
