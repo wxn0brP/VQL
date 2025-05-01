@@ -41,12 +41,33 @@ const query = {
     },
 };
 
-// Or you can use a string query (simplified)
-const stringQuery = `
-db myDatabase find users (search { age: { $gt: 18 } } ) {
-    name
-    age
+// Or you can use a string query like:
+// string
+const VQLS = `
+myDatabase users
+s.age.$gt = 18
+f.name = 1
+f.age = 1
+`
+// Or (use backticks like json)
+const VQLB = `
+myDatabase users
+{
+    collection: "users",
+    search: { age: { $gt: 18 } },
+    fields: { name: 1, age: 1 },
 }
+`
+// Or (use markup like yaml)
+const VQLM = `
+myDatabase users
+collection: users
+search:
+  age:
+    $gt: 18
+fields:
+  name: 1
+  age: 1
 `
 
 // Execute the query
