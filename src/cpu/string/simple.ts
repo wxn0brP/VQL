@@ -9,6 +9,7 @@ const aliases = {
     r: "relations",
     d: "data",
     e: "select",
+    u: "updater",
 }
 
 function parseArgs(input: string): Record<string, any> {
