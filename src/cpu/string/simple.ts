@@ -109,6 +109,9 @@ export function parseVQLS(query: string): VQL {
 
     for (const keysRaw of Object.keys(parsed)) {
         const keys = keysRaw.split(".");
+        if (keys.length === 1) {
+            continue;
+        }
         let obj = parsed;
         for (let i = 0; i < keys.length; i++) {
             const key = keys[i];
@@ -129,6 +132,10 @@ export function parseVQLS(query: string): VQL {
             parsed[aliases[key]] = parsed[key];
             delete parsed[key];
         }
+    }
+
+    if ((op === "find" || op === "findOne") && !("search" in parsed)) {
+        parsed.search = {};
     }
 
     return buildVQL(db, op, collection, parsed);
