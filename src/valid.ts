@@ -47,7 +47,7 @@ export function validateRaw(query: VQLR) {
     if (!validVQLR(query)) {
         let why: any = validVQLR.errors;
         why = VQLConfig.formatAjv ? ajv.errorsText(why) : why;
-        return { err: true, msg: "Invalid query raw", c: 400, why };
+        return { err: true, msg: "Invalid query raw", c: 400, why, rawQuery: query };
     }
     return true;
 }
@@ -56,7 +56,7 @@ export function validateVql(query: VQL) {
     if (!validVQL(query)) {
         let why: any = validVQL.errors;
         why = VQLConfig.formatAjv ? ajv.errorsText(why) : why;
-        return { err: true, msg: "Invalid query", c: 400, why };
+        return { err: true, msg: "Invalid query", c: 400, why, rawQuery: query };
     }
     return true;
 }

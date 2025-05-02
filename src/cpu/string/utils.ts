@@ -35,7 +35,7 @@ export function extractMeta(input: string) {
     }
 
     // Handle cases like "db find users"
-    if (split.length === 3) {
+    if (split.length === 3 && /^[A-Za-z0-9_-]+$/.test(split[2])) {
         return { db: split[0], op: split[1], collection: split[2], body: "" };
     }
 
