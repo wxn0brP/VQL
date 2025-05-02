@@ -20,7 +20,7 @@ export function parseVQLM(query: string): VQL {
     
     if ("relations" in parsed) {
         return {
-            f: {
+            r: {
                 path: [parsed.db || db, parsed.c || collection],
                 ...parsed
             }

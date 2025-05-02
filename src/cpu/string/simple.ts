@@ -54,6 +54,9 @@ function buildVQL(db: string, op: string, collection: string, query: Record<stri
                 path: [value.db as any || db as string, value.c || key],
                 ...value
             };
+            delete (relations[key] as any).db;
+            delete (relations[key] as any).c;
+
             if (value.select) {
                 const select = [];
                 for (const [keyS, val] of Object.entries(value.select)) {
