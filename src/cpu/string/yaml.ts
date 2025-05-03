@@ -1,4 +1,5 @@
 import { VQL } from "../../types/vql";
+import { processVQL_MB } from "./middle";
 import { extractMeta } from "./utils";
 import yaml from "js-yaml";
 
@@ -17,23 +18,6 @@ export function parseVQLM(query: string): VQL {
 
     const body = query.slice(lineEndIndex + 1);
     const parsed = yaml.load(body);
-    
-    if ("relations" in parsed) {
-        return {
-            r: {
-                path: [parsed.db || db, parsed.c || collection],
-                ...parsed
-            }
-        } as any;
-    } else {
-        return {
-            db,
-            d: {
-                [op]: {
-                    collection,
-                    ...parsed
-                }
-            }
-        } as any;
-    }
+
+    return processVQL_MB(db, op, collection, parsed);
 }

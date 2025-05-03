@@ -41,7 +41,7 @@ function guessParser(query: string): {
 
     let mode: VQLParserMode = "VQLS";
     if (_34word.includes("{")) mode = "VQLB";
-    else if (_34word.includes(":") && !query.includes("{")) mode = "VQLM";
+    else if (_34word.includes(":")) mode = "VQLM";
 
     return {
         mode,
