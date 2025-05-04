@@ -1,6 +1,8 @@
 import { RelationTypes } from "@wxn0brp/db";
 import { VQL } from "../../types/vql";
 import { extractMeta } from "./utils";
+import JSON5 from "json5";
+import { convertSearchObjToSearchArray } from "./middle";
 
 const aliases = {
     s: "search",
@@ -33,7 +35,7 @@ function parseArgs(input: string): Record<string, any> {
             value = Number(value);
         } else if (value.startsWith("{") && value.endsWith("}") || value.startsWith("[") && value.endsWith("]")) {
             try {
-                value = JSON.parse(value);
+                value = JSON5.parse(value);
             } catch {}
         }
 
@@ -56,22 +58,10 @@ function buildVQL(db: string, op: string, collection: string, query: Record<stri
             };
             delete (relations[key] as any).db;
             delete (relations[key] as any).c;
-
-            if (value.select) {
-                const select = [];
-                for (const [keyS, val] of Object.entries(value.select)) {
-                    if (val) select.push([key, keyS]);
-                }
-                relations[key].select = select;
-            }
         }
 
         if ("select" in query) {
-            const select = [];
-            for (const [key, val] of Object.entries(query.select)) {
-                if (val) select.push([key]);
-            }
-            query.select = select;
+            query.select = convertSearchObjToSearchArray(query.select);
         }
 
         return {
@@ -88,11 +78,7 @@ function buildVQL(db: string, op: string, collection: string, query: Record<stri
         }
 
         if ("select" in query) {
-            const select = [];
-            for (const [key, val] of Object.entries(query.select || [])) {
-                if (val) select.push(key);
-            }
-            query.select = select;
+            query.select = [...new Set(convertSearchObjToSearchArray(query.select).map(k => k[0]).flat())];
         }
         return {
             db,

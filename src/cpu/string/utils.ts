@@ -48,7 +48,8 @@ export function extractMeta(input: string) {
     // Determine operation and collection based on special characters
     if (
         ["!", "-", "+", "~"].some(c => split[0].includes(c)) || // Check if operation is indicated by special character
-        [".", ":", "{"].some(c => split[1].includes(c)) // Check if query body is indicated by special character
+        [".", ":", "{"].some(c => split[1].includes(c)) || // Check if query body is indicated by special character
+        (split.length > 2 && (split[1].includes("=") || split[2].includes("="))) // if e.g. db1 user many = true ... relation ...
     ) {
         let temp = split.shift();
         const firstChar = temp[0];

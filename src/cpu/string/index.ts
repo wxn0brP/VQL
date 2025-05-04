@@ -25,7 +25,7 @@ function get3rdAnd4thWord(query: string): string {
     return words[2] + (words[3] ? " " + words[3] : "");
 }
 
-function guessParser(query: string): {
+export function guessParser(query: string): {
     mode: VQLParserMode,
     query: string
 } {

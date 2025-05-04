@@ -7,7 +7,7 @@ export function processVQL_MB(db: string, op: string, collection: string, parsed
 }
 
 
-function convertSearchObjToSearchArray(obj: Record<string, any>, parentKeys: string[] = []): string[][] {
+export function convertSearchObjToSearchArray(obj: Record<string, any>, parentKeys: string[] = []): string[][] {
     return Object.entries(obj).reduce((acc, [key, value]) => {
         const currentPath = [...parentKeys, key];
 

@@ -1,0 +1,19 @@
+name: Build Playground
+
+on:
+  push:
+    branches:
+      - main
+
+  workflow_dispatch:
+
+jobs:
+  build:
+    uses: wxn0brP/workflow-dist/.github/workflows/build-ts.yml@main
+    with:
+      files: "playground/index.html playground/style.css playground/dist index.html"
+      customCommands: |
+        cd playground
+        npm i
+        npm run build
+        echo "<script>location.href = './playground'</script>" > index.html
