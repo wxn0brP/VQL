@@ -17,4 +17,5 @@ jobs:
         cd playground
         npm i
         npm run build
+        cd ..
         echo "<script>location.href = './playground'</script>" > index.html
