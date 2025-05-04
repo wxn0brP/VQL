@@ -12,6 +12,7 @@ jobs:
     uses: wxn0brP/workflow-dist/.github/workflows/build-ts.yml@main
     with:
       files: "playground/index.html playground/style.css playground/dist index.html"
+      branch: "playground"
       customCommands: |
         cd playground
         npm i
