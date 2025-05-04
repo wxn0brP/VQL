@@ -17,26 +17,57 @@ const aliases = {
 function parseArgs(input: string): Record<string, any> {
     const result: Record<string, any> = {};
 
-    const lines = input.trim().split(/[\s=]+/);
+    const tokens: string[] = [];
+    let current = "";
+    let inQuotes = false;
+    let escape = false;
 
-    for (let i = 0; i < lines.length; i += 2) {
-        const key = lines[i].trim();
-        let value: any = lines[i + 1]?.trim() ?? "";
+    for (let i = 0; i < input.length; i++) {
+        const char = input[i];
 
-        if (!key) continue;
+        if (escape) {
+            current += char;
+            escape = false;
+        } else if (char === "\\") {
+            escape = true;
+        } else if (char === "\"") {
+            inQuotes = !inQuotes;
+        } else if (!inQuotes && (char === " " || char === "=")) {
+            if (current !== "") {
+                tokens.push(current);
+                current = "";
+            }
+        } else {
+            current += char;
+        }
+    }
 
-        if (value === "") {
-            value = true;
-        } else if (value.toLowerCase() === "true") {
-            value = true;
-        } else if (value.toLowerCase() === "false") {
-            value = false;
-        } else if (!isNaN(Number(value))) {
-            value = Number(value);
-        } else if (value.startsWith("{") && value.endsWith("}") || value.startsWith("[") && value.endsWith("]")) {
-            try {
-                value = JSON5.parse(value);
-            } catch {}
+    if (current !== "") {
+        tokens.push(current);
+    }
+
+    for (let i = 0; i < tokens.length; i += 2) {
+        const key = tokens[i];
+        let value: any = tokens[i + 1] ?? true;
+
+        if (typeof value === "string") {
+            const trimmed = value.trim();
+
+            if (trimmed === "") {
+                value = true;
+            } else if (/^".*"$/.test(trimmed)) {
+                value = trimmed.slice(1, -1);
+            } else if (trimmed.toLowerCase() === "true") {
+                value = true;
+            } else if (trimmed.toLowerCase() === "false") {
+                value = false;
+            } else if (!isNaN(Number(trimmed))) {
+                value = Number(trimmed);
+            } else if ((trimmed.startsWith("{") && trimmed.endsWith("}")) || (trimmed.startsWith("[") && trimmed.endsWith("]"))) {
+                try {
+                    value = JSON5.parse(trimmed);
+                } catch {}
+            }
         }
 
         result[key] = value;
