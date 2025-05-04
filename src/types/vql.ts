@@ -9,7 +9,11 @@ export type VQLQuery = {
     updateOne: VQLUpdateOne,
     remove: VQLRemove,
     removeOne: VQLRemoveOne,
-    updateOneOrAdd: VQLUpdateOneOrAdd
+    updateOneOrAdd: VQLUpdateOneOrAdd,
+    removeCollection: VQLCollectionOperation,
+    checkCollection: VQLCollectionOperation,
+    issetCollection: VQLCollectionOperation,
+    getCollections: {}
 }
 
 export type VQLQueryData =
@@ -22,11 +26,10 @@ export type VQLQueryData =
     | { remove: VQLRemove }
     | { removeOne: VQLRemoveOne }
     | { updateOneOrAdd: VQLUpdateOneOrAdd }
-
-export interface VQLRequest {
-    db: string;
-    d: VQLQueryData;
-}
+    | { removeCollection: VQLCollectionOperation }
+    | { checkCollection: VQLCollectionOperation }
+    | { issetCollection: VQLCollectionOperation }
+    | { getCollections: {} }
 
 export interface VQLRequest {
     db: string;
@@ -82,6 +85,10 @@ export interface VQLUpdateOneOrAdd {
     updater: Record<string, any>;
     add_arg?: Record<string, any>;
     id_gen?: boolean;
+}
+
+export interface VQLCollectionOperation {
+    collection: string;
 }
 
 export type VQLFields = Record<string, boolean | number>;

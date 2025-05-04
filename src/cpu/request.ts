@@ -42,6 +42,17 @@ export async function executeQuery(cpu: VQLProcessor, query: VQLRequest, user: a
     } else if (operation === "updateOneOrAdd") {
         const params = query.d[operation];
         return db.updateOneOrAdd(params.collection, params.search, params.updater, params.add_arg || {}, {}, params.id_gen ?? true);
+    } else if (operation === "removeCollection") {
+        const params = query.d[operation];
+        return db.removeCollection(params.collection);
+    } else if (operation === "checkCollection") {
+        const params = query.d[operation];
+        return db.checkCollection(params.collection);
+    } else if (operation === "issetCollection") {
+        const params = query.d[operation];
+        return db.issetCollection(params.collection);
+    } else if (operation === "getCollections") {
+        return db.getCollections();
     } else {
         const n: never = operation;
         throw new Error("Unknown operation " + n);

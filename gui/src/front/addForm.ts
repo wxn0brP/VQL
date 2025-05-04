@@ -19,6 +19,7 @@ export function showAddRuleForm(entityId: string) {
         { name: "WRITE", value: 1 << 1 },
         { name: "CREATE", value: 1 << 2 },
         { name: "DELETE", value: 1 << 3 },
+        { name: "COLLECTION", value: 1 << 4 },
     ];
 
     permFlags.forEach(({ name, value }) => {
