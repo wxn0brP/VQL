@@ -1,7 +1,7 @@
 import Ajv from "ajv";
 import ajvFormat from "ajv-formats";
 import { VQL, VQLR } from "./types/vql";
-import { existsSync, readFileSync, writeFileSync } from "fs";
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
 import { dirname } from "path";
 import { VQLConfig } from "./config";
 
@@ -22,6 +22,10 @@ if (!existsSync(fileUrl)) {
     schema = TJS.generateSchema(program, "VQLR", {
         required: true
     });
+
+    const dir = dirname(fileUrl);
+    if (!existsSync(dir)) mkdirSync(dir, { recursive: true });
+
     writeFileSync(fileUrl, JSON.stringify(schema));
 } else {
     schema = JSON.parse(readFileSync(fileUrl, "utf-8"));
