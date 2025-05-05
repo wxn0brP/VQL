@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.1](https://github.com/wxn0brP/VQL/compare/v0.1.0...v0.1.1) (2025-05-05)
+
+
+### Bug Fixes
+
+* generate schema.json ([b195fd9](https://github.com/wxn0brP/VQL/commit/b195fd95579ff7a151d781b1311c0764a5283492))
+
 ## 0.1.0 (2025-05-05)
 
 
