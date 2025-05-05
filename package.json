@@ -17,7 +17,7 @@
         "typescript": "^5.7.3"
     },
     "dependencies": {
-        "@wxn0brp/db": "github:wxn0brP/ValtheraDB#dist",
+        "@wxn0brp/db": "^0.7.1",
         "@wxn0brp/gate-warden": "github:wxn0brP/gate-warden#dist",
         "@wxn0brp/wts-deep-merge": "github:wxn0brp/ts-shared#dist-deep-merge",
         "@wxn0brp/wts-logger": "github:wxn0brp/ts-shared#dist-logger",
