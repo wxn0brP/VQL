@@ -4,8 +4,14 @@ on:
   push:
     branches:
       - main
+    tags:
+      - "*"
 
   workflow_dispatch:
+
+concurrency:
+  group: build-main
+  cancel-in-progress: true
 
 jobs:
   build:
