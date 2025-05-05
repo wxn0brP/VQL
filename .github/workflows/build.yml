@@ -13,3 +13,7 @@ jobs:
     with:
       scriptsHandling: "remove-all"
       customCommands: "node dist/valid.js"
+      publishToNpm: true
+    
+    secrets:
+      NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
