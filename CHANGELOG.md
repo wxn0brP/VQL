@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.2](https://github.com/wxn0brP/VQL/compare/v0.1.1...v0.1.2) (2025-05-06)
+
+
+### Bug Fixes
+
+* schema file path ([6aa5d97](https://github.com/wxn0brP/VQL/commit/6aa5d97dbe77f909f7f69443633be16ac520d36a))
+
 ### [0.1.1](https://github.com/wxn0brP/VQL/compare/v0.1.0...v0.1.1) (2025-05-05)
 
 
