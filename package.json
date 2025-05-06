@@ -9,6 +9,12 @@
         "build": "tsc && tsc-alias",
         "test": "node dist/tests/index.js"
     },
+    "description": "VQL - Valthera Query Language",
+	"homepage": "https://github.com/wxn0brP/VQL",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/wxn0brP/VQL.git"
+	},
     "files": [
         "dist"
     ],
