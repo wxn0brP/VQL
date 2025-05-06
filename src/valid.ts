@@ -5,13 +5,14 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
 import { dirname } from "path";
 import { VQLConfig } from "./config";
 
-const fileUrl = dirname(import.meta.url).replace("file://", "") + "/schema.json";
+const filePath = import.meta.dirname + "/schema.json";
 let schema = null;
 
-if (!existsSync(fileUrl)) {
+if (!existsSync(filePath)) {
+    console.log("[VQL-engine] Generating schema to " + filePath);
     const TJS = await import("typescript-json-schema");
 
-    const typesFile = dirname(import.meta.url).replace("file://", "") + "/types/vql.d.ts";
+    const typesFile = import.meta.dirname + "/types/vql.d.ts";
     const program = TJS.getProgramFromFiles(
         [typesFile],
         {
@@ -23,12 +24,12 @@ if (!existsSync(fileUrl)) {
         required: true
     });
 
-    const dir = dirname(fileUrl);
+    const dir = dirname(filePath);
     if (!existsSync(dir)) mkdirSync(dir, { recursive: true });
 
-    writeFileSync(fileUrl, JSON.stringify(schema));
+    writeFileSync(filePath, JSON.stringify(schema));
 } else {
-    schema = JSON.parse(readFileSync(fileUrl, "utf-8"));
+    schema = JSON.parse(readFileSync(filePath, "utf-8"));
 }
 
 export const ajv = new Ajv({
