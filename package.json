@@ -19,21 +19,21 @@
         "dist"
     ],
     "devDependencies": {
-        "@types/node": "^22.12.0",
+        "@types/node": "^22.15.17",
         "dotenv": "^16.5.0",
         "source-map-support": "^0.5.21",
         "tsc-alias": "^1.8.10",
-        "typescript": "^5.7.3"
+        "typescript": "^5.7.3",
+        "typescript-json-schema": "^0.65.1"
     },
     "dependencies": {
-        "@wxn0brp/db": "^0.7.2",
+        "@wxn0brp/db": "^0.7.3",
         "@wxn0brp/gate-warden": "^0.1.0",
         "@wxn0brp/wts-deep-merge": "github:wxn0brp/ts-shared#dist-deep-merge",
         "@wxn0brp/wts-logger": "github:wxn0brp/ts-shared#dist-logger",
         "ajv": "^8.17.1",
         "ajv-formats": "^3.0.1",
         "js-yaml": "^4.1.0",
-        "json5": "^2.2.3",
-        "typescript-json-schema": "^0.65.1"
+        "json5": "^2.2.3"
     }
 }
