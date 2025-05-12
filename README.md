@@ -29,7 +29,7 @@ const gw = new GateWarden("path/to/gate-warden/database");
 // Create a VQLProcessor instance
 const processor = new VQLProcessor(dbInstances, gw);
 
-// Define a query
+// Define a query (VQLR)
 const query = {
     db: "myDatabase",
     d: {
@@ -42,10 +42,10 @@ const query = {
 };
 
 // Or you can use a string query like:
-// string
+// simple
 const VQLS = `
 myDatabase users
-s.age.$gt = 18
+s.$gt.age = 18
 f.name = 1
 f.age = 1
 `
@@ -54,7 +54,7 @@ const VQLB = `
 myDatabase users
 {
     collection: "users",
-    search: { age: { $gt: 18 } },
+    search: { $gt: { age: 18 } },
     fields: { name: 1, age: 1 },
 }
 `
@@ -63,8 +63,8 @@ const VQLM = `
 myDatabase users
 collection: users
 search:
-  age:
-    $gt: 18
+  $gt:
+    age: 18
 fields:
   name: 1
   age: 1
@@ -80,6 +80,13 @@ fields:
     }
 })();
 ```
+
+## Documentation
+
+- [Base/Map](./docs/lang/base.md)
+- [VQLS](./docs/lang/VQLS.md)
+- [VQLM/B](./docs/lang/VQLM.md)
+- [VQLR](./docs/lang/VQLR.md)
 
 ## License
 
