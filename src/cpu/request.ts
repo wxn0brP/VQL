@@ -31,13 +31,13 @@ export async function executeQuery(cpu: VQLProcessor, query: VQLRequest, user: a
     if (operation === "find") {
         const params = query.d[operation] as VQLFind;
         const select = parseSelect(params.fields || params.select || {});
-        if (Object.keys(select).length !== 0) params.searchOpts = { ...params.searchOpts, select };
+        if (select && typeof select === "object" && Object.keys(select).length !== 0) params.searchOpts = { ...params.searchOpts, select };
 
         return db.find(params.collection, params.search, {}, params.options || {}, params.searchOpts);
     } else if (operation === "findOne" || operation === "f") {
         const params = query.d[operation] as VQLFindOne;
         const select = parseSelect(params.fields || params.select || {});
-        if (Object.keys(select).length !== 0) params.searchOpts = { ...params.searchOpts, select };
+        if (select && typeof select === "object" && Object.keys(select).length !== 0) params.searchOpts = { ...params.searchOpts, select };
 
         return db.findOne(params.collection, params.search, {}, params.searchOpts);
     } else if (operation === "add") {
