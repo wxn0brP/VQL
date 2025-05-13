@@ -8,9 +8,4 @@ const logger = new Logger({
     loggerName: "VQL"
 });
 
-export function logLog(instanceName: string, message: any) {
-    const logMessage = `[${instanceName}] ${message}`;
-    logger.info(logMessage);
-}
-
 export default logger;

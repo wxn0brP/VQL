@@ -1,3 +1,4 @@
+import logger from "../../logger";
 import { VQL } from "../../types/vql";
 import { parseVQLB } from "./json5";
 import { parseVQLS } from "./simple";
@@ -51,6 +52,7 @@ export function guessParser(query: string): {
 
 function parseStringQuery(query: string): VQL {
     const { mode, query: queryRaw } = guessParser(query);
+    logger.debug("Query mode: " + mode);
     
     if (mode === "VQLB") {
         return parseVQLB(queryRaw);
