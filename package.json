@@ -1,6 +1,6 @@
 {
     "name": "@wxn0brp/vql",
-    "version": "0.1.6",
+    "version": "0.1.7",
     "main": "dist/index.js",
     "author": "wxn0brP",
     "license": "MIT",

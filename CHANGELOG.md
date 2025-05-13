@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.7](https://github.com/wxn0brP/VQL/compare/v0.1.6...v0.1.7) (2025-05-13)
+
+
+### Features
+
+* add logger ([e96fee1](https://github.com/wxn0brP/VQL/commit/e96fee1fa26bc4b00d35311e42b6108b32546952))
+* **VQLS:** add data alias (updater = data) to update ([7e48568](https://github.com/wxn0brP/VQL/commit/7e485686f0dab67986a3397ffd18f140c7bb4dbf))
+
+
+### Bug Fixes
+
+* **engine:** resolve inconsistencies and expand DB op support ([048e99d](https://github.com/wxn0brP/VQL/commit/048e99dd7b5f973c7c096713a43105563d286891))
+
 ### [0.1.6](https://github.com/wxn0brP/VQL/compare/v0.1.5...v0.1.6) (2025-05-09)
 
 ### [0.1.5](https://github.com/wxn0brP/VQL/compare/v0.1.4...v0.1.5) (2025-05-09)
