@@ -158,5 +158,10 @@ export function parseVQLS(query: string): VQL {
         parsed.search = {};
     }
 
+    if ((op === "update" || op === "remove") && !("updater" in parsed) && ("data" in parsed)) {
+        parsed.updater = parsed.data;
+        delete parsed.data;
+    }
+
     return buildVQL(db, op, collection, parsed);
 }
