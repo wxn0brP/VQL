@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.10](https://github.com/wxn0brP/VQL/compare/v0.1.9...v0.1.10) (2025-05-13)
+
+
+### Bug Fixes
+
+* **engine:** find/findOne ([d5c1bf4](https://github.com/wxn0brP/VQL/commit/d5c1bf42bdcf89e4a084505b56486a7ad560ab6a))
+
 ### [0.1.9](https://github.com/wxn0brP/VQL/compare/v0.1.8...v0.1.9) (2025-05-13)
 
 
