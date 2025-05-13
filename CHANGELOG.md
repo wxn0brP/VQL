@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.9](https://github.com/wxn0brP/VQL/compare/v0.1.8...v0.1.9) (2025-05-13)
+
+
+### Bug Fixes
+
+* playground ([29d096f](https://github.com/wxn0brP/VQL/commit/29d096fa03a0c88cb34ea2190b18f5af6ae198fa))
+
 ### [0.1.8](https://github.com/wxn0brP/VQL/compare/v0.1.7...v0.1.8) (2025-05-13)
 
 
