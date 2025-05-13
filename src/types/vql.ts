@@ -1,4 +1,6 @@
 import { RelationTypes, ValtheraTypes } from "@wxn0brp/db";
+import { DbFindOpts, FindOpts } from "@wxn0brp/db/types/options.js";
+import { SearchOptions } from "@wxn0brp/db/types/searchOpts.js";
 
 export type VQLQuery = {
     find: VQLFind,
@@ -39,22 +41,27 @@ export interface VQLRequest {
 export interface VQLFind {
     collection: string;
     search?: Record<string, any>;
-    sort?: Record<string, "asc" | "desc">;
     limit?: number;
     fields?: VQLFields;
+    select?: VQLFields;
     relations?: VQLRelations;
+    options?: DbFindOpts;
+    searchOpts?: FindOpts;
 }
 
 export interface VQLFindOne {
     collection: string;
     search: Record<string, any>;
     fields?: VQLFields;
+    select?: VQLFields;
     relations?: VQLRelations;
+    searchOpts?: FindOpts;
 }
 
 export interface VQLAdd {
     collection: string;
     data: Record<string, any>;
+    id_gen?: boolean;
 }
 
 export interface VQLUpdate {
