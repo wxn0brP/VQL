@@ -1,6 +1,6 @@
 import { Relation, ValtheraCompatible } from "@wxn0brp/db";
 import { GateWarden } from "@wxn0brp/gate-warden";
-import { VQL, VQLR } from "./types/vql";
+import { VQL, VQLR, VQLRef } from "./types/vql";
 import { validateRaw, validateVql } from "./valid";
 import { executeSheet } from "./sheet";
 import { executeQuery } from "./cpu/request";
@@ -19,17 +19,25 @@ export class VQLProcessor<GW = any> {
         this.relation = new Relation(dbInstances);
     }
 
-    async execute(queryRaw: VQLR | string, user: any): Promise<any> {
-        if (typeof queryRaw === "string") {
+    async execute(queryRaw: VQLR | string | { query: string } & VQLRef, user: any): Promise<any> {
+        if (typeof queryRaw === "string" || "query" in queryRaw) {
             logger.info("Incoming string query");
-            logger.debug(queryRaw);
+            const q =    typeof queryRaw === "string" ? queryRaw : queryRaw.query;
+            const vars = typeof queryRaw === "string" ? null : queryRaw.var;
+            const ref =  typeof queryRaw === "string" ? null : queryRaw.ref;
+            logger.debug(q);
+
             try {
-                queryRaw = parseStringQuery(queryRaw);
+                queryRaw = parseStringQuery(q);
                 logger.debug("transformed query: ", queryRaw);
             } catch (e) {
                 logger.error("Error parsing string query: ", { error: e, msg: e.message });
                 return { err: true, msg: "Invalid query", c: 400, why: `String query parsing error: ${e.message}` };
             }
+
+            if (vars) queryRaw = { ...queryRaw, var: vars };
+            if (ref) queryRaw = { ...queryRaw, ref };
+            logger.debug("Final string query: ", queryRaw);
         } else {
             logger.info("Incoming object query");
             logger.debug("Raw query: ", queryRaw);
