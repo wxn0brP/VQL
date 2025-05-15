@@ -18,8 +18,17 @@
     "files": [
         "dist"
     ],
+    "peerDependencies": {
+        "@wxn0brp/falcon-frame": ">=0.0.1"
+    },
+    "peerDependenciesMeta": {
+        "@wxn0brp/falcon-frame": {
+        "optional": true
+        }
+    },
     "devDependencies": {
         "@types/node": "^22.15.17",
+        "@wxn0brp/falcon-frame": ">=0.0.1",
         "dotenv": "^16.5.0",
         "source-map-support": "^0.5.21",
         "tsc-alias": "^1.8.10",
