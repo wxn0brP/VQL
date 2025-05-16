@@ -23,7 +23,7 @@
     },
     "peerDependenciesMeta": {
         "@wxn0brp/falcon-frame": {
-        "optional": true
+            "optional": true
         }
     },
     "devDependencies": {
@@ -38,8 +38,8 @@
     "dependencies": {
         "@wxn0brp/db": "^0.7.5",
         "@wxn0brp/gate-warden": "^0.1.0",
+        "@wxn0brp/lucerna-log": "^0.1.1",
         "@wxn0brp/wts-deep-merge": "github:wxn0brp/ts-shared#dist-deep-merge",
-        "@wxn0brp/wts-logger": "github:wxn0brp/ts-shared#dist-logger",
         "ajv": "^8.17.1",
         "ajv-formats": "^3.0.1",
         "js-yaml": "^4.1.0",

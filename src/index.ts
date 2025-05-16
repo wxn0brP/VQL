@@ -2,7 +2,7 @@ import { VQLProcessor } from "./processor";
 import { VQLConfig } from "./config";
 import { createValtheraAdapter } from "./apiAbstract";
 import logger from "./logger";
-import { LogLevel } from "@wxn0brp/wts-logger";
+import { LogLevel } from "@wxn0brp/lucerna-log";
 
 export default VQLProcessor;
 export {

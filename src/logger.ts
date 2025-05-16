@@ -1,4 +1,4 @@
-import { Logger } from "@wxn0brp/wts-logger";
+import { Logger } from "@wxn0brp/lucerna-log";
 
 const logger = new Logger({
     loggerName: "VQL"
