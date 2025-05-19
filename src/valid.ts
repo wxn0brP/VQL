@@ -4,6 +4,8 @@ import { VQL, VQLR } from "./types/vql";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
 import { dirname } from "path";
 import { VQLConfig } from "./config";
+import { buildAjvErrorTree } from "./ajv";
+import { deepMerge } from "@wxn0brp/wts-deep-merge";
 
 const filePath = import.meta.dirname + "/schema.json";
 let schema = null;
@@ -51,8 +53,9 @@ const validVQL = ajv.compile(modSchema);
 export function validateRaw(query: VQLR) {
     if (!validVQLR(query)) {
         let why: any = validVQLR.errors;
-        why = VQLConfig.formatAjv ? ajv.errorsText(why) : why;
-        return { err: true, msg: "Invalid query raw", c: 400, why, rawQuery: query };
+        why = VQLConfig.formatAjv ? buildAjvErrorTree(why) : why;
+        why = deepMerge(why, query);
+        return { err: true, msg: "Invalid query raw", c: 400, why };
     }
     return true;
 }
@@ -60,8 +63,9 @@ export function validateRaw(query: VQLR) {
 export function validateVql(query: VQL) {
     if (!validVQL(query)) {
         let why: any = validVQL.errors;
-        why = VQLConfig.formatAjv ? ajv.errorsText(why) : why;
-        return { err: true, msg: "Invalid query", c: 400, why, rawQuery: query };
+        why = VQLConfig.formatAjv ? buildAjvErrorTree(why) : why;
+        why = deepMerge(why, query);
+        return { err: true, msg: "Invalid query", c: 400, why };
     }
     return true;
 }
