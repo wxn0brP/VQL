@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.2.0](https://github.com/wxn0brP/VQL/compare/v0.1.13...v0.2.0) (2025-05-19)
+
+
+### ⚠ BREAKING CHANGES
+
+* new ajv error message format
+
+### Features
+
+* new ajv error message format ([74ba329](https://github.com/wxn0brP/VQL/commit/74ba329fabd1c1769c51bc0eee43b6bb85fbfb8a))
+
 ### [0.1.13](https://github.com/wxn0brP/VQL/compare/v0.1.12...v0.1.13) (2025-05-16)
 
 
