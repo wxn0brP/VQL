@@ -52,7 +52,7 @@ jobs:
             .main,
             .files,
             .homepage
-          ) + { "types": "vql.d.ts" }' package.json > dist/package.json
+          ) + { "types": "./vql.d.ts" }' package.json > dist/package.json
           rm package.json
           mv dist/package.json package.json
           mv dist/vql.d.ts vql.d.ts
