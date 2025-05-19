@@ -3,13 +3,16 @@
         "module": "ES2022",
         "target": "ES2022",
         "moduleResolution": "bundler",
-        "paths": {},
+        "paths": {
+            "#db/*": ["./node_modules/@wxn0brp/db/dist/*"],
+            "#db": ["./node_modules/@wxn0brp/db/dist/index"],
+        },
         "esModuleInterop": true,
         "skipLibCheck": true,
         "outDir": "./dist",
         "inlineSourceMap": false,
         "sourceMap": true,
-        "declaration": true
+        "declaration": true,
     },
     "include": [
        "./src"

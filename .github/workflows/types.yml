@@ -1,0 +1,64 @@
+name: Build and Deploy Type Definitions Only
+
+on:
+  push:
+    branches:
+      - main
+
+  workflow_dispatch:
+
+concurrency:
+  group: build-types
+  cancel-in-progress: true
+
+jobs:
+  deploy-types:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 22
+
+      - name: Install Dependencies
+        run: |
+          npm install -g typescript dts-bundle-generator
+
+      - name: Build Declarations Only
+        run: |
+          tsc --emitDeclarationOnly --declaration --removeComments --outDir dist
+          dts-bundle-generator src/types/vql.ts -o dist/vql.d.ts --external-inlines @wxn0brp/db
+
+      - name: Prepare files
+        run: |
+          mkdir -p dist
+          jq 'del(
+            .scripts,
+            .devDependencies,
+            .dependencies,
+            .peerDependencies,
+            .peerDependenciesMeta,
+            .main
+            .files
+          ) + { "types": "vql.d.ts" }' package.json > dist/package.json
+          rm package.json
+          mv dist/package.json package.json
+          mv dist/vql.d.ts vql.d.ts
+
+      - name: Push to `types` Branch
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+          git checkout --orphan types
+          git reset -q HEAD --
+
+          git add LICENSE vql.d.ts package.json
+          git commit -m "Deploy type definitions only"
+          git push origin types --force

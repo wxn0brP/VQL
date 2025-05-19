@@ -1,4 +1,7 @@
-import { RelationTypes, ValtheraTypes } from "@wxn0brp/db";
+import { RelationTypes } from "#db/index";
+import { Arg, Search } from "#db/types/arg";
+import { DbFindOpts, FindOpts } from "#db/types/options";
+import { UpdaterArg } from "#db/types/updater";
 
 export type VQLQuery = {
     find: VQLFind,
@@ -38,57 +41,57 @@ export interface VQLRequest {
 
 export interface VQLFind {
     collection: string;
-    search?: Record<string, any>;
+    search?: Search;
     limit?: number;
     fields?: VQLFields;
     select?: VQLFields;
     relations?: VQLRelations;
-    options?: ValtheraTypes.DbFindOpts;
-    searchOpts?: ValtheraTypes.FindOpts;
+    options?: DbFindOpts;
+    searchOpts?: FindOpts;
 }
 
 export interface VQLFindOne {
     collection: string;
-    search: Record<string, any>;
+    search: Search;
     fields?: VQLFields;
     select?: VQLFields;
     relations?: VQLRelations;
-    searchOpts?: ValtheraTypes.FindOpts;
+    searchOpts?: FindOpts;
 }
 
 export interface VQLAdd {
     collection: string;
-    data: Record<string, any>;
+    data: Arg;
     id_gen?: boolean;
 }
 
 export interface VQLUpdate {
     collection: string;
-    search: Record<string, any>;
-    updater: Record<string, any>;
+    search: Search;
+    updater: UpdaterArg;
 }
 
 export interface VQLUpdateOne {
     collection: string;
-    search: Record<string, any>;
-    updater: Record<string, any>;
+    search: Search;
+    updater: UpdaterArg;
 }
 
 export interface VQLRemove {
     collection: string;
-    search: Record<string, any>;
+    search: Search;
 }
 
 export interface VQLRemoveOne {
     collection: string;
-    search: Record<string, any>;
+    search: Search;
 }
 
 export interface VQLUpdateOneOrAdd {
     collection: string;
-    search: Record<string, any>;
-    updater: Record<string, any>;
-    add_arg?: Record<string, any>;
+    search: Search;
+    updater: UpdaterArg;
+    add_arg?: Arg;
     id_gen?: boolean;
 }
 
@@ -103,10 +106,10 @@ export type VQLRelations = Record<string, VQLFind | VQLFindOne>;
 export interface RelationQuery {
     r: {
         path: RelationTypes.Path,
-        search: ValtheraTypes.Search,
+        search: Search,
         relations: RelationTypes.Relation,
         many?: boolean,
-        options?: ValtheraTypes.DbFindOpts,
+        options?: DbFindOpts,
         select?: RelationTypes.FieldPath[]
     }
 }
