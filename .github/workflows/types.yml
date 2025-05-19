@@ -4,6 +4,10 @@ on:
   push:
     branches:
       - main
+    paths:
+      - 'src/**/*.ts'
+      - 'package.json'
+      - 'tsconfig.json'
 
   workflow_dispatch:
 
@@ -45,8 +49,9 @@ jobs:
             .dependencies,
             .peerDependencies,
             .peerDependenciesMeta,
-            .main
-            .files
+            .main,
+            .files,
+            .homepage
           ) + { "types": "vql.d.ts" }' package.json > dist/package.json
           rm package.json
           mv dist/package.json package.json

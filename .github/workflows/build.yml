@@ -6,6 +6,10 @@ on:
       - main
     tags:
       - "*"
+    paths:
+      - 'src/**/*.ts'
+      - 'package.json'
+      - 'tsconfig.json'
 
   workflow_dispatch:
 

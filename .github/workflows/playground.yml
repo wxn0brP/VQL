@@ -4,6 +4,11 @@ on:
   push:
     branches:
       - main
+    paths:
+      - 'src/types/**/*.ts'
+      - 'playground/**/*'
+      - 'package.json'
+      - 'tsconfig.json'
 
   workflow_dispatch:
 
