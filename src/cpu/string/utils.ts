@@ -28,6 +28,9 @@ export function extractMeta(input: string) {
     // Ensure the query has at least database and collection
     if (split.length < 2) throw new Error("Invalid query");
 
+    if (split.length === 2 && split[1] === "getCollections") 
+        return { db: split[0], op: "getCollections", collection: "", body: "" };
+
     // Handle cases like "db users" or "db users!"
     if (split.length === 2 && /^[A-Za-z]/.test(split[0])) {
         let op = split[0].endsWith("!") ? "findOne" : "find";
