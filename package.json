@@ -1,0 +1,13 @@
+{
+  "name": "@wxn0brp/vql",
+  "version": "0.2.0",
+  "author": "wxn0brP",
+  "license": "MIT",
+  "type": "module",
+  "description": "VQL - Valthera Query Language",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wxn0brP/VQL.git"
+  },
+  "types": "./vql.d.ts"
+}
