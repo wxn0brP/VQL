@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.3.0](https://github.com/wxn0brP/VQL/compare/v0.2.0...v0.3.0) (2025-05-25)
+
+
+### ⚠ BREAKING CHANGES
+
+* move db to peerDependencies
+
+### Features
+
+* add exports and update ValtheraResolver ([4cafc58](https://github.com/wxn0brP/VQL/commit/4cafc58773146418d24f76b3a5b753fd044dd6ed))
+* move db to peerDependencies ([68f8713](https://github.com/wxn0brP/VQL/commit/68f8713aae8207b145d12e36db7998de748db515))
+* types and types ([b7da21c](https://github.com/wxn0brP/VQL/commit/b7da21caf9066c8f518c2196e9dff4e4fff0c874))
+
+
+### Bug Fixes
+
+* getCollections support ([420e9af](https://github.com/wxn0brP/VQL/commit/420e9af3cb8da0dcb1330494dca4dda38e817e14))
+* ValtheraResolver types ([ac79001](https://github.com/wxn0brP/VQL/commit/ac7900152c90fd6c334b8b65c74356240dbadf83))
+* workflow ([026afdf](https://github.com/wxn0brP/VQL/commit/026afdfdb7bdcbb63fa74cfff9b82581166fe5cf))
+* workflow ([c4c284b](https://github.com/wxn0brP/VQL/commit/c4c284bf969ff3b0937fe689d255b1a45b9c610b))
+* workflows ([8e50c72](https://github.com/wxn0brP/VQL/commit/8e50c7286e0a564038ab199f7c810966828c11cd))
+
 ## [0.2.0](https://github.com/wxn0brP/VQL/compare/v0.1.13...v0.2.0) (2025-05-19)
 
 
