@@ -19,14 +19,19 @@
         "dist"
     ],
     "peerDependencies": {
-        "@wxn0brp/falcon-frame": ">=0.0.1"
+        "@wxn0brp/falcon-frame": ">=0.0.1",
+        "@wxn0brp/db": ">=0.7.6"
     },
     "peerDependenciesMeta": {
         "@wxn0brp/falcon-frame": {
             "optional": true
+        },
+        "@wxn0brp/db": {
+            "optional": false
         }
     },
     "devDependencies": {
+        "@wxn0brp/db": "^0.7.6",
         "@types/node": "^22.15.19",
         "@wxn0brp/falcon-frame": ">=0.0.4",
         "dotenv": "^16.5.0",
@@ -36,7 +41,6 @@
         "typescript-json-schema": "^0.65.1"
     },
     "dependencies": {
-        "@wxn0brp/db": "^0.7.6",
         "@wxn0brp/gate-warden": "^0.1.0",
         "@wxn0brp/lucerna-log": "^0.1.1",
         "@wxn0brp/wts-deep-merge": "github:wxn0brp/ts-shared#dist-deep-merge",
