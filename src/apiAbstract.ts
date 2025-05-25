@@ -1,24 +1,52 @@
+import CollectionManager from "#db/helpers/CollectionManager";
+import { Arg, Search, Updater } from "#db/types/arg";
+import { DbFindOpts, FindOpts } from "#db/types/options";
+import { Context } from "#db/types/types";
 import type { ValtheraCompatible } from "@wxn0brp/db";
 
 type ResolverFn<TArgs extends any[] = any[], TReturn = any> = (...args: TArgs) => Promise<TReturn>;
 
-export interface ValtheraResolver {
-    getCollections?: ResolverFn<[], string[]>;
-    issetCollection?: ResolverFn<[string], boolean>;
-    checkCollection?: ResolverFn<[string], boolean>;
+export interface ValtheraResolverMeta {
+    type: "valthera" | "api" | "wrapper" | (string & {});
+    version: string;
+    description?: string;
+    id?: string;
+    displayName?: string;
+    tags?: string[];
 
-    add?: ResolverFn<[string, any], any>;
-    find?: ResolverFn<[string, any], any[]>;
-    findOne?: ResolverFn<[string, any], any | null>;
-
-    update?: ResolverFn<[string, any, any], boolean>;
-    updateOne?: ResolverFn<[string, any, any], boolean>;
-
-    remove?: ResolverFn<[string, any], boolean>;
-    removeOne?: ResolverFn<[string, any], boolean>;
-
-    removeCollection?: ResolverFn<[string], boolean>;
+    [key: string]: any;
 }
+
+export interface ValtheraResolver {
+    meta?: ValtheraResolverMeta;
+
+    getCollections?: ResolverFn<[], string[]>;
+    issetCollection?: ResolverFn<[collection: string], boolean>;
+    checkCollection?: ResolverFn<[collection: string], boolean>;
+
+    add?: ResolverFn<[collection: string, data: Arg, id_gen?: boolean], any>;
+    find?: ResolverFn<
+        [collection: string, search: Search, context?: Context, options?: DbFindOpts, findOpts?: FindOpts],
+        any[]
+    >;
+    findOne?: ResolverFn<
+        [collection: string, search: Search, context?: Context, findOpts?: FindOpts],
+        any | null
+    >;
+
+    update?: ResolverFn<[collection: string, search: Search, updater: Updater, context?: Context], boolean>;
+    updateOne?: ResolverFn<[collection: string, search: Search, updater: Updater, context?: Context], boolean>;
+    updateOneOrAdd?: ResolverFn<
+        [collection: string, search: Search, updater: Updater, add_arg?: Arg, context?: Context, id_gen?: boolean],
+        boolean
+    >;
+
+    remove?: ResolverFn<[collection: string, search: Search, context?: Context], boolean>;
+    removeOne?: ResolverFn<[collection: string, search: Search, context?: Context], boolean>;
+
+    removeCollection?: ResolverFn<[collection: string], boolean>;
+}
+
 
 export function createValtheraAdapter(resolver: ValtheraResolver): ValtheraCompatible {
     const safe = <T>(fn?: T): T => {
@@ -26,26 +54,31 @@ export function createValtheraAdapter(resolver: ValtheraResolver): ValtheraCompa
         return fn;
     };
 
-    return {
+    const adapter: ValtheraCompatible = {
+        // @ts-ignore
+        meta: resolver.meta ?? { type: "api", version: "0.0.1" },
+        c: null,
         getCollections: () => safe(resolver.getCollections!)(),
         issetCollection: (c) => safe(resolver.issetCollection!)(c),
         checkCollection: (c) => safe(resolver.checkCollection!)(c),
 
-        add: (col, data) => safe(resolver.add!)(col, data),
-        find: (col, search) => safe(resolver.find!)(col, search),
-        findOne: (col, search) => safe(resolver.findOne!)(col, search),
+        add: (col, data, id_gen) => safe(resolver.add)(col, data, id_gen),
+        find: (col, search, context, options, findOpts) => safe(resolver.find)(col, search, context, options, findOpts),
+        findOne: (col, search, context, findOpts) => safe(resolver.findOne)(col, search, context, findOpts),
 
-        update: (col, search, up) => safe(resolver.update!)(col, search, up),
-        updateOne: (col, search, up) => safe(resolver.updateOne!)(col, search, up),
+        update: (col, search, up) => safe(resolver.update)(col, search, up),
+        updateOne: (col, search, up) => safe(resolver.updateOne)(col, search, up),
+        updateOneOrAdd: (col, search, up, add_data, ctx, id_gen) => safe(resolver.updateOneOrAdd)(col, search, up, add_data, ctx, id_gen),
 
-        remove: (col, search) => safe(resolver.remove!)(col, search),
-        removeOne: (col, search) => safe(resolver.removeOne!)(col, search),
+        remove: (col, search) => safe(resolver.remove)(col, search),
+        removeOne: (col, search) => safe(resolver.removeOne)(col, search),
 
-        removeCollection: (col) => safe(resolver.removeCollection!)(col),
+        removeCollection: (col) => safe(resolver.removeCollection)(col),
 
-        c: null,
         findStream: null,
         transaction: null,
-        updateOneOrAdd: null
     };
+    adapter.c = (collection: string) => new CollectionManager(adapter, collection);
+
+    return adapter;
 }

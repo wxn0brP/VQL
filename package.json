@@ -44,5 +44,16 @@
         "ajv-formats": "^3.0.1",
         "js-yaml": "^4.1.0",
         "json5": "^2.2.3"
+    },
+    "exports": {
+        ".": {
+            "types": "./dist/index.d.ts",
+            "default": "./dist/index.js"
+        },
+        "./*": {
+            "types": "./dist/*.d.ts",
+            "default": "./dist/*.js",
+            "import": "./dist/*.js"
+        }
     }
 }
