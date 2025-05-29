@@ -1,13 +1,10 @@
 name: Build and Deploy Type Definitions Only
 
 on:
-  push:
-    branches:
-      - main
-    paths:
-      - 'src/**/*.ts'
-      - 'package.json'
-      - 'tsconfig.json'
+  workflow_run:
+    workflows: ["Build"]
+    types:
+      - completed
 
   workflow_dispatch:
 
@@ -17,6 +14,7 @@ concurrency:
 
 jobs:
   deploy-types:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -24,25 +22,15 @@ jobs:
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v3
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
         with:
-          node-version: 22
+          ref: dist
 
-      - name: Install Dependencies
+      - name: Copy type definitions
         run: |
-          npm install
-          npm install -g typescript dts-bundle-generator
+          cp ./dist/vql.d.ts ./vql.d.ts
 
-      - name: Build Declarations Only
+      - name: Prepare package.json
         run: |
-          tsc --emitDeclarationOnly --declaration --removeComments --outDir dist
-          dts-bundle-generator src/types/vql.ts -o dist/vql.d.ts --external-inlines @wxn0brp/db
-
-      - name: Prepare files
-        run: |
-          mkdir -p dist
           jq 'del(
             .scripts,
             .devDependencies,
@@ -52,12 +40,10 @@ jobs:
             .main,
             .files,
             .homepage
-          ) + { "types": "./vql.d.ts" }' package.json > dist/package.json
-          rm package.json
-          mv dist/package.json package.json
-          mv dist/vql.d.ts vql.d.ts
+          ) + { "types": "./vql.d.ts" }' package.json > tmp.package.json
+          mv tmp.package.json package.json
 
-      - name: Push to `types` Branch
+      - name: Push to `types` branch
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
