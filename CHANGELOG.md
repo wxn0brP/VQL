@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.3.1](https://github.com/wxn0brP/VQL/compare/v0.3.0...v0.3.1) (2025-05-29)
+
+
+### Bug Fixes
+
+* exports ([e8be07d](https://github.com/wxn0brP/VQL/commit/e8be07d5edf36910bedba43bbae2f2ca1be3e143))
+* import ([e8ab4bd](https://github.com/wxn0brP/VQL/commit/e8ab4bd94c1f24465e3715d040ab21e4f291b6cd))
+
 ## [0.3.0](https://github.com/wxn0brP/VQL/compare/v0.2.0...v0.3.0) (2025-05-25)
 
 
