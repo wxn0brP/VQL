@@ -1,10 +1,9 @@
-import { readFileSync, existsSync, mkdirSync, writeFileSync } from "fs";
+import { existsSync, mkdirSync, writeFileSync } from "fs";
 import { dirname } from "path";
 import TJS from "typescript-json-schema";
 
 // @ts-check
 const filePath = import.meta.dirname + "/dist/schema.json";
-let schema = JSON.parse(readFileSync(filePath, "utf-8"));
 console.log("[VQL-engine] Generating schema to " + filePath);
 
 const typesFile = import.meta.dirname + "/dist/vql.d.ts";
