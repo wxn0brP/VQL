@@ -1,5 +1,5 @@
-import CollectionManager from "#db/helpers/CollectionManager";
 import type { ValtheraCompatible } from "@wxn0brp/db";
+import CollectionManager from "@wxn0brp/db/helpers/CollectionManager.js";
 
 type ResolverFn<TArgs extends any[] = any[], TReturn = any> = (...args: TArgs) => Promise<TReturn>;
 

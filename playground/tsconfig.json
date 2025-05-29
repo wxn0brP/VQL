@@ -7,8 +7,6 @@
             "#cpu/*": ["../src/cpu/string/*"],
             "#cpu": ["../src/cpu/string/index"],
             "#src/*": ["../src/*"],
-            "#db/*": ["../node_modules/@wxn0brp/db/dist/*"],
-            "#db": ["../node_modules/@wxn0brp/db/dist/index"],
         },
         "esModuleInterop": true,
         "skipLibCheck": true,

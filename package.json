@@ -56,8 +56,8 @@
         },
         "./*": {
             "types": "./dist/*.d.ts",
-            "default": "./dist/*.js",
-            "import": "./dist/*.js"
+            "import": "./dist/*.js",
+            "default": "./dist/*.js"
         }
     }
 }

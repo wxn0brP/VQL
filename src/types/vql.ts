@@ -1,7 +1,7 @@
-import { RelationTypes } from "#db/index";
-import { Arg, Search } from "#db/types/arg";
-import { DbFindOpts, FindOpts } from "#db/types/options";
-import { UpdaterArg } from "#db/types/updater";
+import { RelationTypes } from "@wxn0brp/db";
+import { Arg, Search } from "@wxn0brp/db/types/arg.js";
+import { DbFindOpts, FindOpts } from "@wxn0brp/db/types/options.js";
+import { UpdaterArg } from "@wxn0brp/db/types/updater.js";
 
 export type VQLQuery = {
     find: VQLFind,
