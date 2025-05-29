@@ -14,7 +14,7 @@ const program = TJS.getProgramFromFiles(
     },
     "./"
 );
-schema = TJS.generateSchema(program, "VQLR", {
+const schema = TJS.generateSchema(program, "VQLR", {
     required: true
 });
 
