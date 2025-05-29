@@ -3,11 +3,11 @@ import { dirname } from "path";
 import TJS from "typescript-json-schema";
 
 // @ts-check
-const filePath = "dist/schema.json";
+const filePath = import.meta.dirname + "/dist/schema.json";
 let schema = JSON.parse(readFileSync(filePath, "utf-8"));
 console.log("[VQL-engine] Generating schema to " + filePath);
 
-const typesFile = "dist/vql.d.ts";
+const typesFile = import.meta.dirname + "/dist/vql.d.ts";
 const program = TJS.getProgramFromFiles(
     [typesFile],
     {
