@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.3.2](https://github.com/wxn0brP/VQL/compare/v0.3.1...v0.3.2) (2025-05-29)
+
+
+### Bug Fixes
+
+* build workflow ([a79d8b6](https://github.com/wxn0brP/VQL/commit/a79d8b67130d542724fea378102466212e689d05))
+* build workflow ([2c24e8c](https://github.com/wxn0brP/VQL/commit/2c24e8cd92c77ed16d4b6bbf2cd9cb513cc5c523))
+* build workflow ([1360b6b](https://github.com/wxn0brP/VQL/commit/1360b6b67469e6a951d582984f60e7c07604ca9c))
+* build workflow ([3d8d058](https://github.com/wxn0brP/VQL/commit/3d8d0586ad2b145c6fa5d830fe3dfcb7a7f3042b))
+* simplify build types workflow ([efbcd11](https://github.com/wxn0brP/VQL/commit/efbcd1180cc0905e8941fed0f34241182ea52675))
+
 ### [0.3.1](https://github.com/wxn0brP/VQL/compare/v0.3.0...v0.3.1) (2025-05-29)
 
 
