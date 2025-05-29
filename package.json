@@ -7,7 +7,9 @@
     "type": "module",
     "scripts": {
         "build": "tsc && tsc-alias",
-        "test": "node dist/tests/index.js"
+        "test": "node dist/tests/index.js",
+        "types": "dts-bundle-generator src/types/vql.ts -o dist/vql.d.ts --external-inlines @wxn0brp/db",
+        "schema": "npm run types && node schema.js"
     },
     "description": "VQL - Valthera Query Language",
     "homepage": "https://github.com/wxn0brP/VQL",

@@ -1,38 +1,13 @@
+import { deepMerge } from "@wxn0brp/wts-deep-merge";
 import Ajv from "ajv";
 import ajvFormat from "ajv-formats";
-import { VQL, VQLR } from "./types/vql";
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
-import { dirname } from "path";
-import { VQLConfig } from "./config";
+import { readFileSync } from "fs";
 import { buildAjvErrorTree } from "./ajv";
-import { deepMerge } from "@wxn0brp/wts-deep-merge";
+import { VQLConfig } from "./config";
+import { VQL, VQLR } from "./types/vql";
 
 const filePath = import.meta.dirname + "/schema.json";
-let schema = null;
-
-if (!existsSync(filePath)) {
-    console.log("[VQL-engine] Generating schema to " + filePath);
-    const TJS = await import("typescript-json-schema");
-
-    const typesFile = import.meta.dirname + "/types/vql.d.ts";
-    const program = TJS.getProgramFromFiles(
-        [typesFile],
-        {
-            required: true
-        },
-        "./"
-    );
-    schema = TJS.generateSchema(program, "VQLR", {
-        required: true
-    });
-
-    const dir = dirname(filePath);
-    if (!existsSync(dir)) mkdirSync(dir, { recursive: true });
-
-    writeFileSync(filePath, JSON.stringify(schema));
-} else {
-    schema = JSON.parse(readFileSync(filePath, "utf-8"));
-}
+const schema = JSON.parse(readFileSync(filePath, "utf-8"));
 
 export const ajv = new Ajv({
     allowUnionTypes: true,
