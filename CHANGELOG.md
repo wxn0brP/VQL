@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.3.3](https://github.com/wxn0brP/VQL/compare/v0.3.2...v0.3.3) (2025-05-30)
+
+
+### Features
+
+* better config ([aa74d37](https://github.com/wxn0brP/VQL/commit/aa74d377e8980391cbc3a208f477c8a3bb6656ce))
+
 ### [0.3.2](https://github.com/wxn0brP/VQL/compare/v0.3.1...v0.3.2) (2025-05-29)
 
 
