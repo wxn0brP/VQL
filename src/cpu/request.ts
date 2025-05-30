@@ -1,4 +1,3 @@
-import { VQLConfig } from "../config";
 import { checkRequestPermission } from "../permissions";
 import { VQLProcessor } from "../processor";
 import {
@@ -24,19 +23,19 @@ export async function executeQuery(cpu: VQLProcessor, query: VQLRequest, user: a
 
     const operation = Object.keys(query.d)[0] as keyof VQLQuery;
 
-    if (!VQLConfig.noCheckPermissions && !await checkRequestPermission(cpu.gw, user, query)) {
+    if (!cpu.config.noCheckPermissions && !await checkRequestPermission(cpu.config, cpu.gw, user, query)) {
         return { err: true, msg: "Permission denied", c: 403 };
     }
 
     if (operation === "find") {
         const params = query.d[operation] as VQLFind;
-        const select = parseSelect(params.fields || params.select || {});
+        const select = parseSelect(cpu.config, params.fields || params.select || {});
         if (select && typeof select === "object" && Object.keys(select).length !== 0) params.searchOpts = { ...params.searchOpts, select };
 
         return db.find(params.collection, params.search, {}, params.options || {}, params.searchOpts);
     } else if (operation === "findOne" || operation === "f") {
         const params = query.d[operation] as VQLFindOne;
-        const select = parseSelect(params.fields || params.select || {});
+        const select = parseSelect(cpu.config, params.fields || params.select || {});
         if (select && typeof select === "object" && Object.keys(select).length !== 0) params.searchOpts = { ...params.searchOpts, select };
 
         return db.findOne(params.collection, params.search, {}, params.searchOpts);

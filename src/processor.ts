@@ -7,6 +7,7 @@ import { executeQuery } from "./cpu/request";
 import { executeRelation } from "./cpu/relation";
 import { parseStringQuery } from "./cpu/string";
 import logger from "./logger";
+import { VQLConfig } from "./config";
 
 export class VQLProcessor<GW = any> {
     public relation: Relation;
@@ -14,7 +15,8 @@ export class VQLProcessor<GW = any> {
 
     constructor(
         public dbInstances: Record<string, ValtheraCompatible>,
-        public gw: GateWarden<GW> = null
+        public gw: GateWarden<GW> = null,
+        public config: VQLConfig = new VQLConfig(),
     ) {
         this.relation = new Relation(dbInstances);
     }
@@ -43,7 +45,7 @@ export class VQLProcessor<GW = any> {
             logger.debug("Raw query: ", queryRaw);
         }
 
-        const validateRawResult = validateRaw(queryRaw);
+        const validateRawResult = validateRaw(this.config, queryRaw);
         if (validateRawResult !== true) {
             logger.warn("Raw validation failed:", validateRawResult);
             return validateRawResult;
@@ -52,7 +54,7 @@ export class VQLProcessor<GW = any> {
         const query = executeSheet(queryRaw, this.preDefinedSheets);
         logger.debug("Executed sheet (expanded query):", query);
 
-        const validateVqlResult = validateVql(query);
+        const validateVqlResult = validateVql(this.config, query);
         if (validateVqlResult !== true) {
             logger.warn("VQL validation failed:", validateVqlResult);
             return validateVqlResult;

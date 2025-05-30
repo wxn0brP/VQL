@@ -5,6 +5,7 @@ import { extractPathsFromData, hashKey } from "./utils";
 import { VQLConfig } from "../config";
 
 export async function checkRelationPermission(
+    config: VQLConfig,
     gw: GateWarden<any>,
     user: any,
     query: RelationQuery
@@ -24,8 +25,8 @@ export async function checkRelationPermission(
         }
 
         // If the result is "entity-404", check the next fallback level
-        if (!VQLConfig.strictACL && result.via === "entity-404" && fallbackLevels.length > 0) {
-            const nextFallbackEntityId = hashKey(fallbackLevels.slice(0, -1));
+        if (!config.strictACL && result.via === "entity-404" && fallbackLevels.length > 0) {
+            const nextFallbackEntityId = hashKey(config, fallbackLevels.slice(0, -1));
             return checkPermissionRecursively(nextFallbackEntityId, fallbackLevels.slice(0, -2));
         }
 
@@ -34,7 +35,7 @@ export async function checkRelationPermission(
     };
 
     // Check permission for the relation field in the parent collection
-    if (!await checkPermissionRecursively(hashKey(path), path)) {
+    if (!await checkPermissionRecursively(hashKey(config, path), path)) {
         return false;
     }
 
@@ -42,7 +43,7 @@ export async function checkRelationPermission(
     const searchPaths = extractPathsFromData(search || {});
     for (const searchPath of searchPaths) {        
         const key = [...path, ...searchPath.path, searchPath.key];
-        if (!await checkPermissionRecursively(hashKey(key), key)) {
+        if (!await checkPermissionRecursively(hashKey(config, key), key)) {
             return false;
         }
     }
@@ -51,7 +52,7 @@ export async function checkRelationPermission(
     if (select) {
         for (const fieldPath of select) {
             const key = [...path, fieldPath] as string[];
-            if (!await checkPermissionRecursively(hashKey(key), key)) {
+            if (!await checkPermissionRecursively(hashKey(config, key), key)) {
                 return false;
             }
         }
@@ -61,7 +62,7 @@ export async function checkRelationPermission(
     if (relations) {
         for (const relationKey in relations) {
             const r = relations[relationKey];
-            if (!await checkRelationPermission(gw, user, { r } as any)) {
+            if (!await checkRelationPermission(config, gw, user, { r } as any)) {
                 return false;
             }
         }

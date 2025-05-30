@@ -5,8 +5,8 @@ import { checkRelationPermission } from "../permissions";
 import { parseSelect } from "./utils";
 import { VQLConfig } from "../config";
 
-function standardizeRelationRequest(req: RelationTypes.Relation | RelationQuery["r"]) {
-    req.select = parseSelect(req.select || []);
+function standardizeRelationRequest(config: VQLConfig, req: RelationTypes.Relation | RelationQuery["r"]) {
+    req.select = parseSelect(config, req.select || []);
 }
 
 function checkDBsExist(cpu: VQLProcessor, req: RelationTypes.Relation | RelationQuery["r"]) {
@@ -29,12 +29,12 @@ export async function executeRelation(cpu: VQLProcessor, query: RelationQuery, u
     const checkDb = checkDBsExist(cpu, query.r);
     if (checkDb.err) return checkDb;
 
-    if (!VQLConfig.noCheckPermissions && !await checkRelationPermission(cpu.gw, user, query)) {
+    if (!cpu.config.noCheckPermissions && !await checkRelationPermission(cpu.config, cpu.gw, user, query)) {
         return { err: true, msg: "Permission denied", c: 403 };
     }
 
     const req = query.r;
-    standardizeRelationRequest(req);
+    standardizeRelationRequest(cpu.config, req);
 
     const { path, search, relations, select } = req;
 

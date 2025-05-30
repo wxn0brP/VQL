@@ -25,20 +25,20 @@ modSchema.anyOf = [
 ]
 const validVQL = ajv.compile(modSchema);
 
-export function validateRaw(query: VQLR) {
+export function validateRaw(config:VQLConfig, query: VQLR) {
     if (!validVQLR(query)) {
         let why: any = validVQLR.errors;
-        why = VQLConfig.formatAjv ? buildAjvErrorTree(why) : why;
+        why = config.formatAjv ? buildAjvErrorTree(why) : why;
         why = deepMerge(why, query);
         return { err: true, msg: "Invalid query raw", c: 400, why };
     }
     return true;
 }
 
-export function validateVql(query: VQL) {
+export function validateVql(config:VQLConfig, query: VQL) {
     if (!validVQL(query)) {
         let why: any = validVQL.errors;
-        why = VQLConfig.formatAjv ? buildAjvErrorTree(why) : why;
+        why = config.formatAjv ? buildAjvErrorTree(why) : why;
         why = deepMerge(why, query);
         return { err: true, msg: "Invalid query", c: 400, why };
     }
