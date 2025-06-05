@@ -131,3 +131,10 @@ export type VQLR =
     | VQL // Raw VQL
     | (DeepPartial<VQL> & VQLRefRequired) // DeepPartial<VQL> + Ref
     | VQLRefRequired; // Only Ref
+
+export interface VQLError {
+    err: true;
+    msg: string;
+    c: number;
+    why?: string;
+}

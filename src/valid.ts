@@ -4,7 +4,7 @@ import ajvFormat from "ajv-formats";
 import { readFileSync } from "fs";
 import { buildAjvErrorTree } from "./ajv";
 import { VQLConfig } from "./config";
-import { VQL, VQLR } from "./types/vql";
+import { VQL, VQLError, VQLR } from "./types/vql";
 
 const filePath = import.meta.dirname + "/schema.json";
 const schema = JSON.parse(readFileSync(filePath, "utf-8"));
@@ -25,7 +25,7 @@ modSchema.anyOf = [
 ]
 const validVQL = ajv.compile(modSchema);
 
-export function validateRaw(config:VQLConfig, query: VQLR) {
+export function validateRaw(config:VQLConfig, query: VQLR): true | VQLError {
     if (!validVQLR(query)) {
         let why: any = validVQLR.errors;
         why = config.formatAjv ? buildAjvErrorTree(why) : why;
@@ -35,7 +35,7 @@ export function validateRaw(config:VQLConfig, query: VQLR) {
     return true;
 }
 
-export function validateVql(config:VQLConfig, query: VQL) {
+export function validateVql(config:VQLConfig, query: VQL): true | VQLError {
     if (!validVQL(query)) {
         let why: any = validVQL.errors;
         why = config.formatAjv ? buildAjvErrorTree(why) : why;
