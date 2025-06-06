@@ -21,8 +21,8 @@
         "dist"
     ],
     "peerDependencies": {
-        "@wxn0brp/falcon-frame": ">=0.0.1",
-        "@wxn0brp/db": ">=0.7.6"
+        "@wxn0brp/db": ">=0.8.1",
+        "@wxn0brp/falcon-frame": ">=0.0.6"
     },
     "peerDependenciesMeta": {
         "@wxn0brp/falcon-frame": {
@@ -33,9 +33,9 @@
         }
     },
     "devDependencies": {
-        "@wxn0brp/db": "^0.7.6",
-        "@types/node": "^22.15.19",
-        "@wxn0brp/falcon-frame": ">=0.0.4",
+        "@types/node": "^22.15.30",
+        "@wxn0brp/db": "^0.8.1",
+        "@wxn0brp/falcon-frame": "0.0.6",
         "dotenv": "^16.5.0",
         "source-map-support": "^0.5.21",
         "tsc-alias": "^1.8.10",
