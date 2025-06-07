@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.3.6](https://github.com/wxn0brP/VQL/compare/v0.3.5...v0.3.6) (2025-06-07)
+
+
+### Bug Fixes
+
+* install vql on system without git ([cdc6967](https://github.com/wxn0brP/VQL/commit/cdc69673211bf7c77ee776fbd3e139d0cbf6e4dc))
+
 ### [0.3.5](https://github.com/wxn0brP/VQL/compare/v0.3.4...v0.3.5) (2025-06-06)
 
 ### [0.3.4](https://github.com/wxn0brP/VQL/compare/v0.3.3...v0.3.4) (2025-06-05)
