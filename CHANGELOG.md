@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.3.7](https://github.com/wxn0brP/VQL/compare/v0.3.6...v0.3.7) (2025-06-07)
+
+
+### Bug Fixes
+
+* extractMeta ([85ebd4b](https://github.com/wxn0brP/VQL/commit/85ebd4b608374f6c0c2bf5c075ed4ba3e280a7fd))
+
 ### [0.3.6](https://github.com/wxn0brP/VQL/compare/v0.3.5...v0.3.6) (2025-06-07)
 
 
