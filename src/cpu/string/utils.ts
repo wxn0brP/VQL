@@ -4,6 +4,15 @@ const opPrefix = {
     "~": "update",
 }
 
+const operations = [
+    "add",
+    "find", "findOne",
+    "update", "updateOne",
+    "remove", "removeOne",
+    "updateOneOrAdd",
+    "checkCollection", "issetCollection",
+];
+
 /**
  * Extracts metadata from a query string, including database name, operation,
  * collection name, and the query body.
@@ -28,19 +37,24 @@ export function extractMeta(input: string) {
     // Ensure the query has at least database and collection
     if (split.length < 2) throw new Error("Invalid query");
 
-    if (split.length === 2 && split[1] === "getCollections") 
+    if (split.length === 2 && split[1] === "getCollections")
         return { db: split[0], op: "getCollections", collection: "", body: "" };
 
     // Handle cases like "db users" or "db users!"
     if (split.length === 2 && /^[A-Za-z]/.test(split[0])) {
-        let op = split[0].endsWith("!") ? "findOne" : "find";
-        return { db: split[0], op, collection: split[1].replace("!", ""), body: "" };
+        const data = extendedCollectionToData(split[1]);
+        return { db: split[0], op: data.op, collection: data.collection, body: "" };
     }
 
     // Handle cases like "db find users"
     if (split.length === 3 && /^[A-Za-z0-9_-]+$/.test(split[2])) {
         return { db: split[0], op: split[1], collection: split[2], body: "" };
     }
+
+    // Handle cases like "db update my.db.users s.name = 'John' u.name = 'Jane'"
+    if (split.length > 3 && operations.includes(split[1])) {
+        return { db: split[0], op: split[1], collection: split[2], body: split.slice(3).join(" ") };
+    } 
 
     // Default operation and initialization
     const db = split.shift();
@@ -54,17 +68,9 @@ export function extractMeta(input: string) {
         [".", ":", "{"].some(c => split[1].includes(c)) // Check if query body is indicated by special character
     ) {
         let temp = split.shift();
-        const firstChar = temp[0];
-        const lastChar = temp[temp.length - 1];
-        op = opPrefix[firstChar] || "find";
-
-        if (op !== "find") temp = temp.slice(1); // Remove operation prefix if not "find"
-        if (lastChar === "!") {
-            if (op !== "add") op += "One"; // Adjust operation for singular cases
-            collection = temp.slice(0, -1);
-        } else {
-            collection = temp;
-        }
+        const data = extendedCollectionToData(temp);
+        op = data.op;
+        collection = data.collection;
     } else {
         op = split.shift(); // Assume second word is operation
         collection = split.shift(); // Assume third word is collection
@@ -74,4 +80,23 @@ export function extractMeta(input: string) {
     body = split.join(" ");
 
     return { db, op, collection, body };
+}
+
+function extendedCollectionToData(collection: string) {
+    const firstChar = collection[0];
+    const lastChar = collection[collection.length - 1];
+    let op = "find";
+    let collectionName = collection;
+
+    if (opPrefix[firstChar]) {
+        op = opPrefix[firstChar];
+        collectionName = collectionName.slice(1);
+    }
+
+    if (lastChar === "!") {
+        if (op !== "add") op += "One";
+        collectionName = collectionName.slice(0, -1);
+    }
+
+    return { op, collection: collectionName };
 }
