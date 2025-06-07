@@ -1,9 +1,9 @@
-import { deepMerge } from "@wxn0brp/wts-deep-merge";
 import Ajv from "ajv";
 import ajvFormat from "ajv-formats";
 import { readFileSync } from "fs";
 import { buildAjvErrorTree } from "./ajv";
 import { VQLConfig } from "./config";
+import { deepMerge } from "./merge";
 import { VQL, VQLError, VQLR } from "./types/vql";
 
 const filePath = import.meta.dirname + "/schema.json";

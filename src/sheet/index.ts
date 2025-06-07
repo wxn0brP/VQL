@@ -1,4 +1,4 @@
-import { deepMerge } from "@wxn0brp/wts-deep-merge";
+import { deepMerge } from "../merge";
 import { VQL, VQLR } from "../types/vql";
 import { RelationTypes } from "@wxn0brp/db";
 
