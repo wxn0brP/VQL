@@ -1,5 +1,6 @@
 import type { ValtheraCompatible } from "@wxn0brp/db";
 import CollectionManager from "@wxn0brp/db/helpers/CollectionManager.js";
+import updateFindObject from "@wxn0brp/db/utils/updateFindObject.js";
 
 type ResolverFn<TArgs extends any[] = any[], TReturn = any> = (...args: TArgs) => Promise<TReturn>;
 
@@ -45,7 +46,7 @@ export interface ValtheraResolver {
 }
 
 
-export function createValtheraAdapter(resolver: ValtheraResolver): ValtheraCompatible {
+export function createValtheraAdapter(resolver: ValtheraResolver, extendedFind: boolean = false): ValtheraCompatible {
     const safe = <T>(fn?: T): T => {
         if (!fn) throw new Error("Unimplemented method");
         return fn;
@@ -76,6 +77,27 @@ export function createValtheraAdapter(resolver: ValtheraResolver): ValtheraCompa
         transaction: null,
     };
     adapter.c = (collection: string) => new CollectionManager(adapter, collection);
+
+    if (extendedFind) {
+        adapter.find = async (col, search, context, options, findOpts) => {
+            let data = await safe(resolver.find)(col, search, context, options, findOpts);
+
+            if (options?.reverse) data.reverse();
+
+            if (options?.max !== -1 && data.length > options?.max)
+                data = data.slice(0, options?.max);
+
+            data = data.map(d => updateFindObject(d, findOpts || {}));
+
+            return data;
+        };
+
+        adapter.findOne = async (col, search, context, findOpts) => {
+            const data = await safe(resolver.findOne)(col, search, context, findOpts);
+            if (typeof data !== "object") return data;
+            return updateFindObject(data, findOpts || {}) as any;
+        };
+    }
 
     return adapter;
 }
