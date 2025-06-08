@@ -21,7 +21,7 @@
         "dist"
     ],
     "peerDependencies": {
-        "@wxn0brp/db": ">=0.8.1",
+        "@wxn0brp/db": ">=0.8.2",
         "@wxn0brp/falcon-frame": ">=0.0.6"
     },
     "peerDependenciesMeta": {
@@ -34,7 +34,7 @@
     },
     "devDependencies": {
         "@types/node": "^22.15.30",
-        "@wxn0brp/db": "^0.8.1",
+        "@wxn0brp/db": "^0.8.2",
         "@wxn0brp/falcon-frame": "0.0.6",
         "dotenv": "^16.5.0",
         "source-map-support": "^0.5.21",
