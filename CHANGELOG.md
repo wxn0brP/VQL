@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.3.9](https://github.com/wxn0brP/VQL/compare/v0.3.8...v0.3.9) (2025-06-08)
+
+
+### Features
+
+* extend find on apiAbstract ([a416a0d](https://github.com/wxn0brP/VQL/commit/a416a0df3e6c89821ceed860f015f43d0021e54b))
+
 ### [0.3.8](https://github.com/wxn0brP/VQL/compare/v0.3.7...v0.3.8) (2025-06-08)
 
 ### [0.3.7](https://github.com/wxn0brP/VQL/compare/v0.3.6...v0.3.7) (2025-06-07)
