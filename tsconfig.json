@@ -8,7 +8,6 @@
         "skipLibCheck": true,
         "outDir": "./dist",
         "inlineSourceMap": false,
-        "sourceMap": true,
         "declaration": true,
     },
     "include": [
