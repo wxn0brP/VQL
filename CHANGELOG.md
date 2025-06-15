@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.3.10](https://github.com/wxn0brP/VQL/compare/v0.3.9...v0.3.10) (2025-06-15)
+
+
+### Features
+
+* define VqlQueryRaw type ([098b7cd](https://github.com/wxn0brP/VQL/commit/098b7cde22aa1c1ca57907ac9977b78338716bda))
+* remove source map ([4bf635b](https://github.com/wxn0brP/VQL/commit/4bf635b7694ff91d62fd730fa2d96bce2de955d4))
+
 ### [0.3.9](https://github.com/wxn0brP/VQL/compare/v0.3.8...v0.3.9) (2025-06-08)
 
 
