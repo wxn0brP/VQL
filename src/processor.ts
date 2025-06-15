@@ -1,13 +1,13 @@
 import { Relation, ValtheraCompatible } from "@wxn0brp/db";
 import { GateWarden } from "@wxn0brp/gate-warden";
-import { VQL, VQLError, VQLR, VQLRef } from "./types/vql";
-import { validateRaw, validateVql } from "./valid";
-import { executeSheet } from "./sheet";
-import { executeQuery } from "./cpu/request";
+import { VQLConfig } from "./config";
 import { executeRelation } from "./cpu/relation";
+import { executeQuery } from "./cpu/request";
 import { parseStringQuery } from "./cpu/string";
 import logger from "./logger";
-import { VQLConfig } from "./config";
+import { executeSheet } from "./sheet";
+import { VQL, VQLError, VqlQueryRaw } from "./types/vql";
+import { validateRaw, validateVql } from "./valid";
 
 export class VQLProcessor<GW = any> {
     public relation: Relation;
@@ -21,7 +21,7 @@ export class VQLProcessor<GW = any> {
         this.relation = new Relation(dbInstances);
     }
 
-    async execute<T=any>(queryRaw: VQLR | string | { query: string } & VQLRef, user: any): Promise<T | VQLError> {
+    async execute<T=any>(queryRaw: VqlQueryRaw, user: any): Promise<T | VQLError> {
         if (typeof queryRaw === "string" || "query" in queryRaw) {
             logger.info("Incoming string query");
             const q =    typeof queryRaw === "string" ? queryRaw : queryRaw.query;

@@ -138,3 +138,5 @@ export interface VQLError {
     c: number;
     why?: string;
 }
+
+export type VqlQueryRaw = VQLR | string | { query: string } & VQLRef;
