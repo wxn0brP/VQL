@@ -31,22 +31,30 @@ function pathFix(vql: VQL) {
 }
 
 function replaceVariables(obj: any, variables: Record<string, any>): any {
+    if (typeof obj === "object" && !Array.isArray(obj) && obj !== null && "__" in obj) {
+        const varKey = obj.__;
+        return variables[varKey] ?? obj;
+    }
+
     if (typeof obj === "string") {
-        if (obj.startsWith("$")) {
-            return variables[obj.slice(1)] || variables[obj];
-        }
+        if (obj.startsWith("$")) 
+            return variables[obj.slice(1)] ?? obj;
+        
         return obj;
-    } else if (Array.isArray(obj)) {
-        return obj.map((item: any) => replaceVariables(item, variables));
-    } else if (typeof obj === "object") {
+    }
+
+    if (Array.isArray(obj))
+        return obj.map((item) => replaceVariables(item, variables));
+
+    if (typeof obj === "object" && obj !== null) {
         const newObj: any = {};
         for (const key in obj) {
             newObj[key] = replaceVariables(obj[key], variables);
         }
         return newObj;
-    } else {
-        return obj;
     }
+
+    return obj;
 }
 
 export function executeSheet(query: VQLR, preDefinedSheets: Map<string, VQL>): VQL {
