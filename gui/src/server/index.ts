@@ -1,16 +1,14 @@
-import bodyParser from "body-parser";
 import crypto from "crypto";
-import express from "express";
 import { watch } from "fs";
 import { config, loadConfig } from "./config";
 import { buildTree } from "./struct";
+import FalconFrame from "@wxn0brp/falcon-frame";
 
 const port = process.env.PORT || 3000;
-const app = express();
+const app = new FalconFrame();
 
-app.use(express.static("public"));
-app.use("/", express.static("dist/front"));
-app.use(bodyParser.json());
+app.static("/", "public");
+app.static("/", "dist/front");
 
 loadConfig();
 let lastRefresh: NodeJS.Timeout;
@@ -81,6 +79,6 @@ app.post("/remove", async (req, res) => {
 })
 
 // for security server available only on localhost
-app.listen(port, "127.0.0.1", () => {
-    console.log(`Listening on http://127.0.0.1:${port}`);
+app.listen(+port, () => {
+    console.log(`Listening on http://localhost:${port}`);
 });

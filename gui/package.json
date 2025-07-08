@@ -8,17 +8,17 @@
     "type": "module",
     "scripts": {
         "build": "tsc && tsc-alias",
-        "start": "node dist/server/index.js"
+        "start": "node dist/server/index.js",
+        "bun": "bun run src/server/index.ts"
     },
     "devDependencies": {
-        "@types/node": "^22.12.0",
-        "tsc-alias": "^1.8.10",
+        "@types/node": "^24.0.11",
+        "tsc-alias": "^1.8.16",
         "typescript": "^5.7.3"
     },
     "dependencies": {
         "@wxn0brp/db": "github:wxn0brP/ValtheraDB#dist",
-        "@wxn0brp/gate-warden": "github:wxn0brP/gate-warden#dist",
-        "body-parser": "^2.2.0",
-        "express": "^5.1.0"
+        "@wxn0brp/falcon-frame": "^0.0.17",
+        "@wxn0brp/gate-warden": "github:wxn0brP/gate-warden#dist"
     }
 }

@@ -1,6 +1,6 @@
 import { Valthera, ValtheraRemote } from "@wxn0brp/db";
-import { Remote } from "@wxn0brp/db/client/remote.js";
 import { config } from "./config";
+import { Remote } from "@wxn0brp/db/client/remote.js";
 
 type DB = Valthera | ValtheraRemote;
 

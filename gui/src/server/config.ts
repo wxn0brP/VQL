@@ -1,5 +1,5 @@
 import { Remote } from "@wxn0brp/db/client/remote.js";
-import { GateWarden, UserManager, WardenManager } from "@wxn0brp/gate-warden";
+import { UserManager, WardenManager } from "@wxn0brp/gate-warden";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
 import { createDatabase } from "./struct";
 import { Valthera, ValtheraRemote } from "@wxn0brp/db";

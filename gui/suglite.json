@@ -1,5 +1,5 @@
 {
-    "cmd": "yarn build && yarn start",
+    "cmd": "yarn bun",
     "watch": [
         "src"
     ],
