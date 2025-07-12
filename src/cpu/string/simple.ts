@@ -1,4 +1,4 @@
-import { RelationTypes } from "@wxn0brp/db";
+import { RelationTypes } from "@wxn0brp/db-core";
 import { VQL } from "../../types/vql";
 import { extractMeta } from "./utils";
 import JSON5 from "json5";

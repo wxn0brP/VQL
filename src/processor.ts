@@ -1,4 +1,4 @@
-import { Relation, ValtheraCompatible } from "@wxn0brp/db";
+import { Relation, ValtheraCompatible } from "@wxn0brp/db-core";
 import { GateWarden } from "@wxn0brp/gate-warden";
 import { VQLConfig } from "./config";
 import { executeRelation } from "./cpu/relation";

@@ -1,6 +1,6 @@
-import type { ValtheraCompatible } from "@wxn0brp/db";
-import CollectionManager from "@wxn0brp/db/helpers/CollectionManager.js";
-import updateFindObject from "@wxn0brp/db/utils/updateFindObject.js";
+import { ValtheraCompatible } from "@wxn0brp/db-core";
+import CollectionManager from "@wxn0brp/db-core/helpers/CollectionManager";
+import updateFindObject from "@wxn0brp/db-core/utils/updateFindObject";
 
 type ResolverFn<TArgs extends any[] = any[], TReturn = any> = (...args: TArgs) => Promise<TReturn>;
 

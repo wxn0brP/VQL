@@ -1,4 +1,4 @@
-import { RelationTypes } from "@wxn0brp/db";
+import { RelationTypes } from "@wxn0brp/db-core";
 import { VQLProcessor } from "../processor";
 import { RelationQuery } from "../types/vql";
 import { checkRelationPermission } from "../permissions";

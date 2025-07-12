@@ -1,6 +1,6 @@
 import { deepMerge } from "../merge";
 import { VQL, VQLR } from "../types/vql";
-import { RelationTypes } from "@wxn0brp/db";
+import { RelationTypes } from "@wxn0brp/db-core";
 
 function trimPath(path: RelationTypes.Path | undefined): RelationTypes.Path | undefined {
     return path && path.length > 2 ? path.slice(0, 2) as RelationTypes.Path : path;

@@ -8,7 +8,7 @@
     "scripts": {
         "build": "tsc && tsc-alias",
         "test": "node dist/tests/index.js",
-        "types": "dts-bundle-generator src/types/vql.ts -o dist/vql.d.ts --external-inlines @wxn0brp/db",
+        "types": "dts-bundle-generator src/types/vql.ts -o dist/vql.d.ts --external-inlines @wxn0brp/db-core",
         "schema": "npm run types && node schema.js"
     },
     "description": "VQL - Valthera Query Language",
@@ -21,29 +21,30 @@
         "dist"
     ],
     "peerDependencies": {
-        "@wxn0brp/db": ">=0.10.0",
+        "@wxn0brp/db-core": ">=0.0.1 <0.1.0",
         "@wxn0brp/falcon-frame": ">=0.0.14"
     },
     "peerDependenciesMeta": {
         "@wxn0brp/falcon-frame": {
             "optional": true
         },
-        "@wxn0brp/db": {
+        "@wxn0brp/db-core": {
             "optional": false
         }
     },
     "devDependencies": {
-        "@types/node": "^24.0.10",
-        "@wxn0brp/db": "^0.10.0",
-        "@wxn0brp/falcon-frame": "0.0.16",
-        "dotenv": "^17.0.1",
+        "@types/node": "^24.0.13",
+        "@wxn0brp/db": "^0.20.1",
+        "@wxn0brp/falcon-frame": "0.0.18",
+        "dotenv": "^17.2.0",
         "source-map-support": "^0.5.21",
         "tsc-alias": "^1.8.10",
         "typescript": "^5.7.3",
         "typescript-json-schema": "^0.65.1"
     },
     "dependencies": {
-        "@wxn0brp/gate-warden": ">=0.2.2",
+        "@wxn0brp/db-core": "^0.0.2",
+        "@wxn0brp/gate-warden": ">=0.3.0",
         "@wxn0brp/lucerna-log": "^0.1.1",
         "ajv": "^8.17.1",
         "ajv-formats": "^3.0.1",
