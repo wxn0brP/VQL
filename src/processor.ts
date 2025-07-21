@@ -21,12 +21,12 @@ export class VQLProcessor<GW = any> {
         this.relation = new Relation(dbInstances);
     }
 
-    async execute<T=any>(queryRaw: VqlQueryRaw, user: any): Promise<T | VQLError> {
+    async execute<T = any>(queryRaw: VqlQueryRaw<T>, user: any): Promise<T | VQLError> {
         if (typeof queryRaw === "string" || "query" in queryRaw) {
             logger.info("Incoming string query");
-            const q =    typeof queryRaw === "string" ? queryRaw : queryRaw.query;
+            const q = typeof queryRaw === "string" ? queryRaw : queryRaw.query;
             const vars = typeof queryRaw === "string" ? null : queryRaw.var;
-            const ref =  typeof queryRaw === "string" ? null : queryRaw.ref;
+            const ref = typeof queryRaw === "string" ? null : queryRaw.ref;
             logger.debug(q);
 
             try {
