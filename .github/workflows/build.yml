@@ -23,8 +23,8 @@ jobs:
     with:
       scriptsHandling: "remove-all"
       customCommands: |
-        npm install -g dts-bundle-generator
-        npm run schema
+        # TODO fix workflow
+        mv schema.json dist/schema.json
       publishToNpm: true
     
     secrets:
