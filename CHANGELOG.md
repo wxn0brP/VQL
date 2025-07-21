@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.4.1](https://github.com/wxn0brP/VQL/compare/v0.4.0...v0.4.1) (2025-07-21)
+
+
+### Features
+
+* add predefined vars ([0e1f2eb](https://github.com/wxn0brP/VQL/commit/0e1f2ebac73ce23c4f2f06a1c3fa328760c8ba03))
+* update db and types ([0ccf55d](https://github.com/wxn0brP/VQL/commit/0ccf55ddb1d75ddcb57a370a200ced67439dd865))
+* update FalconFrame integration ([221209e](https://github.com/wxn0brP/VQL/commit/221209e5e349d2b8f519a5d9fc5cd4fdfe8e6510))
+
 ## [0.4.0](https://github.com/wxn0brP/VQL/compare/v0.3.11...v0.4.0) (2025-07-12)
 
 
