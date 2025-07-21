@@ -22,7 +22,7 @@
     ],
     "peerDependencies": {
         "@wxn0brp/db-core": ">=0.0.1 <0.1.0",
-        "@wxn0brp/falcon-frame": ">=0.0.14"
+        "@wxn0brp/falcon-frame": ">=0.0.18"
     },
     "peerDependenciesMeta": {
         "@wxn0brp/falcon-frame": {
