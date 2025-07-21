@@ -24,6 +24,7 @@ jobs:
       scriptsHandling: "remove-all"
       customCommands: |
         # TODO fix workflow
+        npm i -g dts-bundle-generator
         npm run types
         mv schema.json dist/schema.json
       publishToNpm: true
