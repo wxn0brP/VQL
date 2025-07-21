@@ -57,7 +57,7 @@ function replaceVariables(obj: any, variables: Record<string, any>): any {
     return obj;
 }
 
-export function executeSheet(query: VQLR, preDefinedSheets: Map<string, VQL>): VQL {
+export function executeSheetAndReplaceVars(query: VQLR, preDefinedSheets: Map<string, VQL>, user: any): VQL {
     if ("ref" in query) {
         if (preDefinedSheets.has(query.ref)) {
             const ref = preDefinedSheets.get(query.ref);
@@ -68,10 +68,16 @@ export function executeSheet(query: VQLR, preDefinedSheets: Map<string, VQL>): V
         delete query.ref;
     }
 
-    if ("var" in query) {
-        query = replaceVariables(query, query.var);
-        delete query.var;
+    query.var = {
+        _me: user?.id || user?._id || user,
+        _now: Date.now(),
+        _nowShort: Math.floor(Date.now() / 1000),
+        __now: Date.now().toString(),
+        __nowShort: Math.floor(Date.now() / 1000).toString(),
+        ...(query.var || {})
     }
+    query = replaceVariables(query, query.var);
+    delete query.var;
 
     return query as VQL;
 }

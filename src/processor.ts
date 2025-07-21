@@ -5,7 +5,7 @@ import { executeRelation } from "./cpu/relation";
 import { executeQuery } from "./cpu/request";
 import { parseStringQuery } from "./cpu/string";
 import logger from "./logger";
-import { executeSheet } from "./sheet";
+import { executeSheetAndReplaceVars } from "./sheet";
 import { VQL, VQLError, VqlQueryRaw } from "./types/vql";
 import { validateRaw, validateVql } from "./valid";
 
@@ -51,7 +51,7 @@ export class VQLProcessor<GW = any> {
             return validateRawResult;
         }
 
-        const query = executeSheet(queryRaw, this.preDefinedSheets);
+        const query = executeSheetAndReplaceVars(queryRaw, this.preDefinedSheets, user);
         logger.debug("Executed sheet (expanded query):", query);
 
         const validateVqlResult = validateVql(this.config, query);
