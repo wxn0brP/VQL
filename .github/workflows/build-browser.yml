@@ -1,0 +1,55 @@
+name: Build Browser
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'src/**/*.ts'
+      - 'browser/**/*.ts'
+      - 'package.json'
+      - 'tsconfig.json'
+
+  workflow_dispatch:
+
+concurrency:
+  group: build-browser
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+        with:
+          ref: dist
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 22
+          registry-url: https://registry.npmjs.org/
+
+      - name: Install Dependencies
+        run: npm i
+
+      - name: Build Browser
+        run: |
+          node build-browser.js
+          cp dist-browser/* browser
+
+      - name: Push
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+          git checkout --orphan browser
+          git reset -q HEAD --
+
+          git add LICENSE browser
+          git commit -m "Deploy browser"
+          git push origin browser --force

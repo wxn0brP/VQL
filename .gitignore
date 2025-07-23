@@ -7,3 +7,4 @@ package-lock.json
 tests
 .suglite_history
 .env
+dist-browser
