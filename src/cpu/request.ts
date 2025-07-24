@@ -60,9 +60,9 @@ export async function executeQuery(cpu: VQLProcessor, query: VQLRequest, user: a
     } else if (operation === "removeCollection") {
         const params = query.d[operation] as VQLCollectionOperation;
         return db.removeCollection(params.collection);
-    } else if (operation === "checkCollection") {
+    } else if (operation === "ensureCollection") {
         const params = query.d[operation] as VQLCollectionOperation;
-        return db.checkCollection(params.collection);
+        return db.ensureCollection(params.collection);
     } else if (operation === "issetCollection") {
         const params = query.d[operation] as VQLCollectionOperation;
         return db.issetCollection(params.collection);

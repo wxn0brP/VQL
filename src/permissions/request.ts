@@ -48,7 +48,7 @@ export function extractPaths(config: VQLConfig, query: VQLRequest): {
             permPaths.paths.push({ filed: extractPathsFromData(qo.search), p: PermCRUD.READ });
             permPaths.paths.push({ filed: extractPathsFromData(qo.updater), p: PermCRUD.UPDATE });
             break;
-        case "checkCollection":
+        case "ensureCollection":
         case "getCollections":
         case "issetCollection":
         case "removeCollection":

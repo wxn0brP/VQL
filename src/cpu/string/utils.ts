@@ -10,7 +10,7 @@ const operations = [
     "update", "updateOne",
     "remove", "removeOne",
     "updateOneOrAdd",
-    "checkCollection", "issetCollection",
+    "ensureCollection", "issetCollection",
 ];
 
 /**

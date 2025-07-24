@@ -14,7 +14,7 @@ export interface VQLQuery<T = any> {
     removeOne: VQLRemoveOne<T>,
     updateOneOrAdd: VQLUpdateOneOrAdd<T>,
     removeCollection: VQLCollectionOperation,
-    checkCollection: VQLCollectionOperation,
+    ensureCollection: VQLCollectionOperation,
     issetCollection: VQLCollectionOperation,
     getCollections: {}
 }
@@ -30,7 +30,7 @@ export type VQLQueryData<T = any> =
     | { removeOne: VQLRemoveOne<T> }
     | { updateOneOrAdd: VQLUpdateOneOrAdd<T> }
     | { removeCollection: VQLCollectionOperation }
-    | { checkCollection: VQLCollectionOperation }
+    | { ensureCollection: VQLCollectionOperation }
     | { issetCollection: VQLCollectionOperation }
     | { getCollections: {} }
 

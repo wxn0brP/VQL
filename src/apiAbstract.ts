@@ -20,7 +20,7 @@ export interface ValtheraResolver {
 
     getCollections?: ResolverFn<[], string[]>;
     issetCollection?: ResolverFn<[collection: string], boolean>;
-    checkCollection?: ResolverFn<[collection: string], boolean>;
+    ensureCollection?: ResolverFn<[collection: string], boolean>;
 
     add?: ResolverFn<[collection: string, data: any, id_gen?: boolean], any>;
     find?: ResolverFn<
@@ -58,7 +58,7 @@ export function createValtheraAdapter(resolver: ValtheraResolver, extendedFind: 
         c: null,
         getCollections: () => safe(resolver.getCollections!)(),
         issetCollection: (c) => safe(resolver.issetCollection!)(c),
-        checkCollection: (c) => safe(resolver.checkCollection!)(c),
+        ensureCollection: (c) => safe(resolver.ensureCollection!)(c),
 
         add: (col, data, id_gen) => safe(resolver.add)(col, data, id_gen),
         find: (col, search, context, options, findOpts) => safe(resolver.find)(col, search, context, options, findOpts),
