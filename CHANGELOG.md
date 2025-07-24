@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.5.0](https://github.com/wxn0brP/VQL/compare/v0.4.3...v0.5.0) (2025-07-24)
+
+
+### ⚠ BREAKING CHANGES
+
+* update db
+
+### Features
+
+* browser support ([0f9b8d6](https://github.com/wxn0brP/VQL/commit/0f9b8d665f7b514d42b7ef0d62e6af07cd6a3819))
+* update db ([6565050](https://github.com/wxn0brP/VQL/commit/65650508d0e211cb9e37a9fbb5762f22c2a21534))
+
+
+### Bug Fixes
+
+* workflow ([65a646d](https://github.com/wxn0brP/VQL/commit/65a646d29e917efb094ecf22c6ddb15b08f88e47))
+
 ### [0.4.3](https://github.com/wxn0brP/VQL/compare/v0.4.2...v0.4.3) (2025-07-21)
 
 
