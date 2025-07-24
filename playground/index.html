@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VQL Playground</title>
+    <link rel="shortcut icon" href="https://raw.githubusercontent.com/wxn0brP/ValtheraDB/refs/heads/main/logo.svg" type="image/x-icon">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div id="app">
+        <section id="left">
+            <textarea id="input-area"></textarea>
+        </section>
+        <section id="center">
+            <label>
+                From:
+                <br/>
+                <select id="from-format">
+                    <option value="auto">Auto</option>
+                    <option value="VQLS">S</option>
+                    <option value="VQLM">M</option>
+                    <option value="VQLB">B</option>
+                    <option value="VQLR">R</option>
+                </select>
+            </label>
+
+            <br/>
+
+            <label>
+                To:
+                <br/>
+                <select id="to-format">
+                    <option value="VQLS">S</option>
+                    <option value="VQLM">M</option>
+                    <option value="VQLB">B</option>
+                    <option value="VQLR">R</option>
+                </select>
+            </label>
+
+            <br/>
+
+            <h2>Options</h2>
+            <label>
+                Short operations:
+                <input type="checkbox" id="short-ops" checked>
+            </label>
+            <label>
+                Use object select:
+                <input type="checkbox" id="use-object-select" checked>
+            </label>
+
+            <br/>
+            <br/>
+            <button id="run">Run</button>
+            <br/>
+            <br/>
+            <div id="errors"></div>
+        </section>
+        <section id="right">
+            <textarea id="output-area"></textarea>
+        </section>
+    </div>
+    <script type="module" src="./dist/index.js"></script>
+</body>
+
+</html>
