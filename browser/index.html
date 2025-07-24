@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VQL</title>
+</head>
+
+<body>
+    <script type="importmap">
+    {
+        "imports": {
+            "js-yaml": "https://esm.sh/js-yaml",
+            "json5": "https://esm.sh/json5",
+            "ajv": "https://esm.sh/ajv",
+            "ajv-formats": "https://esm.sh/ajv-formats",
+            "@wxn0brp/db-core": "https://esm.sh/@wxn0brp/db-core",
+            "@wxn0brp/db-core/": "https://esm.sh/@wxn0brp/db-core/",
+            "@wxn0brp/vql": "../dist-browser/index.js",
+            "crypto": "./crypto.js",
+            "fs": "./fs.js"
+        }
+    }
+    </script>
+    <script type="module">
+        import VQLProcessor, { VQLConfig } from "@wxn0brp/vql";
+        import { createMemoryValthera } from "@wxn0brp/db-core";
+
+        const db = createMemoryValthera({
+            data: [{ a: 1, _id: "test" }]
+        });
+
+        const VQL = new VQLProcessor({ db }, null, new VQLConfig({ noCheckPermissions: true, strictSelect: false }));
+
+        const result = await VQL.execute("db data");
+        console.log(result);
+    </script>
+</body>
+
+</html>
