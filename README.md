@@ -2,6 +2,10 @@
 
 VQL is a query language and processing framework designed for managing and interacting with databases using ValtheraDB. It provides a robust permission system, query execution, and a GUI for managing ACL rules and database structures.
 
+[![npm version](https://img.shields.io/npm/v/@wxn0brp/vql)](https://www.npmjs.com/package/@wxn0brp/vql)
+[![License](https://img.shields.io/npm/l/@wxn0brp/vql)](./LICENSE)
+[![Downloads](https://img.shields.io/npm/dm/@wxn0brp/vql)](https://www.npmjs.com/package/@wxn0brp/vql)
+
 ## Features
 
 - **Query Execution**: Supports CRUD operations and advanced query capabilities.
