@@ -40,13 +40,13 @@ function validD(query: VQLRequest): true | VQLError {
     if (key === "issetCollection" || key === "ensureCollection") return true;
 
     if (key === "add") {
-        if (!isObj(value.data, false)) return emptyErr();
+        if (!isObj(value.data)) return emptyErr();
         else return true;
     }
 
-    if ("search" in value && !isObj(value.search)) return emptyErr();
+    if ("search" in value && !isObj(value.search, false)) return emptyErr();
 
-    if (key === "find" || key === "findOne" || key === "remove" || key === "removeOne") return true;
+    if (key === "find" || key === "findOne" || key === "f" || key === "remove" || key === "removeOne") return true;
 
     if (key === "update" || key === "updateOne" || key === "updateOneOrAdd") {
         if (!isObj(value.updater, false)) return emptyErr();
