@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.6.0-alpha.0](https://github.com/wxn0brP/VQL/compare/v0.5.1...v0.6.0-alpha.0) (2025-08-03)
+
+
+### ⚠ BREAKING CHANGES
+
+* new order
+
+### Features
+
+* new order ([7aa5106](https://github.com/wxn0brP/VQL/commit/7aa5106c6338fd04e552c131c7c7bb77a0f4a5f1))
+* update browser version ([5f08ae7](https://github.com/wxn0brP/VQL/commit/5f08ae7cfe2cc25194accbef81499be692bd3d55))
+
+
+### Bug Fixes
+
+* workflow ([c0d2f8c](https://github.com/wxn0brP/VQL/commit/c0d2f8ce2dd0d118ce720c2a5ea99df1b2e4b4ba))
+
 ### [0.5.1](https://github.com/wxn0brP/VQL/compare/v0.5.0...v0.5.1) (2025-07-24)
 
 ## [0.5.0](https://github.com/wxn0brP/VQL/compare/v0.4.3...v0.5.0) (2025-07-24)
