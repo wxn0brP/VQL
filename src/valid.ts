@@ -1,4 +1,4 @@
-import { RelationQuery, VQL, VQLError, VQLR, VQLRequest } from "./types/vql";
+import { VQL_Query_Relation, VQL_Query, VQLError, VQL_Query_CRUD } from "./types/vql";
 
 function emptyErr(): VQLError {
     return {
@@ -12,7 +12,7 @@ function isObj(obj: any, one = true): boolean {
     return typeof obj === "object" && obj !== null && !Array.isArray(obj) && (!one || Object.keys(obj).length !== 0);
 }
 
-export function validateRaw(query: VQLR): true | VQLError {
+export function validateRaw(query: VQL_Query): true | VQLError {
     if (
         ("r" in query && isObj(query.r)) ||
         ("db" in query && typeof query.db === "string" && isObj(query.d)) ||
@@ -22,14 +22,14 @@ export function validateRaw(query: VQLR): true | VQLError {
     return emptyErr();
 }
 
-function validR(query: RelationQuery): true | VQLError {
+function validR(query: VQL_Query_Relation): true | VQLError {
     const { r } = query;
     if (!("path" in r) || !Array.isArray(r.path) || r.path.length !== 2) return emptyErr();
     if (!isObj(r.search, false)) return emptyErr();
     return true;
 }
 
-function validD(query: VQLRequest): true | VQLError {
+function validD(query: VQL_Query_CRUD): true | VQLError {
     const { d } = query;
     const key = Object.keys(d)[0];
     if (key === "getCollection") return true;
@@ -56,7 +56,7 @@ function validD(query: VQLRequest): true | VQLError {
     return true;
 }
 
-export function validateVql(query: VQL): true | VQLError {
+export function validateVql(query: VQL_Query): true | VQLError {
     if ("r" in query && isObj(query.r)) return validR(query);
     if ("d" in query && isObj(query.d)) return validD(query);
     return emptyErr();

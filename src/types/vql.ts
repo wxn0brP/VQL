@@ -3,80 +3,42 @@ import { Search, Arg } from "@wxn0brp/db-core/types/arg";
 import { DbFindOpts, FindOpts } from "@wxn0brp/db-core/types/options";
 import { UpdaterArg } from "@wxn0brp/db-core/types/updater";
 
-export interface VQLQuery<T = any> {
-    find: VQLFind<T>,
-    findOne: VQLFindOne<T>,
-    f: VQLFindOne<T>,
-    add: VQLAdd<T>,
-    update: VQLUpdate<T>,
-    updateOne: VQLUpdate<T>,
-    remove: VQLRemove<T>,
-    removeOne: VQLRemove<T>,
-    updateOneOrAdd: VQLUpdateOneOrAdd<T>,
-    removeCollection: VQLCollectionOperation,
-    ensureCollection: VQLCollectionOperation,
-    issetCollection: VQLCollectionOperation,
-    getCollections: {}
-}
-
-export type VQLQueryData<T = any> =
-    | { find: VQLFind<T> }
-    | { findOne: VQLFindOne<T> }
-    | { f: VQLFindOne<T> }
-    | { add: VQLAdd<T> }
-    | { update: VQLUpdate<T> }
-    | { updateOne: VQLUpdate<T> }
-    | { remove: VQLRemove<T> }
-    | { removeOne: VQLRemove<T> }
-    | { updateOneOrAdd: VQLUpdateOneOrAdd<T> }
-    | { removeCollection: VQLCollectionOperation }
-    | { ensureCollection: VQLCollectionOperation }
-    | { issetCollection: VQLCollectionOperation }
-    | { getCollections: {} }
-
-export interface VQLRequest<T = any> {
-    db: string;
-    d: VQLQueryData<T>;
-}
-
-export interface VQLFind<T = any> {
+export interface VQL_OP_Find<T = any> {
     collection: string;
     search?: Search<T>;
     limit?: number;
-    fields?: VQLFields;
-    select?: VQLFields;
-    relations?: VQLRelations;
+    fields?: VQL_Fields;
+    select?: VQL_Fields;
     options?: DbFindOpts<T>;
     searchOpts?: FindOpts<T>;
 }
 
-export interface VQLFindOne<T = any> {
+export interface VQL_OP_FindOne<T = any> {
     collection: string;
     search: Search<T>;
-    fields?: VQLFields;
-    select?: VQLFields;
-    relations?: VQLRelations;
+    fields?: VQL_Fields;
+    select?: VQL_Fields;
     searchOpts?: FindOpts<T>;
 }
 
-export interface VQLAdd<T = any> {
+export interface VQL_OP_Add<T = any> {
     collection: string;
     data: Arg<T>;
     id_gen?: boolean;
 }
 
-export interface VQLUpdate<T = any> {
+export interface VQL_OP_Update<T = any> {
     collection: string;
     search: Search<T>;
     updater: UpdaterArg<T>;
 }
 
-export interface VQLRemove<T = any> {
+export interface VQL_OP_Remove<T = any> {
     collection: string;
     search: Search<T>;
 }
 
-export interface VQLUpdateOneOrAdd<T = any> {
+export interface VQL_OP_UpdateOneOrAdd<T = any> {
     collection: string;
     search: Search<T>;
     updater: UpdaterArg<T>;
@@ -84,15 +46,33 @@ export interface VQLUpdateOneOrAdd<T = any> {
     id_gen?: boolean;
 }
 
-export interface VQLCollectionOperation {
+export interface VQL_OP_CollectionOperation {
     collection: string;
 }
 
-export type VQLFields = Record<string, boolean | number> | string[];
+export type VQL_Fields = Record<string, boolean | number> | string[];
 
-export type VQLRelations = Record<string, VQLFind | VQLFindOne>;
+export type VQL_Query_CRUD_Data<T = any> =
+    | { find: VQL_OP_Find<T> }
+    | { findOne: VQL_OP_FindOne<T> }
+    | { f: VQL_OP_FindOne<T> }
+    | { add: VQL_OP_Add<T> }
+    | { update: VQL_OP_Update<T> }
+    | { updateOne: VQL_OP_Update<T> }
+    | { remove: VQL_OP_Remove<T> }
+    | { removeOne: VQL_OP_Remove<T> }
+    | { updateOneOrAdd: VQL_OP_UpdateOneOrAdd<T> }
+    | { removeCollection: VQL_OP_CollectionOperation }
+    | { ensureCollection: VQL_OP_CollectionOperation }
+    | { issetCollection: VQL_OP_CollectionOperation }
+    | { getCollections: {} }
 
-export interface RelationQuery {
+export interface VQL_Query_CRUD<T = any> {
+    db: string;
+    d: VQL_Query_CRUD_Data<T>;
+}
+
+export interface VQL_Query_Relation {
     r: {
         path: RelationTypes.Path,
         search: Search,
@@ -104,22 +84,13 @@ export interface RelationQuery {
 }
 
 export interface VQLRef {
-    ref?: string
     var?: { [k: string]: any }
 }
 
-type VQLRefRequired = VQLRef & Required<Pick<VQLRef, "ref">>
-
-type DeepPartial<T> = {
-    [P in keyof T]?: T[P] extends object ? DeepPartial<T[P]> : T[P];
-};
-
-export type VQL<T = any> = (VQLRequest<T> | RelationQuery) & VQLRef;
-
-export type VQLR<T = any> =
-    | VQL<T> // Raw VQL
-    | (DeepPartial<VQL<T>> & VQLRefRequired) // DeepPartial<VQL> + Ref
-    | VQLRefRequired; // Only Ref
+/** VQL Query */
+export type VQL_Query<T = any> = (VQL_Query_CRUD<T> | VQL_Query_Relation) & VQLRef;
+/** VQL Universal Query */
+export type VQLUQ<T = any> = VQL_Query<T> | string | { query: string } & VQLRef;
 
 export interface VQLError {
     err: true;
@@ -127,5 +98,3 @@ export interface VQLError {
     c: number;
     why?: string;
 }
-
-export type VqlQueryRaw<T = any> = VQLR<T> | string | { query: string } & VQLRef;

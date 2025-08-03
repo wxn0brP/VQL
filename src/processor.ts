@@ -4,7 +4,7 @@ import { executeRelation } from "./cpu/relation";
 import { executeQuery } from "./cpu/request";
 import logger from "./logger";
 import { replaceVars } from "./sheet";
-import { VQLError, VqlQueryRaw } from "./types/vql";
+import { VQLError, VQLUQ } from "./types/vql";
 import { validateRaw, validateVql } from "./valid";
 import { parseVQLS } from "./cpu/string";
 import { ValidFn } from "./types/perm";
@@ -22,12 +22,11 @@ export class VQLProcessor {
         this.config = config instanceof VQLConfig ? config : new VQLConfig(config);
     }
 
-    async execute<T = any>(queryRaw: VqlQueryRaw<T>, user: any = { _id: "null-null-null" }): Promise<T | VQLError> {
+    async execute<T = any>(queryRaw: VQLUQ<T>, user: any = { _id: "null-null-null" }): Promise<T | VQLError> {
         if (typeof queryRaw === "string" || "query" in queryRaw) {
             logger.info("Incoming string query");
             const q = typeof queryRaw === "string" ? queryRaw : queryRaw.query;
             const vars = typeof queryRaw === "string" ? null : queryRaw.var;
-            const ref = typeof queryRaw === "string" ? null : queryRaw.ref;
             logger.debug(q);
 
             try {
@@ -39,7 +38,6 @@ export class VQLProcessor {
             }
 
             if (vars) queryRaw = { ...queryRaw, var: vars };
-            if (ref) queryRaw = { ...queryRaw, ref };
             logger.debug("Final string query: ", queryRaw);
         } else {
             logger.info("Incoming object query");

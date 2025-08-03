@@ -1,9 +1,9 @@
 import { PermCRUD, ValidFn } from "../types/perm";
-import { VQLFind, VQLFindOne, VQLQuery, VQLRequest, VQLUpdate, VQLUpdateOneOrAdd } from "../types/vql";
+import { VQL_OP_Find, VQL_OP_FindOne, VQL_Query_CRUD, VQL_OP_Update, VQL_OP_UpdateOneOrAdd, VQL_Query_CRUD_Data } from "../types/vql";
 import { extractPathsFromData, hashKey } from "./utils";
 import { VQLConfig } from "../config";
 
-export async function extractPaths(config: VQLConfig, query: VQLRequest): Promise<{
+export async function extractPaths(config: VQLConfig, query: VQL_Query_CRUD): Promise<{
     db: string,
     c: string,
     paths: {
@@ -13,7 +13,7 @@ export async function extractPaths(config: VQLConfig, query: VQLRequest): Promis
         path?: string[]
     }[]
 }> {
-    const operation = Object.keys(query.d)[0] as keyof VQLQuery;
+    const operation = Object.keys(query.d)[0];
     const collection = query.d[operation].collection;
     const permPaths = {
         db: await hashKey(config, query.db),
@@ -25,7 +25,7 @@ export async function extractPaths(config: VQLConfig, query: VQLRequest): Promis
         case "f":
         case "find":
         case "findOne":
-            const qf = query.d[operation] as VQLFind | VQLFindOne;
+            const qf = query.d[operation] as VQL_OP_Find | VQL_OP_FindOne;
             permPaths.paths.push({ filed: extractPathsFromData(qf.search), p: PermCRUD.READ });
             break;
         case "add":
@@ -33,7 +33,7 @@ export async function extractPaths(config: VQLConfig, query: VQLRequest): Promis
             break;
         case "update":
         case "updateOne":
-            const qu = query.d[operation] as VQLUpdate;
+            const qu = query.d[operation] as VQL_OP_Update;
             permPaths.paths.push({ filed: extractPathsFromData(qu.search), p: PermCRUD.READ });
             permPaths.paths.push({ filed: extractPathsFromData(qu.updater), p: PermCRUD.UPDATE });
             break;
@@ -42,7 +42,7 @@ export async function extractPaths(config: VQLConfig, query: VQLRequest): Promis
             permPaths.paths.push({ c: PermCRUD.DELETE });
             break;
         case "updateOneOrAdd":
-            const qo = query.d[operation] as VQLUpdateOneOrAdd;
+            const qo = query.d[operation] as VQL_OP_UpdateOneOrAdd;
             permPaths.paths.push({ c: PermCRUD.CREATE });
             permPaths.paths.push({ filed: extractPathsFromData(qo.search), p: PermCRUD.READ });
             permPaths.paths.push({ filed: extractPathsFromData(qo.updater), p: PermCRUD.UPDATE });
@@ -100,7 +100,7 @@ export async function checkRequestPermission(
     config: VQLConfig,
     validFn: ValidFn,
     user: any,
-    query: VQLRequest
+    query: VQL_Query_CRUD
 ): Promise<boolean> {
     if (!query) return false;
 

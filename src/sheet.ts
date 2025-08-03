@@ -1,4 +1,4 @@
-import { VQL, VQLR } from "./types/vql";
+import { VQL_Query } from "./types/vql";
 
 function replaceVariables(obj: any, variables: Record<string, any>): any {
     if (typeof obj === "object" && !Array.isArray(obj) && obj !== null && "__" in obj) {
@@ -27,7 +27,7 @@ function replaceVariables(obj: any, variables: Record<string, any>): any {
     return obj;
 }
 
-export function replaceVars(query: VQLR, user: any): VQL {
+export function replaceVars(query: VQL_Query, user: any): VQL_Query {
     query.var = {
         _me: user?.id || user?._id || user,
         _now: Date.now(),
@@ -39,5 +39,5 @@ export function replaceVars(query: VQLR, user: any): VQL {
     query = replaceVariables(query, query.var);
     delete query.var;
 
-    return query as VQL;
+    return query as VQL_Query;
 }

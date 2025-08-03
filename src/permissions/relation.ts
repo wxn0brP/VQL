@@ -1,5 +1,5 @@
 import { PermCRUD, ValidFn } from "../types/perm";
-import { RelationQuery } from "../types/vql";
+import { VQL_Query_Relation } from "../types/vql";
 import { extractPathsFromData, hashKey } from "./utils";
 import { VQLConfig } from "../config";
 
@@ -7,7 +7,7 @@ export async function checkRelationPermission(
     config: VQLConfig,
     validFn: ValidFn,
     user: any,
-    query: RelationQuery
+    query: VQL_Query_Relation
 ): Promise<boolean> {
     const { path, search, relations, select } = query.r;
 

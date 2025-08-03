@@ -1,15 +1,15 @@
 import { RelationTypes } from "@wxn0brp/db-core";
 import { VQLProcessor } from "../processor";
-import { RelationQuery } from "../types/vql";
+import { VQL_Query_Relation } from "../types/vql";
 import { checkRelationPermission } from "../permissions";
 import { parseSelect } from "./utils";
 import { VQLConfig } from "../config";
 
-function standardizeRelationRequest(config: VQLConfig, req: RelationTypes.Relation | RelationQuery["r"]) {
+function standardizeRelationRequest(config: VQLConfig, req: RelationTypes.Relation | VQL_Query_Relation["r"]) {
     req.select = parseSelect(config, req.select || []);
 }
 
-function checkDBsExist(cpu: VQLProcessor, req: RelationTypes.Relation | RelationQuery["r"]) {
+function checkDBsExist(cpu: VQLProcessor, req: RelationTypes.Relation | VQL_Query_Relation["r"]) {
     const db = req.path[0];
 
     if (!db || !cpu.dbInstances[db]) {
@@ -25,7 +25,7 @@ function checkDBsExist(cpu: VQLProcessor, req: RelationTypes.Relation | Relation
     return { err: false };
 }
 
-export async function executeRelation(cpu: VQLProcessor, query: RelationQuery, user: any): Promise<any> {
+export async function executeRelation(cpu: VQLProcessor, query: VQL_Query_Relation, user: any): Promise<any> {
     const checkDb = checkDBsExist(cpu, query.r);
     if (checkDb.err) return checkDb;
 

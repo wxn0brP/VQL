@@ -1,6 +1,6 @@
 import { RelationTypes } from "@wxn0brp/db-core";
 import { convertSearchObjToSearchArray, extractMeta } from "./utils";
-import { VQL } from "../../types/vql";
+import { VQL_Query } from "../../types/vql";
 
 const aliases = {
     s: "search",
@@ -74,7 +74,7 @@ function parseArgs(input: string): Record<string, any> {
     return result;
 }
 
-function buildVQL(db: string, op: string, collection: string, query: Record<string, any>): VQL {
+function buildVQL(db: string, op: string, collection: string, query: Record<string, any>): VQL_Query {
     const hasRelations = "relations" in query;
 
     if (hasRelations) {
@@ -121,7 +121,7 @@ function buildVQL(db: string, op: string, collection: string, query: Record<stri
     }
 }
 
-export function parseVQLS(query: string): VQL {
+export function parseVQLS(query: string): VQL_Query {
     const { db, op, collection, body } = extractMeta(query);
     const parsed = parseArgs(body);
 
