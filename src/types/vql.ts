@@ -9,9 +9,9 @@ export interface VQLQuery<T = any> {
     f: VQLFindOne<T>,
     add: VQLAdd<T>,
     update: VQLUpdate<T>,
-    updateOne: VQLUpdateOne<T>,
+    updateOne: VQLUpdate<T>,
     remove: VQLRemove<T>,
-    removeOne: VQLRemoveOne<T>,
+    removeOne: VQLRemove<T>,
     updateOneOrAdd: VQLUpdateOneOrAdd<T>,
     removeCollection: VQLCollectionOperation,
     ensureCollection: VQLCollectionOperation,
@@ -25,9 +25,9 @@ export type VQLQueryData<T = any> =
     | { f: VQLFindOne<T> }
     | { add: VQLAdd<T> }
     | { update: VQLUpdate<T> }
-    | { updateOne: VQLUpdateOne<T> }
+    | { updateOne: VQLUpdate<T> }
     | { remove: VQLRemove<T> }
-    | { removeOne: VQLRemoveOne<T> }
+    | { removeOne: VQLRemove<T> }
     | { updateOneOrAdd: VQLUpdateOneOrAdd<T> }
     | { removeCollection: VQLCollectionOperation }
     | { ensureCollection: VQLCollectionOperation }
@@ -71,18 +71,7 @@ export interface VQLUpdate<T = any> {
     updater: UpdaterArg<T>;
 }
 
-export interface VQLUpdateOne<T = any> {
-    collection: string;
-    search: Search<T>;
-    updater: UpdaterArg<T>;
-}
-
 export interface VQLRemove<T = any> {
-    collection: string;
-    search: Search<T>;
-}
-
-export interface VQLRemoveOne<T = any> {
     collection: string;
     search: Search<T>;
 }

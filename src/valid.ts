@@ -37,7 +37,7 @@ function validD(query: VQLRequest): true | VQLError {
     const value = d[key];
     if (typeof value.collection !== "string" || value.collection.trim() === "") return emptyErr();
 
-    if (key === "issetCollection" || key === "ensureCollection") return true;
+    if (key === "issetCollection" || key === "ensureCollection" || key === "removeCollection") return true;
 
     if (key === "add") {
         if (!isObj(value.data)) return emptyErr();

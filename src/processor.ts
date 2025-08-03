@@ -3,15 +3,14 @@ import { VQLConfig, VQLConfigInterface } from "./config";
 import { executeRelation } from "./cpu/relation";
 import { executeQuery } from "./cpu/request";
 import logger from "./logger";
-import { executeSheetAndReplaceVars } from "./sheet";
-import { VQL, VQLError, VqlQueryRaw } from "./types/vql";
+import { replaceVars } from "./sheet";
+import { VQLError, VqlQueryRaw } from "./types/vql";
 import { validateRaw, validateVql } from "./valid";
 import { parseVQLS } from "./cpu/string";
 import { ValidFn } from "./types/perm";
 
 export class VQLProcessor {
     public relation: Relation;
-    public preDefinedSheets: Map<string, VQL> = new Map();
     public config: VQLConfig;
 
     constructor(
@@ -23,7 +22,7 @@ export class VQLProcessor {
         this.config = config instanceof VQLConfig ? config : new VQLConfig(config);
     }
 
-    async execute<T = any>(queryRaw: VqlQueryRaw<T>, user: any = {}): Promise<T | VQLError> {
+    async execute<T = any>(queryRaw: VqlQueryRaw<T>, user: any = { _id: "null-null-null" }): Promise<T | VQLError> {
         if (typeof queryRaw === "string" || "query" in queryRaw) {
             logger.info("Incoming string query");
             const q = typeof queryRaw === "string" ? queryRaw : queryRaw.query;
@@ -53,7 +52,7 @@ export class VQLProcessor {
             return validateRawResult;
         }
 
-        const query = executeSheetAndReplaceVars(queryRaw, this.preDefinedSheets, user);
+        const query = replaceVars(queryRaw, user);
         logger.debug("Executed sheet (expanded query):", query);
 
         const validateVqlResult = validateVql(query);

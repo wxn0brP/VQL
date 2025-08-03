@@ -26,7 +26,7 @@ export async function checkRelationPermission(
 
         // If the result is "entity-404", check the next fallback level
         if (!config.strictACL && result.via === "entity-404" && fallbackLevels.length > 0) {
-            const nextFallbackEntityId = hashKey(config, fallbackLevels.slice(0, -1));
+            const nextFallbackEntityId = await hashKey(config, fallbackLevels.slice(0, -1));
             return checkPermissionRecursively(nextFallbackEntityId, fallbackLevels.slice(0, -2));
         }
 
@@ -35,7 +35,7 @@ export async function checkRelationPermission(
     };
 
     // Check permission for the relation field in the parent collection
-    if (!await checkPermissionRecursively(hashKey(config, path), path)) {
+    if (!await checkPermissionRecursively(await hashKey(config, path), path)) {
         return false;
     }
 
@@ -43,7 +43,7 @@ export async function checkRelationPermission(
     const searchPaths = extractPathsFromData(search || {});
     for (const searchPath of searchPaths) {        
         const key = [...path, ...searchPath.path, searchPath.key];
-        if (!await checkPermissionRecursively(hashKey(config, key), key)) {
+        if (!await checkPermissionRecursively(await hashKey(config, key), key)) {
             return false;
         }
     }
@@ -52,7 +52,7 @@ export async function checkRelationPermission(
     if (select) {
         for (const fieldPath of select) {
             const key = [...path, fieldPath] as string[];
-            if (!await checkPermissionRecursively(hashKey(config, key), key)) {
+            if (!await checkPermissionRecursively(await hashKey(config, key), key)) {
                 return false;
             }
         }

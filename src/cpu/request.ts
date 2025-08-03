@@ -7,10 +7,8 @@ import {
     VQLFindOne,
     VQLQuery,
     VQLRemove,
-    VQLRemoveOne,
     VQLRequest,
     VQLUpdate,
-    VQLUpdateOne,
     VQLUpdateOneOrAdd
 } from "../types/vql";
 import { parseSelect } from "./utils";
@@ -46,13 +44,13 @@ export async function executeQuery(cpu: VQLProcessor, query: VQLRequest, user: a
         const params = query.d[operation] as VQLUpdate;
         return db.update(params.collection, params.search, params.updater);
     } else if (operation === "updateOne") {
-        const params = query.d[operation] as VQLUpdateOne;
+        const params = query.d[operation] as VQLUpdate;
         return db.updateOne(params.collection, params.search, params.updater);
     } else if (operation === "remove") {
         const params = query.d[operation] as VQLRemove;
         return db.remove(params.collection, params.search);
     } else if (operation === "removeOne") {
-        const params = query.d[operation] as VQLRemoveOne;
+        const params = query.d[operation] as VQLRemove;
         return db.removeOne(params.collection, params.search);
     } else if (operation === "updateOneOrAdd") {
         const params = query.d[operation] as VQLUpdateOneOrAdd;
