@@ -1,6 +1,6 @@
 export function readFileSync(path, encoding = "utf8") {
     const xhr = new XMLHttpRequest();
-    if (path.includes("schema.json")) path = window.VQL?.schemaPath || "/dist/schema.json";
+    if (path.includes("schema.json")) path = window.VQL?.schemaPath || "https://cdn.jsdelivr.net/gh/wxn0brP/VQL/schema.json";
 
     xhr.open("GET", path, false); // sync
     try {
