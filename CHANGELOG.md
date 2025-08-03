@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.6.0-alpha.1](https://github.com/wxn0brP/VQL/compare/v0.6.0-alpha.0...v0.6.0-alpha.1) (2025-08-03)
+
+
+### ⚠ BREAKING CHANGES
+
+* new order 2
+
+### Features
+
+* new order 2 ([8c8c7eb](https://github.com/wxn0brP/VQL/commit/8c8c7ebf40e63fca8c52c797295e26056ca9651a))
+
+
+### Bug Fixes
+
+* valid ([487a0c0](https://github.com/wxn0brP/VQL/commit/487a0c0e125c919418532a94be457e5680e247a3))
+
 ## [0.6.0-alpha.0](https://github.com/wxn0brP/VQL/compare/v0.5.1...v0.6.0-alpha.0) (2025-08-03)
 
 
