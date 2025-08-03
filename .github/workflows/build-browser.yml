@@ -6,7 +6,7 @@ on:
       - main
     paths:
       - 'src/**/*.ts'
-      - 'browser/**/*.ts'
+      - 'browser/**/*'
       - 'package.json'
       - 'tsconfig.json'
 
