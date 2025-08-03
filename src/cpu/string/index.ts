@@ -1,66 +1,165 @@
-import logger from "../../logger";
+import { RelationTypes } from "@wxn0brp/db-core";
+import { convertSearchObjToSearchArray, extractMeta } from "./utils";
 import { VQL } from "../../types/vql";
-import { parseVQLB } from "./json5";
-import { parseVQLS } from "./simple";
-import { parseVQLM } from "./yaml";
 
-export type VQLParserMode = "VQLS" | "VQLM" | "VQLB" | "VQLR";
+const aliases = {
+    s: "search",
+    f: "fields",
+    o: "options",
+    r: "relations",
+    d: "data",
+    e: "select",
+    u: "updater",
+}
 
-function get3rdAnd4thWord(query: string): string {
-    let words: string[] = [];
-    let word = "";
-    let i = 0;
+function parseArgs(input: string): Record<string, any> {
+    const result: Record<string, any> = {};
 
-    while (i < query.length && words.length < 4) {
-        const c = query[i++];
-        if (" \t\n\r".includes(c)) {
-            if (word) words.push(word);
-            word = "";
+    const tokens: string[] = [];
+    let current = "";
+    let inQuotes = false;
+    let escape = false;
+
+    for (let i = 0; i < input.length; i++) {
+        const char = input[i];
+
+        if (escape) {
+            current += char;
+            escape = false;
+        } else if (char === "\\") {
+            escape = true;
+        } else if (char === "\"") {
+            inQuotes = !inQuotes;
+        } else if (!inQuotes && (char === " " || char === "=")) {
+            if (current !== "") {
+                tokens.push(current);
+                current = "";
+            }
         } else {
-            word += c;
+            current += char;
         }
     }
 
-    if (word && words.length < 4) words.push(word);
+    if (current !== "") {
+        tokens.push(current);
+    }
 
-    return words[2] + (words[3] ? " " + words[3] : "");
+    for (let i = 0; i < tokens.length; i += 2) {
+        const key = tokens[i];
+        let value: any = tokens[i + 1] ?? true;
+
+        if (typeof value === "string") {
+            const trimmed = value.trim();
+
+            if (trimmed === "") {
+                value = true;
+            } else if (/^".*"$/.test(trimmed)) {
+                value = trimmed.slice(1, -1);
+            } else if (trimmed.toLowerCase() === "true") {
+                value = true;
+            } else if (trimmed.toLowerCase() === "false") {
+                value = false;
+            } else if (!isNaN(Number(trimmed))) {
+                value = Number(trimmed);
+            } else if ((trimmed.startsWith("{") && trimmed.endsWith("}")) || (trimmed.startsWith("[") && trimmed.endsWith("]"))) {
+                try {
+                    value = JSON.parse(trimmed);
+                } catch {}
+            }
+        }
+
+        result[key] = value;
+    }
+
+    return result;
 }
 
-export function guessParser(query: string): {
-    mode: VQLParserMode,
-    query: string
-} {
-    query = query.trimStart();
-    if (query[0] === "#") {
+function buildVQL(db: string, op: string, collection: string, query: Record<string, any>): VQL {
+    const hasRelations = "relations" in query;
+
+    if (hasRelations) {
+        const relations: RelationTypes.Relation = {};
+        for (const key in query.relations) {
+            const value = query.relations[key];
+            relations[key] = {
+                path: [value.db as any || db as string, value.c || key],
+                ...value
+            };
+            delete (relations[key] as any).db;
+            delete (relations[key] as any).c;
+        }
+
+        if ("select" in query) {
+            query.select = convertSearchObjToSearchArray(query.select);
+        }
+
         return {
-            mode: "VQL" + query[1].toUpperCase() as any,
-            query: query.slice(2)
+            r: {
+                path: [db, collection],
+                ...query,
+                relations,
+            }
+        } as any;
+    } else {
+        if (query.fields && !query.select) {
+            query.select = query.fields;
+            delete query.fields;
+        }
+
+        if ("select" in query) {
+            query.select = [...new Set(convertSearchObjToSearchArray(query.select).map(k => k[0]).flat())];
+        }
+        return {
+            db,
+            d: {
+                [op]: {
+                    collection,
+                    ...query,
+                }
+            }
+        } as any
+    }
+}
+
+export function parseVQLS(query: string): VQL {
+    const { db, op, collection, body } = extractMeta(query);
+    const parsed = parseArgs(body);
+
+    for (const keysRaw of Object.keys(parsed)) {
+        const keys = keysRaw.split(".");
+        if (keys.length === 1) {
+            continue;
+        }
+        let obj = parsed;
+        for (let i = 0; i < keys.length; i++) {
+            const key = keys[i];
+            if (i < keys.length - 1) {
+                if (!(key in obj)) {
+                    obj[key] = {};
+                }
+                obj = obj[key];
+            } else {
+                obj[key] = parsed[keysRaw];
+                delete parsed[keysRaw];
+            }
         }
     }
 
-    const _34word = get3rdAnd4thWord(query);
-
-    let mode: VQLParserMode = "VQLS";
-    if (_34word.includes("{")) mode = "VQLB";
-    else if (_34word.includes(":")) mode = "VQLM";
-
-    return {
-        mode,
-        query
+    for (const key in aliases) {
+        if (key in parsed) {
+            parsed[aliases[key]] = parsed[key];
+            delete parsed[key];
+        }
     }
-}
 
-function parseStringQuery(query: string): VQL {
-    const { mode, query: queryRaw } = guessParser(query);
-    logger.debug("Query mode: " + mode);
-    
-    if (mode === "VQLB") {
-        return parseVQLB(queryRaw);
-    } else if (mode === "VQLM") {
-        return parseVQLM(queryRaw);
-    } else {
-        return parseVQLS(queryRaw);
+    if ((op === "find" || op === "findOne") && !("search" in parsed)) {
+        parsed.search = {};
     }
-}
 
-export { parseStringQuery };
+    if ((op === "update" || op === "remove") && !("updater" in parsed) && ("data" in parsed)) {
+        parsed.updater = parsed.data;
+        delete parsed.data;
+    }
+
+    return buildVQL(db, op, collection, parsed);
+}

@@ -29,7 +29,7 @@ export async function executeRelation(cpu: VQLProcessor, query: RelationQuery, u
     const checkDb = checkDBsExist(cpu, query.r);
     if (checkDb.err) return checkDb;
 
-    if (!cpu.config.noCheckPermissions && !await checkRelationPermission(cpu.config, cpu.gw, user, query)) {
+    if (!cpu.config.noCheckPermissions && !await checkRelationPermission(cpu.config, cpu.validFn, user, query)) {
         return { err: true, msg: "Permission denied", c: 403 };
     }
 

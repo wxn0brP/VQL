@@ -100,3 +100,17 @@ function extendedCollectionToData(collection: string) {
 
     return { op, collection: collectionName };
 }
+
+export function convertSearchObjToSearchArray(obj: Record<string, any>, parentKeys: string[] = []): string[][] {
+    return Object.entries(obj).reduce((acc, [key, value]) => {
+        const currentPath = [...parentKeys, key];
+
+        if (!value) {
+            return acc;
+        } else if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
+            return [...acc, ...convertSearchObjToSearchArray(value, currentPath)];
+        } else {
+            return [...acc, currentPath];
+        }
+    }, []);
+}

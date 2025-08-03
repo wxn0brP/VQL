@@ -5,3 +5,10 @@ export enum PermCRUD {
     DELETE = 1 << 3,
     COLLECTION = 1 << 4
 }
+
+export interface ValidFnResult {
+    granted: boolean;
+    via?: string;
+}
+
+export type ValidFn = (path: string, perm: number, user: any) => Promise<ValidFnResult>;

@@ -3,15 +3,13 @@ export interface VQLConfigInterface {
     strictSelect: boolean;
     strictACL: boolean;
     noCheckPermissions: boolean;
-    formatAjv: boolean;
 }
 
 export class VQLConfig implements VQLConfigInterface {
-    hidePath = true;
-    strictSelect = true;
-    strictACL = true;
-    noCheckPermissions = false;
-    formatAjv = true;
+    hidePath = false;
+    strictSelect = false;
+    strictACL = false;
+    noCheckPermissions = true;
 
     constructor(config?: Partial<VQLConfigInterface>) {
         if (config) {

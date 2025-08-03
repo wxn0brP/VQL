@@ -20,18 +20,14 @@ Here is an example of how to use the `VQLProcessor` to execute a query:
 ```typescript
 import VQLProcessor from "@wxn0brp/vql";
 import { Valthera } from "@wxn0brp/db";
-import { GateWarden } from "@wxn0brp/gate-warden";
 
 // Initialize database instances
 const dbInstances = {
     myDatabase: new Valthera("path/to/database"),
 };
 
-// Initialize Gate Warden
-const gw = new GateWarden("path/to/gate-warden/database");
-
 // Create a VQLProcessor instance
-const processor = new VQLProcessor(dbInstances, gw);
+const processor = new VQLProcessor(dbInstances);
 
 // Define a query (VQLR)
 const query = {
@@ -53,31 +49,11 @@ s.$gt.age = 18
 f.name = 1
 f.age = 1
 `
-// Or (use backticks like json)
-const VQLB = `
-myDatabase users
-{
-    collection: "users",
-    search: { $gt: { age: 18 } },
-    fields: { name: 1, age: 1 },
-}
-`
-// Or (use markup like yaml)
-const VQLM = `
-myDatabase users
-collection: users
-search:
-  $gt:
-    age: 18
-fields:
-  name: 1
-  age: 1
-`
 
 // Execute the query
 (async () => {
     try {
-        const result = await processor.execute(query, { id: "user123" });
+        const result = await processor.execute(query);
         console.log("Query Result:", result);
     } catch (error) {
         console.error("Error executing query:", error);
@@ -89,7 +65,6 @@ fields:
 
 - [Base/Map](./docs/lang/base.md)
 - [VQLS](./docs/lang/VQLS.md)
-- [VQLM/B](./docs/lang/VQLM.md)
 - [VQLR](./docs/lang/VQLR.md)
 
 ## License

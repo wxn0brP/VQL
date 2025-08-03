@@ -11,5 +11,5 @@ esbuild.build({
     external: [],
     splitting: false,
     minify: true,
-    external: ["fs", "crypto", "js-yaml", "json5", "ajv", "ajv-formats", "@wxn0brp/db-core"],
+    external: ["fs", "crypto", "@wxn0brp/db-core"],
 }).catch(() => process.exit(1));

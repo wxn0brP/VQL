@@ -1,5 +1,4 @@
-import { GateWarden } from "@wxn0brp/gate-warden";
-import { PermCRUD } from "../types/perm";
+import { PermCRUD, ValidFn } from "../types/perm";
 import { VQLFind, VQLFindOne, VQLQuery, VQLRequest, VQLUpdate, VQLUpdateOne, VQLUpdateOneOrAdd } from "../types/vql";
 import { extractPathsFromData, hashKey } from "./utils";
 import { VQLConfig } from "../config";
@@ -99,7 +98,7 @@ export function processFieldPath(pathObj: { path: string[]; key: string }): stri
 
 export async function checkRequestPermission(
     config: VQLConfig,
-    gw: GateWarden<any>,
+    validFn: ValidFn,
     user: any,
     query: VQLRequest
 ): Promise<boolean> {
@@ -114,7 +113,8 @@ export async function checkRequestPermission(
         fallbackLevels: string[] = []
     ): Promise<boolean> => {
         // Check if the user has access to the current entity
-        const result = await gw.hasAccess(user.id, entityId, requiredPerm);
+        // const result = await gw.hasAccess(user.id, entityId, requiredPerm);
+        const result = await validFn(entityId, requiredPerm, user);
 
         if (result.granted) {
             return true;

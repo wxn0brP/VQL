@@ -23,7 +23,7 @@ export async function executeQuery(cpu: VQLProcessor, query: VQLRequest, user: a
 
     const operation = Object.keys(query.d)[0] as keyof VQLQuery;
 
-    if (!cpu.config.noCheckPermissions && !await checkRequestPermission(cpu.config, cpu.gw, user, query)) {
+    if (!cpu.config.noCheckPermissions && !await checkRequestPermission(cpu.config, cpu.validFn, user, query)) {
         return { err: true, msg: "Permission denied", c: 403 };
     }
 

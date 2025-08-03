@@ -1,27 +1,29 @@
 import { Relation, ValtheraCompatible } from "@wxn0brp/db-core";
-import { GateWarden } from "@wxn0brp/gate-warden";
-import { VQLConfig } from "./config";
+import { VQLConfig, VQLConfigInterface } from "./config";
 import { executeRelation } from "./cpu/relation";
 import { executeQuery } from "./cpu/request";
-import { parseStringQuery } from "./cpu/string";
 import logger from "./logger";
 import { executeSheetAndReplaceVars } from "./sheet";
 import { VQL, VQLError, VqlQueryRaw } from "./types/vql";
 import { validateRaw, validateVql } from "./valid";
+import { parseVQLS } from "./cpu/string";
+import { ValidFn } from "./types/perm";
 
-export class VQLProcessor<GW = any> {
+export class VQLProcessor {
     public relation: Relation;
     public preDefinedSheets: Map<string, VQL> = new Map();
+    public config: VQLConfig;
 
     constructor(
         public dbInstances: Record<string, ValtheraCompatible>,
-        public gw: GateWarden<GW> = null,
-        public config: VQLConfig = new VQLConfig(),
+        config: VQLConfig | Partial<VQLConfigInterface> = new VQLConfig(),
+        public validFn: ValidFn = async () => ({ granted: true, via: "" })
     ) {
         this.relation = new Relation(dbInstances);
+        this.config = config instanceof VQLConfig ? config : new VQLConfig(config);
     }
 
-    async execute<T = any>(queryRaw: VqlQueryRaw<T>, user: any): Promise<T | VQLError> {
+    async execute<T = any>(queryRaw: VqlQueryRaw<T>, user: any = {}): Promise<T | VQLError> {
         if (typeof queryRaw === "string" || "query" in queryRaw) {
             logger.info("Incoming string query");
             const q = typeof queryRaw === "string" ? queryRaw : queryRaw.query;
@@ -30,7 +32,7 @@ export class VQLProcessor<GW = any> {
             logger.debug(q);
 
             try {
-                queryRaw = parseStringQuery(q);
+                queryRaw = parseVQLS(q);
                 logger.debug("transformed query: ", queryRaw);
             } catch (e) {
                 logger.error("Error parsing string query: ", { error: e, msg: e.message });
@@ -45,7 +47,7 @@ export class VQLProcessor<GW = any> {
             logger.debug("Raw query: ", queryRaw);
         }
 
-        const validateRawResult = validateRaw(this.config, queryRaw);
+        const validateRawResult = validateRaw(queryRaw);
         if (validateRawResult !== true) {
             logger.warn("Raw validation failed:", validateRawResult);
             return validateRawResult;
@@ -54,7 +56,7 @@ export class VQLProcessor<GW = any> {
         const query = executeSheetAndReplaceVars(queryRaw, this.preDefinedSheets, user);
         logger.debug("Executed sheet (expanded query):", query);
 
-        const validateVqlResult = validateVql(this.config, query);
+        const validateVqlResult = validateVql(query);
         if (validateVqlResult !== true) {
             logger.warn("VQL validation failed:", validateVqlResult);
             return validateVqlResult;

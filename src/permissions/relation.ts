@@ -1,12 +1,11 @@
-import { GateWarden } from "@wxn0brp/gate-warden";
-import { PermCRUD } from "../types/perm";
+import { PermCRUD, ValidFn } from "../types/perm";
 import { RelationQuery } from "../types/vql";
 import { extractPathsFromData, hashKey } from "./utils";
 import { VQLConfig } from "../config";
 
 export async function checkRelationPermission(
     config: VQLConfig,
-    gw: GateWarden<any>,
+    validFn: ValidFn,
     user: any,
     query: RelationQuery
 ): Promise<boolean> {
@@ -18,7 +17,8 @@ export async function checkRelationPermission(
         fallbackLevels: string[] = []
     ): Promise<boolean> => {
         // Check if the user has access to the current entity
-        const result = await gw.hasAccess(user.id, entityId, PermCRUD.READ);
+        // const result = await gw.hasAccess(user.id, entityId, PermCRUD.READ);
+        const result = await validFn(entityId, PermCRUD.READ, user);
 
         if (result.granted) {
             return true;
@@ -62,7 +62,7 @@ export async function checkRelationPermission(
     if (relations) {
         for (const relationKey in relations) {
             const r = relations[relationKey];
-            if (!await checkRelationPermission(config, gw, user, { r } as any)) {
+            if (!await checkRelationPermission(config, validFn, user, { r } as any)) {
                 return false;
             }
         }
