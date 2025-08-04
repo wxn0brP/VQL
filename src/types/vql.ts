@@ -96,5 +96,4 @@ export interface VQLError {
     err: true;
     msg: string;
     c: number;
-    why?: string;
 }

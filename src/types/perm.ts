@@ -11,4 +11,4 @@ export interface ValidFnResult {
     via?: string;
 }
 
-export type ValidFn = (path: string, perm: number, user: any) => Promise<ValidFnResult>;
+export type PermValidFn = (path: string, perm: number, user: any) => Promise<ValidFnResult>;

@@ -8,7 +8,6 @@ import {
     VQL_OP_Remove,
     VQL_OP_Update,
     VQL_OP_UpdateOneOrAdd,
-    VQL_Query,
     VQL_Query_CRUD,
     VQL_Query_CRUD_Data
 } from "../types/vql";
@@ -22,7 +21,7 @@ export async function executeQuery(cpu: VQLProcessor, query: VQL_Query_CRUD, use
 
     const operation = Object.keys(query.d)[0] as keyof VQL_Query_CRUD_Data;
 
-    if (!cpu.config.noCheckPermissions && !await checkRequestPermission(cpu.config, cpu.validFn, user, query)) {
+    if (!cpu.config.noCheckPermissions && !await checkRequestPermission(cpu.config, cpu.permValidFn, user, query)) {
         return { err: true, msg: "Permission denied", c: 403 };
     }
 

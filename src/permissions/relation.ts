@@ -1,11 +1,11 @@
-import { PermCRUD, ValidFn } from "../types/perm";
+import { PermCRUD, PermValidFn } from "../types/perm";
 import { VQL_Query_Relation } from "../types/vql";
 import { extractPathsFromData, hashKey } from "./utils";
 import { VQLConfig } from "../config";
 
 export async function checkRelationPermission(
     config: VQLConfig,
-    validFn: ValidFn,
+    permValidFn: PermValidFn,
     user: any,
     query: VQL_Query_Relation
 ): Promise<boolean> {
@@ -18,7 +18,7 @@ export async function checkRelationPermission(
     ): Promise<boolean> => {
         // Check if the user has access to the current entity
         // const result = await gw.hasAccess(user.id, entityId, PermCRUD.READ);
-        const result = await validFn(entityId, PermCRUD.READ, user);
+        const result = await permValidFn(entityId, PermCRUD.READ, user);
 
         if (result.granted) {
             return true;
@@ -62,7 +62,7 @@ export async function checkRelationPermission(
     if (relations) {
         for (const relationKey in relations) {
             const r = relations[relationKey];
-            if (!await checkRelationPermission(config, validFn, user, { r } as any)) {
+            if (!await checkRelationPermission(config, permValidFn, user, { r } as any)) {
                 return false;
             }
         }

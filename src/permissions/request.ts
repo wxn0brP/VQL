@@ -1,7 +1,7 @@
-import { PermCRUD, ValidFn } from "../types/perm";
-import { VQL_OP_Find, VQL_OP_FindOne, VQL_Query_CRUD, VQL_OP_Update, VQL_OP_UpdateOneOrAdd, VQL_Query_CRUD_Data } from "../types/vql";
-import { extractPathsFromData, hashKey } from "./utils";
 import { VQLConfig } from "../config";
+import { PermCRUD, PermValidFn } from "../types/perm";
+import { VQL_OP_Find, VQL_OP_FindOne, VQL_OP_Update, VQL_OP_UpdateOneOrAdd, VQL_Query_CRUD } from "../types/vql";
+import { extractPathsFromData, hashKey } from "./utils";
 
 export async function extractPaths(config: VQLConfig, query: VQL_Query_CRUD): Promise<{
     db: string,
@@ -98,7 +98,7 @@ export function processFieldPath(pathObj: { path: string[]; key: string }): stri
 
 export async function checkRequestPermission(
     config: VQLConfig,
-    validFn: ValidFn,
+    permValidFn: PermValidFn,
     user: any,
     query: VQL_Query_CRUD
 ): Promise<boolean> {
@@ -114,7 +114,7 @@ export async function checkRequestPermission(
     ): Promise<boolean> => {
         // Check if the user has access to the current entity
         // const result = await gw.hasAccess(user.id, entityId, requiredPerm);
-        const result = await validFn(entityId, requiredPerm, user);
+        const result = await permValidFn(entityId, requiredPerm, user);
 
         if (result.granted) {
             return true;
