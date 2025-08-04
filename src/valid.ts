@@ -32,7 +32,7 @@ function validR(query: VQL_Query_Relation): true | VQLError {
 function validD(query: VQL_Query_CRUD): true | VQLError {
     const { d } = query;
     const key = Object.keys(d)[0];
-    if (key === "getCollection") return true;
+    if (key === "getCollections") return true;
 
     const value = d[key];
     if (typeof value.collection !== "string" || value.collection.trim() === "") return emptyErr();
