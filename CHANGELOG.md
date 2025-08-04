@@ -2,6 +2,31 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.6.0-beta.0](https://github.com/wxn0brP/VQL/compare/v0.6.0-alpha.1...v0.6.0-beta.0) (2025-08-04)
+
+
+### ⚠ BREAKING CHANGES
+
+* rename type
+* new order 5
+* new order 4
+* new order 3
+
+### Features
+
+* new order 3 ([28583ac](https://github.com/wxn0brP/VQL/commit/28583ac196a4d3bf8f20dfa0c77d3d4211c79bae))
+* new order 4 ([63d57ce](https://github.com/wxn0brP/VQL/commit/63d57ce025ecf88cfff59abc5508214ec95695d7))
+* new order 5 ([4d71c78](https://github.com/wxn0brP/VQL/commit/4d71c78df638107854340de42c00073099a11cdd))
+* update browser ([3758d57](https://github.com/wxn0brP/VQL/commit/3758d573bc00144ec2d2716203c3fcb87bbc1bdc))
+
+
+### Bug Fixes
+
+* valid ([d22a7b3](https://github.com/wxn0brP/VQL/commit/d22a7b3d135ac1ed5200c0a35457539439866a60))
+
+
+* rename type ([accaafb](https://github.com/wxn0brP/VQL/commit/accaafb635768857ddfba25d43a8a573e872f0b4))
+
 ## [0.6.0-alpha.1](https://github.com/wxn0brP/VQL/compare/v0.6.0-alpha.0...v0.6.0-alpha.1) (2025-08-03)
 
 
