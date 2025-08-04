@@ -83,14 +83,14 @@ export interface VQL_Query_Relation {
     }
 }
 
-export interface VQLRef {
+export interface VQL_Var {
     var?: { [k: string]: any }
 }
 
 /** VQL Query */
-export type VQL_Query<T = any> = (VQL_Query_CRUD<T> | VQL_Query_Relation) & VQLRef;
+export type VQL_Query<T = any> = (VQL_Query_CRUD<T> | VQL_Query_Relation) & VQL_Var;
 /** VQL Universal Query */
-export type VQLUQ<T = any> = VQL_Query<T> | string | { query: string } & VQLRef;
+export type VQLUQ<T = any> = VQL_Query<T> | string | { query: string } & VQL_Var;
 
 export interface VQLError {
     err: true;
