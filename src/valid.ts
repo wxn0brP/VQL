@@ -63,10 +63,7 @@ function validD(query: VQL_Query_CRUD): true | VQLError {
     const key = Object.keys(d)[0];
     const value = d[key]; // Cast for common property
 
-    if (key === "getCollections") {
-        if (Object.keys(value).length > 0) return emptyErr("'getCollections' should be an empty object.");
-        return true;
-    }
+    if (key === "getCollections") return true;
 
     if (typeof value.collection !== "string" || value.collection.trim() === "") return emptyErr(`CRUD operation '${key}' must specify a non-empty 'collection' string.`);
 
