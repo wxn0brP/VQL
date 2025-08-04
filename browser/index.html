@@ -7,20 +7,13 @@
     <title>VQL</title>
 </head>
 
-
 <body>
     <script type="importmap">
     {
         "imports": {
-            "js-yaml": "https://esm.sh/js-yaml",
-            "json5": "https://esm.sh/json5",
-            "ajv": "https://esm.sh/ajv",
-            "ajv-formats": "https://esm.sh/ajv-formats",
             "@wxn0brp/db-core": "https://esm.sh/@wxn0brp/db-core",
             "@wxn0brp/db-core/": "https://esm.sh/@wxn0brp/db-core/",
-            "@wxn0brp/vql": "https://cdn.jsdelivr.net/gh/wxn0brP/VQL@browser/browser/index.js",
-            "crypto": "https://cdn.jsdelivr.net/gh/wxn0brP/VQL@browser/browser/crypto.js",
-            "fs": "https://cdn.jsdelivr.net/gh/wxn0brP/VQL@browser/browser/fs.js"
+            "@wxn0brp/vql": "https://cdn.jsdelivr.net/gh/wxn0brP/VQL@browser/browser/index.js"
         }
     }
     </script>
@@ -32,7 +25,7 @@
             data: [{ a: 1, _id: "test" }]
         });
 
-        const VQL = new VQLProcessor({ db }, null, new VQLConfig({ noCheckPermissions: true, strictSelect: false }));
+        const VQL = new VQLProcessor({ db });
 
         const result = await VQL.execute("db data");
         console.log(result);
