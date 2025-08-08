@@ -49,8 +49,25 @@ function parseArgs(input: string): Record<string, any> {
             } else {
                 current += char;
             }
-        } else if (!inQuotes && (char === " " || char === "=")) {
+        } else if (!inQuotes && (char === " " || char === "=" || char === "<" || char === ">")) {
             if (current !== "") {
+                if (char === "<" || char === ">") {
+                    let type = char === ">" ? "gt" : "lt";
+                    if (i < input.length - 1 && input[i + 1] === "=") {
+                        type += "e";
+                        i++;
+                    }
+                    const split = current.split(".");
+                    if (split.length > 1) {
+                        const original = split.shift();
+                        const operation = "$" + type;
+                        split.unshift(operation);
+                        split.unshift(original);
+                        current = split.join(".");
+                    } else {
+                        current = "$" + type + "." + current;
+                    }
+                }
                 tokens.push(current);
                 current = "";
             }
