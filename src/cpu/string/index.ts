@@ -17,8 +17,9 @@ function parseArgs(input: string): Record<string, any> {
 
     const tokens: string[] = [];
     let current = "";
-    let inQuotes = false;
+    let inQuotes: "`" | "'" | '"' | false = false;
     let escape = false;
+    let objTree = 0;
 
     for (let i = 0; i < input.length; i++) {
         const char = input[i];
@@ -28,8 +29,26 @@ function parseArgs(input: string): Record<string, any> {
             escape = false;
         } else if (char === "\\") {
             escape = true;
-        } else if (char === "\"") {
-            inQuotes = !inQuotes;
+        } else if (!inQuotes && (char === "{" || char === "[")) {
+            objTree++;
+            current += char;
+        } else if (!inQuotes && (char === "}" || char === "]")) {
+            objTree--;
+            current += char;
+            if (objTree === 0) {
+                tokens.push(current);
+                current = "";
+            }
+        } else if (!objTree && (char === "'" || char === '"' || char === "`")) {
+            if (inQuotes === char) {
+                inQuotes = false;
+                tokens.push(`"` + current + `"`);
+                current = "";
+            } else if (typeof inQuotes === "boolean") {
+                inQuotes = char;
+            } else {
+                current += char;
+            }
         } else if (!inQuotes && (char === " " || char === "=")) {
             if (current !== "") {
                 tokens.push(current);
@@ -64,7 +83,7 @@ function parseArgs(input: string): Record<string, any> {
             } else if ((trimmed.startsWith("{") && trimmed.endsWith("}")) || (trimmed.startsWith("[") && trimmed.endsWith("]"))) {
                 try {
                     value = JSON.parse(trimmed);
-                } catch {}
+                } catch { }
             }
         }
 
