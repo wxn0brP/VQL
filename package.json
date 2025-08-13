@@ -38,7 +38,7 @@
     "devDependencies": {
         "@types/node": "^24.1.0",
         "@wxn0brp/db": "^0.30.0",
-        "@wxn0brp/falcon-frame": "0.0.20",
+        "@wxn0brp/falcon-frame": "0.0.21",
         "@wxn0brp/gate-warden": "^0.4.0",
         "esbuild": "^0.25.8",
         "tsc-alias": "^1.8.10",
