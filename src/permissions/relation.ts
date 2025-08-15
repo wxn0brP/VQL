@@ -41,7 +41,7 @@ export async function checkRelationPermission(
 
     // Check permissions for search fields
     const searchPaths = extractPathsFromData(search || {});
-    for (const searchPath of searchPaths) {        
+    for (const searchPath of searchPaths) {
         const key = [...path, ...searchPath.path, searchPath.key];
         if (!await checkPermissionRecursively(await hashKey(config, key), key)) {
             return false;
@@ -50,7 +50,7 @@ export async function checkRelationPermission(
 
     // Check permissions for select fields
     if (select) {
-        for (const fieldPath of select) {
+        for (const fieldPath of select as string[]) {
             const key = [...path, fieldPath] as string[];
             if (!await checkPermissionRecursively(await hashKey(config, key), key)) {
                 return false;

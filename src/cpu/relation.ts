@@ -2,11 +2,12 @@ import { RelationTypes } from "@wxn0brp/db-core";
 import { VQLProcessor } from "../processor";
 import { VQL_Query_Relation } from "../types/vql";
 import { checkRelationPermission } from "../permissions";
-import { parseSelect } from "./utils";
+import { parseObjectSelect, parseSelect } from "./utils";
 import { VQLConfig } from "../config";
 
 function standardizeRelationRequest(config: VQLConfig, req: RelationTypes.Relation | VQL_Query_Relation["r"]) {
-    req.select = parseSelect(config, req.select || []);
+    const select = parseObjectSelect(req.select) || [];
+    req.select = parseSelect(config, select);
 }
 
 function checkDBsExist(cpu: VQLProcessor, req: RelationTypes.Relation | VQL_Query_Relation["r"]) {

@@ -54,7 +54,7 @@ function validR(query: VQL_Query_Relation): true | VQLError {
 
     if ("many" in r && typeof r.many !== "boolean") return emptyErr("Relation query 'r.many' must be a boolean.");
     if ("options" in r && !isObj(r.options, false)) return emptyErr("Relation query 'r.options' must be an object.");
-    if ("select" in r && !Array.isArray(r.select)) return emptyErr("Relation query 'r.select' must be an array.");
+    if ("select" in r && typeof r.select !== "object") return emptyErr("Relation query 'r.select' must be an object or an array.");
     return true;
 }
 

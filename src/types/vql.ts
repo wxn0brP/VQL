@@ -74,12 +74,12 @@ export interface VQL_Query_CRUD<T = any> {
 
 export interface VQL_Query_Relation {
     r: {
-        path: RelationTypes.Path,
-        search: Search,
-        relations: RelationTypes.Relation,
-        many?: boolean,
-        options?: DbFindOpts,
-        select?: RelationTypes.FieldPath[]
+        path: RelationTypes.Path;
+        search: Search;
+        relations: RelationTypes.Relation;
+        many?: boolean;
+        options?: DbFindOpts;
+        select?: RelationTypes.FieldPath[] | Record<string, any>;
     }
 }
 
