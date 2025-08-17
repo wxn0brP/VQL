@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.6.1](https://github.com/wxn0brP/VQL/compare/v0.6.0...v0.6.1) (2025-08-17)
+
+
+### Features
+
+* **relations:** object select ([258c5de](https://github.com/wxn0brP/VQL/commit/258c5de894c30429499d2587c96d6c9d5c12a11a))
+* **VQLS:** >, >=, <=, < ([f93013b](https://github.com/wxn0brP/VQL/commit/f93013bde2df83050c519d46e053c16aa0010240))
+
+
+### Bug Fixes
+
+* **VQLS:** parse key value engine ([310703d](https://github.com/wxn0brP/VQL/commit/310703d917d120f248f03366aed3a753257cee74))
+
 ## [0.6.0](https://github.com/wxn0brP/VQL/compare/v0.6.0-beta.0...v0.6.0) (2025-08-07)
 
 
