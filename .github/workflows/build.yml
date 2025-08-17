@@ -3,13 +3,13 @@ name: Build
 on:
   push:
     branches:
-      - main
+      - master
     tags:
       - "*"
     paths:
-      - 'src/**/*.ts'
-      - 'package.json'
-      - 'tsconfig.json'
+      - "src/**/*.ts"
+      - "package.json"
+      - "tsconfig.json"
 
   workflow_dispatch:
 
@@ -26,6 +26,6 @@ jobs:
         npm i -g dts-bundle-generator
         npm run types
       publishToNpm: true
-    
+
     secrets:
       NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
