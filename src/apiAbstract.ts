@@ -45,7 +45,6 @@ export interface ValtheraResolver {
     removeCollection?: ResolverFn<[collection: string], boolean>;
 }
 
-
 export function createValtheraAdapter(resolver: ValtheraResolver, extendedFind: boolean = false): ValtheraCompatible {
     const safe = <T>(fn?: T): T => {
         if (!fn) throw new Error("Unimplemented method");
@@ -72,9 +71,6 @@ export function createValtheraAdapter(resolver: ValtheraResolver, extendedFind: 
         removeOne: (col, search) => safe(resolver.removeOne)(col, search),
 
         removeCollection: (col) => safe(resolver.removeCollection)(col),
-
-        findStream: null,
-        transaction: null,
     };
     adapter.c = (collection: string) => new CollectionManager(adapter, collection);
 
@@ -100,4 +96,59 @@ export function createValtheraAdapter(resolver: ValtheraResolver, extendedFind: 
     }
 
     return adapter;
+}
+
+export type Operation = "add" | "find" | "findOne" | "update" | "updateOne" | "updateOneOrAdd" | "remove" | "removeOne" | "removeCollection";
+
+export class AdapterBuilder {
+    private handlers: Map<string, Function> = new Map();
+    private collections: Set<string> = new Set();
+
+    register(op: "add", collection: string, fn: ResolverFn<[collection: string, data: any, id_gen?: boolean], any>);
+    register(op: "find", collection: string, fn: ResolverFn<[collection: string, search: any, context?: any, options?: any, findOpts?: any], any[]>);
+    register(op: "findOne", collection: string, fn: ResolverFn<[collection: string, search: any, context?: any, findOpts?: any], any | null>);
+    register(op: "update", collection: string, fn: ResolverFn<[collection: string, search: any, updater: any], boolean>);
+    register(op: "updateOne", collection: string, fn: ResolverFn<[collection: string, search: any, updater: any], boolean>);
+    register(op: "updateOneOrAdd", collection: string, fn: ResolverFn<[collection: string, search: any, updater: any, add_arg?: any, context?: any, id_gen?: boolean], boolean>);
+    register(op: "remove", collection: string, fn: ResolverFn<[collection: string, search: any], boolean>);
+    register(op: "removeOne", collection: string, fn: ResolverFn<[collection: string, search: any], boolean>);
+    register(op: "removeCollection", collection: string, fn: ResolverFn<[collection: string], boolean>);
+    register(op: Operation, collection: string, fn: Function) {
+        this.handlers.set(`${op}:${collection}`, fn);
+        this.collections.add(collection);
+        return this;
+    }
+
+    getAdapter(extendedFind: boolean = true) {
+        const resolve = async (op: string, col: string, ...args: any[]) => {
+            const handler = this.handlers.get(`${op}:${col}`) || this.handlers.get(`${op}:*`) || null;
+            if (!handler) throw new Error(`Unimplemented method: ${op}:${col}`);
+            return handler(...args);
+        };
+
+        const adapter = createValtheraAdapter({
+            getCollections: async () => Array.from(this.collections),
+            issetCollection: async (col) => this.collections.has(col),
+            ensureCollection: async (col) => {
+                if (!this.collections.has(col))
+                    this.collections.add(col)
+                return true;
+            },
+
+            add: (col, data, id_gen) => resolve("add", col, data, id_gen),
+            find: (col, search, context, options, findOpts) => resolve("find", col, search, context, options, findOpts),
+            findOne: (col, search, context, findOpts) => resolve("findOne", col, search, context, findOpts),
+
+            update: (col, search, up) => resolve("update", col, search, up),
+            updateOne: (col, search, up) => resolve("updateOne", col, search, up),
+            updateOneOrAdd: (col, search, up, add_data, ctx, id_gen) => resolve("updateOneOrAdd", col, search, up, add_data, ctx, id_gen),
+
+            remove: (col, search) => resolve("remove", col, search),
+            removeOne: (col, search) => resolve("removeOne", col, search),
+
+            removeCollection: (col) => resolve("removeCollection", col),
+        }, extendedFind);
+
+        return adapter;
+    }
 }
