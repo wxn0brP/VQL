@@ -18,7 +18,7 @@
     },
     "dependencies": {
         "@wxn0brp/db": "github:wxn0brP/ValtheraDB#dist",
-        "@wxn0brp/falcon-frame": "^0.0.17",
+        "@wxn0brp/falcon-frame": "^0.0.21",
         "@wxn0brp/gate-warden": "github:wxn0brP/gate-warden#dist"
     }
 }
