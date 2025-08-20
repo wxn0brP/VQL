@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.6.3](https://github.com/wxn0brP/VQL/compare/v0.6.2...v0.6.3) (2025-08-20)
+
+
+### Bug Fixes
+
+* relation select ([3897c4e](https://github.com/wxn0brP/VQL/commit/3897c4eb5b327be0a8667c970e8cb383ee5c4153))
+
 ### [0.6.2](https://github.com/wxn0brP/VQL/compare/v0.6.1...v0.6.2) (2025-08-20)
 
 
