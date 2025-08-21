@@ -45,6 +45,14 @@ export interface ValtheraResolver {
     removeCollection?: ResolverFn<[collection: string], boolean>;
 }
 
+const list = [
+    "ensureCollection", "issetCollection", "getCollections", "removeCollection",
+    "add",
+    "find", "findOne",
+    "update", "updateOne", "updateOneOrAdd",
+    "remove", "removeOne"
+];
+
 export function createValtheraAdapter(resolver: ValtheraResolver, extendedFind: boolean = false): ValtheraCompatible {
     const safe = <T>(fn?: T): T => {
         if (!fn) throw new Error("Unimplemented method");
@@ -54,25 +62,13 @@ export function createValtheraAdapter(resolver: ValtheraResolver, extendedFind: 
     const adapter: ValtheraCompatible = {
         // @ts-ignore
         meta: resolver.meta ?? { type: "api", version: "0.0.1" },
-        c: null,
-        getCollections: () => safe(resolver.getCollections!)(),
-        issetCollection: (c) => safe(resolver.issetCollection!)(c),
-        ensureCollection: (c) => safe(resolver.ensureCollection!)(c),
-
-        add: (col, data, id_gen) => safe(resolver.add)(col, data, id_gen),
-        find: (col, search, context, options, findOpts) => safe(resolver.find)(col, search, context, options, findOpts),
-        findOne: (col, search, context, findOpts) => safe(resolver.findOne)(col, search, context, findOpts),
-
-        update: (col, search, up) => safe(resolver.update)(col, search, up),
-        updateOne: (col, search, up) => safe(resolver.updateOne)(col, search, up),
-        updateOneOrAdd: (col, search, up, add_data, ctx, id_gen) => safe(resolver.updateOneOrAdd)(col, search, up, add_data, ctx, id_gen),
-
-        remove: (col, search) => safe(resolver.remove)(col, search),
-        removeOne: (col, search) => safe(resolver.removeOne)(col, search),
-
-        removeCollection: (col) => safe(resolver.removeCollection)(col),
     };
+
     adapter.c = (collection: string) => new CollectionManager(adapter, collection);
+
+    for (const name of list) {
+        adapter[name] = (...args: any[]) => safe(resolver[name])(...args);
+    }
 
     if (extendedFind) {
         adapter.find = async (col, search, context, options, findOpts) => {
@@ -104,26 +100,63 @@ export class AdapterBuilder {
     private handlers: Map<string, Function> = new Map();
     private collections: Set<string> = new Set();
 
-    register(op: "add", collection: string, fn: ResolverFn<[collection: string, data: any, id_gen?: boolean], any>);
-    register(op: "find", collection: string, fn: ResolverFn<[collection: string, search: any, context?: any, options?: any, findOpts?: any], any[]>);
-    register(op: "findOne", collection: string, fn: ResolverFn<[collection: string, search: any, context?: any, findOpts?: any], any | null>);
-    register(op: "update", collection: string, fn: ResolverFn<[collection: string, search: any, updater: any], boolean>);
-    register(op: "updateOne", collection: string, fn: ResolverFn<[collection: string, search: any, updater: any], boolean>);
-    register(op: "updateOneOrAdd", collection: string, fn: ResolverFn<[collection: string, search: any, updater: any, add_arg?: any, context?: any, id_gen?: boolean], boolean>);
-    register(op: "remove", collection: string, fn: ResolverFn<[collection: string, search: any], boolean>);
-    register(op: "removeOne", collection: string, fn: ResolverFn<[collection: string, search: any], boolean>);
-    register(op: "removeCollection", collection: string, fn: ResolverFn<[collection: string], boolean>);
+    constructor(
+        private catchCb: (e: any, op: string, args: any[]) => void = (e) => { console.log(e); }
+    ) { }
+
     register(op: Operation, collection: string, fn: Function) {
         this.handlers.set(`${op}:${collection}`, fn);
         this.collections.add(collection);
         return this;
     }
 
+    add(collection: string, fn: ResolverFn<[data: any, id_gen?: boolean], any>) {
+        return this.register("add", collection, fn);
+    }
+
+    find(collection: string, fn: ResolverFn<[search: any, context?: any, options?: any, findOpts?: any], any[]>) {
+        return this.register("find", collection, fn);
+    }
+
+    findOne(collection: string, fn: ResolverFn<[search: any, context?: any, findOpts?: any], any | null>) {
+        return this.register("findOne", collection, fn);
+    }
+
+    update(collection: string, fn: ResolverFn<[collection: string, search: any, updater: any], boolean>) {
+        return this.register("update", collection, fn);
+    }
+
+    updateOne(collection: string, fn: ResolverFn<[search: any, updater: any], boolean>) {
+        return this.register("updateOne", collection, fn);
+    }
+
+    updateOneOrAdd(collection: string, fn: ResolverFn<[search: any, updater: any, add_arg?: any, context?: any, id_gen?: boolean], boolean>) {
+        return this.register("updateOneOrAdd", collection, fn);
+    }
+
+    remove(collection: string, fn: ResolverFn<[search: any], boolean>) {
+        return this.register("remove", collection, fn);
+    }
+
+    removeOne(collection: string, fn: ResolverFn<[search: any], boolean>) {
+        return this.register("removeOne", collection, fn);
+    }
+
+    removeCollection(collection: string, fn: ResolverFn<[], boolean>) {
+        return this.register("removeCollection", collection, fn);
+    }
+
     getAdapter(extendedFind: boolean = true) {
-        const resolve = async (op: string, col: string, ...args: any[]) => {
+        const resolve = async (op: string, ...args: any[]) => {
+            const col: string = args.shift();
             const handler = this.handlers.get(`${op}:${col}`) || this.handlers.get(`${op}:*`) || null;
             if (!handler) throw new Error(`Unimplemented method: ${op}:${col}`);
-            return handler(...args);
+            if (col === "*") args.unshift(col);
+            try {
+                return await handler(...args);
+            } catch (e) {
+                this.catchCb(e, op, args);
+            }
         };
 
         const adapter = createValtheraAdapter({
@@ -134,20 +167,11 @@ export class AdapterBuilder {
                     this.collections.add(col)
                 return true;
             },
-
-            add: (col, data, id_gen) => resolve("add", col, data, id_gen),
-            find: (col, search, context, options, findOpts) => resolve("find", col, search, context, options, findOpts),
-            findOne: (col, search, context, findOpts) => resolve("findOne", col, search, context, findOpts),
-
-            update: (col, search, up) => resolve("update", col, search, up),
-            updateOne: (col, search, up) => resolve("updateOne", col, search, up),
-            updateOneOrAdd: (col, search, up, add_data, ctx, id_gen) => resolve("updateOneOrAdd", col, search, up, add_data, ctx, id_gen),
-
-            remove: (col, search) => resolve("remove", col, search),
-            removeOne: (col, search) => resolve("removeOne", col, search),
-
-            removeCollection: (col) => resolve("removeCollection", col),
         }, extendedFind);
+
+        for (const name of ["add", "find", "findOne", "update", "updateOne", "updateOneOrAdd", "remove", "removeOne", "removeCollection"]) {
+            adapter[name] = (...args: any[]) => resolve(name, ...args);
+        }
 
         return adapter;
     }
