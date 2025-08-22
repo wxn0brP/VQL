@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.6.4](https://github.com/wxn0brP/VQL/compare/v0.6.3...v0.6.4) (2025-08-22)
+
+
+### Bug Fixes
+
+* AdapterBuilder ([5ffb031](https://github.com/wxn0brP/VQL/commit/5ffb0311c8ef3be29a5b1298a20bc0378d395e96))
+
 ### [0.6.3](https://github.com/wxn0brP/VQL/compare/v0.6.2...v0.6.3) (2025-08-20)
 
 
