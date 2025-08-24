@@ -5,12 +5,13 @@ VQL is a query language and processing framework designed for managing and inter
 [![npm version](https://img.shields.io/npm/v/@wxn0brp/vql)](https://www.npmjs.com/package/@wxn0brp/vql)
 [![License](https://img.shields.io/npm/l/@wxn0brp/vql)](./LICENSE)
 [![Downloads](https://img.shields.io/npm/dm/@wxn0brp/vql)](https://www.npmjs.com/package/@wxn0brp/vql)
+![CI](https://img.shields.io/github/actions/workflow/status/wxn0brP/VQL/build.yml?branch=master)
+![bundle size](https://img.shields.io/bundlephobia/minzip/@wxn0brp/vql)
 
 ## Features
 
 - **Query Execution**: Supports CRUD operations and advanced query capabilities.
 - **Permission Management**: Fine-grained access control using Gate Warden.
-- **GUI**: A web-based interface for managing ACL rules and database structures.
 - **Extensibility**: Easily extendable with pre-defined sheets and custom configurations.
 
 ## Example Usage
@@ -35,7 +36,7 @@ const query = {
     d: {
         find: {
             collection: "users",
-            search: { age: { $gt: 18 } },
+            search: { $gt: { age: 18 } },
             fields: { name: 1, age: 1 },
         },
     },
