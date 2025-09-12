@@ -37,15 +37,15 @@ interface VQL {
 ```
 
 ## Examples
-### Basic Find
+### Basic Find (findOne)
 ```ts
 const query: VQL = {
-  r: {
-    path: ["db1", "users"],
-    search: { status: "active" },
-    select: [["name"], ["email"]],
-    options: { limit: 10 },
-    many: true
+  db: "db1",
+  d: {
+    f: { // alias to findOne
+      collection: "users",
+      search: { status: "active" }
+    }
   }
 };
 ```
