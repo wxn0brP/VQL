@@ -71,8 +71,8 @@ export function createValtheraAdapter(resolver: ValtheraResolver, extendedFind: 
     }
 
     if (extendedFind) {
-        adapter.find = async (col, search, context, options, findOpts) => {
-            let data = await safe(resolver.find)(col, search, context, options, findOpts);
+        adapter.find = async (col, search, options, findOpts, context) => {
+            let data = await safe(resolver.find)(col, search, options, findOpts, context);
 
             if (options?.reverse) data.reverse();
 

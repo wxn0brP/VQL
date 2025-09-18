@@ -1,3 +1,4 @@
+import { UpdateOneOrAdd } from "@wxn0brp/db-core/types/valthera";
 import { checkRequestPermission } from "../permissions";
 import { VQLProcessor } from "../processor";
 import {
@@ -30,13 +31,13 @@ export async function executeQuery(cpu: VQLProcessor, query: VQL_Query_CRUD, use
         const select = parseSelect(cpu.config, params.fields || params.select || {});
         if (select && typeof select === "object" && Object.keys(select).length !== 0) params.searchOpts = { ...params.searchOpts, select };
 
-        return db.find(params.collection, params.search, {}, params.options || {}, params.searchOpts);
+        return db.find(params.collection, params.search, params.options || {}, params.searchOpts);
     } else if (operation === "findOne" || operation === "f") {
         const params = query.d[operation] as VQL_OP_FindOne;
         const select = parseSelect(cpu.config, params.fields || params.select || {});
         if (select && typeof select === "object" && Object.keys(select).length !== 0) params.searchOpts = { ...params.searchOpts, select };
 
-        return db.findOne(params.collection, params.search, {}, params.searchOpts);
+        return db.findOne(params.collection, params.search, params.searchOpts);
     } else if (operation === "add") {
         const params = query.d[operation] as VQL_OP_Add;
         return db.add(params.collection, params.data, params.id_gen ?? true);
@@ -54,7 +55,10 @@ export async function executeQuery(cpu: VQLProcessor, query: VQL_Query_CRUD, use
         return db.removeOne(params.collection, params.search);
     } else if (operation === "updateOneOrAdd") {
         const params = query.d[operation] as VQL_OP_UpdateOneOrAdd;
-        return db.updateOneOrAdd(params.collection, params.search, params.updater, params.add_arg || {}, {}, params.id_gen ?? true);
+        const opts: UpdateOneOrAdd<any> = {};
+        if (params.add_arg) opts.add_arg = params.add_arg;
+        if (params.id_gen) opts.id_gen = params.id_gen;
+        return db.updateOneOrAdd(params.collection, params.search, params.updater, opts);
     } else if (operation === "removeCollection") {
         const params = query.d[operation] as VQL_OP_CollectionOperation;
         return db.removeCollection(params.collection);
