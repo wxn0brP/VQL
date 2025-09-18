@@ -15,7 +15,7 @@ export class PermissionResolverEngine {
 
     createResolverOnlyPermValidFn(): PermValidFn {
         return async (args: PermValidFnArgs): Promise<{ granted: boolean; via?: string }> => {
-            const originalPath: string = args.path.join('.');
+            const originalPath: string = args.path.join("/");
 
             for (const { matcher, resolver } of this.resolvers) {
                 let isMatch = false;
@@ -25,7 +25,7 @@ export class PermissionResolverEngine {
                 } else if (matcher instanceof RegExp) {
                     isMatch = matcher.test(originalPath);
                 } else if (typeof matcher === "function") {
-                    isMatch = await matcher(originalPath);
+                    isMatch = await matcher(originalPath, args.path);
                 }
 
                 if (isMatch) {

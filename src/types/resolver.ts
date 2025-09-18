@@ -4,7 +4,7 @@ export interface GWUser {
     _id: string;
 }
 
-export type PathMatcher = string | RegExp | ((path: string) => Promise<boolean>);
+export type PathMatcher = string | RegExp | ((path: string, pathSegments: string[]) => Promise<boolean>);
 export type PermissionResolver = (args: PermValidFnArgs) => Promise<boolean>;
 
 export interface ResolverEntry {
