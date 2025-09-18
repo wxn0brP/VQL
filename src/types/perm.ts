@@ -11,4 +11,14 @@ export interface ValidFnResult {
     via?: string;
 }
 
-export type PermValidFn = (path: string, perm: number, user: any) => Promise<ValidFnResult>;
+export interface PermValidFnArgs {
+    /** sha256/json */
+    field: string;
+    /** original path */
+    path: string[];
+    /** permission */
+    p: number;
+    user: any;
+}
+
+export type PermValidFn = (args: PermValidFnArgs) => Promise<ValidFnResult>;

@@ -55,14 +55,19 @@ export async function extractPaths(config: VQLConfig, query: VQL_Query_CRUD): Pr
             break;
     }
 
-    permPaths.paths = permPaths.paths.map(path => {
-        if (!path.filed) return path;
+    permPaths.paths = (await Promise.all(
+        permPaths.paths.map(async (path) => {
+            if (!path.filed) return path;
 
-        return path.filed.map(filed => {
-            const processedPath = [query.db, collection, ...processFieldPath(filed)];
-            return { filed: hashKey(config, processedPath), path: processedPath, p: path.p };
-        });
-    }).flat();
+            return await Promise.all(
+                path.filed.map(async (filed) => {
+                    const processedPath = [query.db, collection, ...processFieldPath(filed)];
+                    const hashedKey = await hashKey(config, processedPath);
+                    return { filed: hashedKey, path: processedPath, p: path.p };
+                })
+            );
+        })
+    )).flat();
 
     return permPaths;
 }
@@ -109,12 +114,18 @@ export async function checkRequestPermission(
     // Helper function to recursively check permissions
     const checkPermissionRecursively = async (
         entityId: string,
+        originalPath: string[],
         requiredPerm: number,
         fallbackLevels: string[] = []
     ): Promise<boolean> => {
         // Check if the user has access to the current entity
         // const result = await gw.hasAccess(user.id, entityId, requiredPerm);
-        const result = await permValidFn(entityId, requiredPerm, user);
+        const result = await permValidFn({
+            field: entityId,
+            path: originalPath,
+            p: requiredPerm,
+            user
+        });
 
         if (result.granted) {
             return true;
@@ -123,7 +134,7 @@ export async function checkRequestPermission(
         // If the result is "entity-404", check the next fallback level
         if (!config.strictACL && result.via === "entity-404" && fallbackLevels.length > 0) {
             const nextFallbackEntityId = await hashKey(config, fallbackLevels.slice(0, -1));
-            return checkPermissionRecursively(nextFallbackEntityId, requiredPerm, fallbackLevels.slice(0, -2));
+            return checkPermissionRecursively(nextFallbackEntityId, fallbackLevels.slice(0, -2), requiredPerm, fallbackLevels.slice(0, -2));
         }
 
         // If no fallback levels are left or the result is not "entity-404", deny access
@@ -136,11 +147,13 @@ export async function checkRequestPermission(
         let entityId: string;
         let requiredPerm: number;
         let fallbackLevels: string[] = [];
+        let originalPath: string[] = [];
 
         if ("c" in path) {
             // Collection-level permission: hash the combination of db and collection
             entityId = await hashKey(config, [query.db, permPaths.c]);
             requiredPerm = path.c;
+            originalPath = [query.db, permPaths.c];
 
             // Fallback to database level if needed
             fallbackLevels = [query.db];
@@ -148,13 +161,14 @@ export async function checkRequestPermission(
             // Field-level permission: use the hashed field path
             entityId = path.filed;
             requiredPerm = path.p;
+            originalPath = path.path;
 
             // Fallback to collection and then database level if needed
             fallbackLevels = path.path;
         }
 
         // Check permissions recursively
-        const result = await checkPermissionRecursively(entityId, requiredPerm, fallbackLevels);
+        const result = await checkPermissionRecursively(entityId, originalPath, requiredPerm, fallbackLevels);
         results.push(result);
     }
 
