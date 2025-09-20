@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.7.0](https://github.com/wxn0brP/VQL/compare/v0.6.4...v0.7.0) (2025-09-20)
+
+
+### ⚠ BREAKING CHANGES
+
+* create permission resolver
+* update permission resolver
+* bump deps
+* rebuild perm system
+
+### Features
+
+* bump deps ([02e5e59](https://github.com/wxn0brP/VQL/commit/02e5e59ff4ae73108bdd3ac53af17b02431152ec))
+* create permission resolver ([4f4c974](https://github.com/wxn0brP/VQL/commit/4f4c974428432b6d687ed3de31490a4e9668146c))
+* permission resolver ([048c53d](https://github.com/wxn0brP/VQL/commit/048c53d9eaa27252044c26237f2370ea79d9f3f2))
+* rebuild perm system ([cba5409](https://github.com/wxn0brP/VQL/commit/cba5409d87932d0c7a2e1f237b9cd20745c2d7c5))
+* update permission resolver ([a395656](https://github.com/wxn0brP/VQL/commit/a3956561c3c34f3485346ede0d47bf5dd8070cce))
+
 ### [0.6.4](https://github.com/wxn0brP/VQL/compare/v0.6.3...v0.6.4) (2025-08-22)
 
 
