@@ -20,8 +20,8 @@
         "dist"
     ],
     "peerDependencies": {
-        "@wxn0brp/db-core": ">=0.2.0",
-        "@wxn0brp/falcon-frame": ">=0.0.21",
+        "@wxn0brp/db-core": ">=0.2.2",
+        "@wxn0brp/falcon-frame": ">=0.1.0",
         "@wxn0brp/gate-warden": ">=0.4.0"
     },
     "peerDependenciesMeta": {
@@ -38,7 +38,7 @@
     "devDependencies": {
         "@types/node": "*",
         "@wxn0brp/db": "^0.40.0",
-        "@wxn0brp/falcon-frame": "0.0.21",
+        "@wxn0brp/falcon-frame": "0.1.0",
         "@wxn0brp/gate-warden": "^0.4.0",
         "esbuild": "^0.25.10",
         "tsc-alias": "*",
