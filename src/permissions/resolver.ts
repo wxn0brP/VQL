@@ -5,6 +5,7 @@ import {
     ResolverEntry
 } from "../types/resolver";
 import { PermValidFn, PermValidFnArgs } from "../types/perm";
+import { GateWarden } from "@wxn0brp/gate-warden";
 
 export class PermissionResolverEngine {
     private resolvers: ResolverEntry[] = [];
@@ -13,7 +14,7 @@ export class PermissionResolverEngine {
         this.resolvers.push({ matcher, resolver });
     }
 
-    createResolverOnlyPermValidFn(): PermValidFn {
+    create(): PermValidFn {
         return async (args: PermValidFnArgs): Promise<{ granted: boolean; via?: string }> => {
             const originalPath: string = args.path.join("/");
 
@@ -31,11 +32,7 @@ export class PermissionResolverEngine {
                 if (isMatch) {
                     try {
                         const resolverGranted = await resolver(args);
-                        if (resolverGranted === true) {
-                            return { granted: true, via: `resolver` };
-                        } else {
-                            return { granted: false, via: `resolver` };
-                        }
+                        return { granted: resolverGranted, via: `resolver` };
                     } catch (error) {
                         console.error(`[Resolver Engine] Error in custom resolver for path ${originalPath}:`, error);
                         return { granted: false, via: `resolver-error` };
@@ -44,6 +41,19 @@ export class PermissionResolverEngine {
             }
 
             return { granted: false, via: `no-resolver-match` };
+        };
+    }
+
+    createWithGw(gw: GateWarden): PermValidFn {
+        const resolver = this.create();
+
+        return async (args: PermValidFnArgs): Promise<{ granted: boolean; via?: string }> => {
+            const resolverResult = await resolver(args);
+            if (resolverResult.granted) return resolverResult;
+            if (!resolverResult.granted && resolverResult.via !== `no-resolver-match`) return resolverResult;
+
+            const gwResult = await gw.hasAccess(args.user.id, args.field, args.p);
+            return { granted: gwResult.granted, via: `gate-warden` };
         };
     }
 }
