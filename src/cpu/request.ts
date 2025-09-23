@@ -26,50 +26,49 @@ export async function executeQuery(cpu: VQLProcessor, query: VQL_Query_CRUD, use
         return { err: true, msg: "Permission denied", c: 403 };
     }
 
+    const context = { user };
+
     if (operation === "find") {
         const params = query.d[operation] as VQL_OP_Find;
         const select = parseSelect(cpu.config, params.fields || params.select || {});
         if (select && typeof select === "object" && Object.keys(select).length !== 0) params.searchOpts = { ...params.searchOpts, select };
 
-        return db.find(params.collection, params.search, params.options || {}, params.searchOpts);
+        return db.find(params.collection, params.search, context, params.options || {}, params.searchOpts);
     } else if (operation === "findOne" || operation === "f") {
         const params = query.d[operation] as VQL_OP_FindOne;
         const select = parseSelect(cpu.config, params.fields || params.select || {});
         if (select && typeof select === "object" && Object.keys(select).length !== 0) params.searchOpts = { ...params.searchOpts, select };
 
-        return db.findOne(params.collection, params.search, params.searchOpts);
+        return db.findOne(params.collection, params.search, context, params.searchOpts);
     } else if (operation === "add") {
         const params = query.d[operation] as VQL_OP_Add;
-        return db.add(params.collection, params.data, params.id_gen ?? true);
+        return db.add(params.collection, params.data, params.id_gen ?? true, context);
     } else if (operation === "update") {
         const params = query.d[operation] as VQL_OP_Update;
-        return db.update(params.collection, params.search, params.updater);
+        return db.update(params.collection, params.search, params.updater, context);
     } else if (operation === "updateOne") {
         const params = query.d[operation] as VQL_OP_Update;
-        return db.updateOne(params.collection, params.search, params.updater);
+        return db.updateOne(params.collection, params.search, params.updater, context);
     } else if (operation === "remove") {
         const params = query.d[operation] as VQL_OP_Remove;
-        return db.remove(params.collection, params.search);
+        return db.remove(params.collection, params.search, context);
     } else if (operation === "removeOne") {
         const params = query.d[operation] as VQL_OP_Remove;
-        return db.removeOne(params.collection, params.search);
+        return db.removeOne(params.collection, params.search, context);
     } else if (operation === "updateOneOrAdd") {
         const params = query.d[operation] as VQL_OP_UpdateOneOrAdd;
-        const opts: UpdateOneOrAdd<any> = {};
-        if (params.add_arg) opts.add_arg = params.add_arg;
-        if (params.id_gen) opts.id_gen = params.id_gen;
-        return db.updateOneOrAdd(params.collection, params.search, params.updater, opts);
+        return db.updateOneOrAdd(params.collection, params.search, params.updater, params.add_arg, context, params.id_gen);
     } else if (operation === "removeCollection") {
         const params = query.d[operation] as VQL_OP_CollectionOperation;
-        return db.removeCollection(params.collection);
+        return db.removeCollection(params.collection, context);
     } else if (operation === "ensureCollection") {
         const params = query.d[operation] as VQL_OP_CollectionOperation;
-        return db.ensureCollection(params.collection);
+        return db.ensureCollection(params.collection, context);
     } else if (operation === "issetCollection") {
         const params = query.d[operation] as VQL_OP_CollectionOperation;
-        return db.issetCollection(params.collection);
+        return db.issetCollection(params.collection, context);
     } else if (operation === "getCollections") {
-        return db.getCollections();
+        return db.getCollections(context);
     } else {
         const n: never = operation;
         throw new Error("Unknown operation " + n);
