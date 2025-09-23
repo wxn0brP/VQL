@@ -8,6 +8,7 @@ import { VQL_Query, VQLError, VQLUQ } from "./types/vql";
 import { validateRaw, validateVql } from "./valid";
 import { parseVQLS } from "./cpu/string";
 import { PermValidFn } from "./types/perm";
+import { createVqlProxyDb } from "./vqlMesh";
 
 export class VQLProcessor {
     public relation: Relation;
@@ -16,8 +17,21 @@ export class VQLProcessor {
     constructor(
         public dbInstances: Record<string, ValtheraCompatible>,
         config: VQLConfig | Partial<VQLConfigInterface> = new VQLConfig(),
-        public permValidFn: PermValidFn = async () => ({ granted: true, via: "" })
+        public permValidFn: PermValidFn = async () => ({ granted: true, via: "" }),
+        vqlMesh: VQLProcessor[] = []
     ) {
+        for (const remoteVql of vqlMesh) {
+            const remoteDbs = Object.keys(remoteVql.dbInstances);
+            for (const dbName of remoteDbs) {
+                if (!this.dbInstances[dbName]) {
+                    logger.info(`[VQL Mesh] Creating proxy for remote database: ${dbName}`);
+                    this.dbInstances[dbName] = createVqlProxyDb(remoteVql, dbName);
+                } else {
+                    logger.info(`[VQL Mesh] Skipping remote database "${dbName}" as it already exists locally.`);
+                }
+            }
+        }
+
         this.relation = new Relation(dbInstances);
         this.config = config instanceof VQLConfig ? config : new VQLConfig(config);
     }
