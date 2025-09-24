@@ -1,4 +1,4 @@
-import { VQL_Query } from "./types/vql";
+import { VQL_Query } from "../types/vql";
 
 function replaceVariables(obj: any, variables: Record<string, any>): any {
     if (typeof obj === "object" && !Array.isArray(obj) && obj !== null && "__" in obj) {
@@ -7,9 +7,9 @@ function replaceVariables(obj: any, variables: Record<string, any>): any {
     }
 
     if (typeof obj === "string") {
-        if (obj.startsWith("$")) 
+        if (obj.startsWith("$"))
             return variables[obj.slice(1)] ?? obj;
-        
+
         return obj;
     }
 

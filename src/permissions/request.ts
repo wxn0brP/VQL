@@ -1,4 +1,4 @@
-import { VQLConfig } from "../config";
+import { VQLConfig } from "../helpers/config";
 import { PermCRUD, PermValidFn } from "../types/perm";
 import { VQL_OP_Find, VQL_OP_FindOne, VQL_OP_Update, VQL_OP_UpdateOneOrAdd, VQL_Query_CRUD } from "../types/vql";
 import { extractPathsFromData, hashKey } from "./utils";

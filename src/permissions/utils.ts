@@ -1,4 +1,4 @@
-import { VQLConfig } from "../config";
+import { VQLConfig } from "../helpers/config";
 
 let cryptoRef: typeof import("crypto") | null = null;
 

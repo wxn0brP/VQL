@@ -1,5 +1,5 @@
-import { parseVQLS } from "./cpu/string";
-import { type VQLProcessor } from "./processor";
+import { parseVQLS } from "../cpu/string";
+import { type VQLProcessor } from "../processor";
 import type { FalconFrame, FFRequest } from "@wxn0brp/falcon-frame";
 
 type ContextFn = (req: FFRequest) => Promise<any> | any;
@@ -27,7 +27,7 @@ export function FF_VQL(app: FalconFrame, processor: VQLProcessor, options: FF_VQ
     });
 
     if (options.dev) {
-        app.get(path+"-query", (req, res) => {
+        app.get(path + "-query", (req, res) => {
             try {
                 return res.json(parseVQLS(req.query?.query || ""));
             } catch (e) {

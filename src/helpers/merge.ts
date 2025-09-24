@@ -1,11 +1,11 @@
 export function deepMerge<T = Record<string, any>>(target: T, source: T): T {
-    if (typeof target !== 'object' || target === null) {
+    if (typeof target !== "object" || target === null) {
         target = {} as T;
     }
 
     for (const key in source) {
         if (source.hasOwnProperty(key)) {
-            if (typeof source[key] === 'object' && source[key] !== null && !Array.isArray(source[key])) {
+            if (typeof source[key] === "object" && source[key] !== null && !Array.isArray(source[key])) {
                 if (!target[key]) {
                     target[key] = {} as any;
                 }

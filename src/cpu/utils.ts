@@ -1,4 +1,4 @@
-import { VQLConfig } from "../config";
+import { VQLConfig } from "../helpers/config";
 
 export function parseSelect(config: VQLConfig, select: object | object[]) {
     if (Array.isArray(select)) {

@@ -1,4 +1,4 @@
-import { VQL_Query_Relation, VQL_Query, VQLError, VQL_Query_CRUD } from "./types/vql";
+import { VQL_Query_Relation, VQL_Query, VQLError, VQL_Query_CRUD } from "../types/vql";
 import { RelationTypes } from "@wxn0brp/db";
 
 function emptyErr(msg: string = "Bad query"): VQLError {

@@ -3,7 +3,7 @@ import { VQLProcessor } from "../processor";
 import { VQL_Query_Relation } from "../types/vql";
 import { checkRelationPermission } from "../permissions";
 import { parseSelect } from "./utils";
-import { VQLConfig } from "../config";
+import { VQLConfig } from "../helpers/config";
 
 function standardizeRelationRequest(config: VQLConfig, req: RelationTypes.Relation | VQL_Query_Relation["r"]) {
     req.select = parseSelect(config, req.select);

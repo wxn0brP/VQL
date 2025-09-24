@@ -1,11 +1,11 @@
 import { Relation, ValtheraCompatible } from "@wxn0brp/db-core";
-import { VQLConfig, VQLConfigInterface } from "./config";
+import { VQLConfig, VQLConfigInterface } from "./helpers/config";
 import { executeRelation } from "./cpu/relation";
 import { executeQuery } from "./cpu/request";
 import logger from "./logger";
-import { replaceVars } from "./sheet";
+import { replaceVars } from "./helpers/sheet";
 import { VQL_Query, VQLError, VQLUQ } from "./types/vql";
-import { validateRaw, validateVql } from "./valid";
+import { validateRaw, validateVql } from "./helpers/valid";
 import { parseVQLS } from "./cpu/string";
 import { PermValidFn } from "./types/perm";
 

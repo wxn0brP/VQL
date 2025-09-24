@@ -1,7 +1,7 @@
 import { PermCRUD, PermValidFn } from "../types/perm";
 import { VQL_Query_Relation } from "../types/vql";
 import { extractPathsFromData, hashKey } from "./utils";
-import { VQLConfig } from "../config";
+import { VQLConfig } from "../helpers/config";
 
 export async function checkRelationPermission(
     config: VQLConfig,
