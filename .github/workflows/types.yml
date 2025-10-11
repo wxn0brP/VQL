@@ -27,7 +27,7 @@ jobs:
 
       - name: Copy type definitions
         run: |
-          cp ./dist/types/vql.d.ts ./vql.d.ts
+          cp ./dist/vql.d.ts ./vql.d.ts
 
       - name: Prepare package.json
         run: |
