@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.8.1](https://github.com/wxn0brP/VQL/compare/v0.8.0...v0.8.1) (2025-10-11)
+
+
+### Bug Fixes
+
+* ci ([50f0bd1](https://github.com/wxn0brP/VQL/commit/50f0bd1709e2e45bc21c7e7f6474321e9521df8b))
+* ci ([47385af](https://github.com/wxn0brP/VQL/commit/47385afba461b632b273fcce9fc97dbb576261a4))
+* ci ([64f5530](https://github.com/wxn0brP/VQL/commit/64f5530cb1bdc4a2f2ac188ab2243cba8f017207))
+* ci ([67dc1d8](https://github.com/wxn0brP/VQL/commit/67dc1d883bf3468139303b031115879d830d361d))
+
 ## [0.8.0](https://github.com/wxn0brP/VQL/compare/v0.7.0...v0.8.0) (2025-10-11)
 
 
