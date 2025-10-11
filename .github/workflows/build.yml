@@ -25,8 +25,3 @@ jobs:
     steps:
       - name: Run Rusalka
         uses: wxn0brP/rusalka@master
-        with:
-          customCommands: |
-            npm i -g dts-bundle-generator
-            npm run types
-          publishToNpm: true
