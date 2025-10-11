@@ -25,3 +25,5 @@ jobs:
     steps:
       - name: Run Rusalka
         uses: wxn0brP/rusalka@master
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
