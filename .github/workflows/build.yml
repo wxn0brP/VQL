@@ -10,22 +10,23 @@ on:
       - "src/**/*.ts"
       - "package.json"
       - "tsconfig.json"
-
   workflow_dispatch:
 
 concurrency:
-  group: build-main
+  group: build-master
   cancel-in-progress: true
 
 jobs:
   build:
-    uses: wxn0brP/workflow-dist/.github/workflows/build-ts.yml@main
-    with:
-      scriptsHandling: "remove-all"
-      customCommands: |
-        npm i -g dts-bundle-generator
-        npm run types
-      publishToNpm: true
-
-    secrets:
-      NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      id-token: write
+    steps:
+      - name: Run Rusalka
+        uses: wxn0brP/rusalka@master
+        with:
+          customCommands: |
+            npm i -g dts-bundle-generator
+            npm run types
+          publishToNpm: true
