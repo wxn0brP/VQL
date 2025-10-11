@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.8.0](https://github.com/wxn0brP/VQL/compare/v0.7.0...v0.8.0) (2025-10-11)
+
+
+### ⚠ BREAKING CHANGES
+
+* organize files
+
+* organize files ([a1185e8](https://github.com/wxn0brP/VQL/commit/a1185e89bbf6e866079df0de13def6a946382c9b))
+
 ## [0.7.0](https://github.com/wxn0brP/VQL/compare/v0.6.4...v0.7.0) (2025-09-20)
 
 
