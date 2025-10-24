@@ -3,6 +3,7 @@ export interface VQLConfigInterface {
     strictSelect: boolean;
     strictACL: boolean;
     noCheckPermissions: boolean;
+    permissionDeniedIfNoUser: boolean;
 }
 
 export class VQLConfig implements VQLConfigInterface {
@@ -10,6 +11,7 @@ export class VQLConfig implements VQLConfigInterface {
     strictSelect = false;
     strictACL = false;
     noCheckPermissions = true;
+    permissionDeniedIfNoUser = true;
 
     constructor(config?: Partial<VQLConfigInterface>) {
         if (config) {

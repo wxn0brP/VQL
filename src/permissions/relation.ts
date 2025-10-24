@@ -9,6 +9,7 @@ export async function checkRelationPermission(
     user: any,
     query: VQL_Query_Relation
 ): Promise<boolean> {
+    if (!user && config.permissionDeniedIfNoUser) return false;
     const { path, search, relations, select } = query.r;
 
     // Helper function to recursively check permissions with fallback mechanism

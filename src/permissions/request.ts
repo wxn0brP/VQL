@@ -108,6 +108,7 @@ export async function checkRequestPermission(
     query: VQL_Query_CRUD
 ): Promise<boolean> {
     if (!query) return false;
+    if (!user && config.permissionDeniedIfNoUser) return false;
 
     const permPaths = await extractPaths(config, query);
 
@@ -119,7 +120,6 @@ export async function checkRequestPermission(
         fallbackLevels: string[] = []
     ): Promise<boolean> => {
         // Check if the user has access to the current entity
-        // const result = await gw.hasAccess(user.id, entityId, requiredPerm);
         const result = await permValidFn({
             field: entityId,
             path: originalPath,
