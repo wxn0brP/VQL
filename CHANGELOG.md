@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.8.3](https://github.com/wxn0brP/VQL/compare/v0.8.2...v0.8.3) (2025-11-01)
+
+
+### Features
+
+* add permissionDeniedIfNoUser config option ([53e35ef](https://github.com/wxn0brP/VQL/commit/53e35ef4d141703683612bca1bfbb8885b1b5dbf))
+
 ### [0.8.2](https://github.com/wxn0brP/VQL/compare/v0.8.1...v0.8.2) (2025-10-11)
 
 
