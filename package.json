@@ -8,7 +8,7 @@
     "scripts": {
         "build": "tsc && tsc-alias",
         "test": "bun run src/tests/index.ts",
-        "types": "dts-bundle-generator src/types/vql.ts -o dist/vql.d.ts --external-inlines @wxn0brp/db-core"
+        "types": "bunx dts-bundle-generator src/types/vql.ts -o dist/vql.d.ts --external-inlines @wxn0brp/db-core"
     },
     "description": "VQL - Valthera Query Language",
     "homepage": "https://github.com/wxn0brP/VQL",
@@ -32,8 +32,8 @@
         "query-language"
     ],
     "peerDependencies": {
-        "@wxn0brp/db-core": ">=0.2.5",
-        "@wxn0brp/falcon-frame": ">=0.5.1",
+        "@wxn0brp/db-core": ">=0.2.7",
+        "@wxn0brp/falcon-frame": ">=0.5.3",
         "@wxn0brp/gate-warden": ">=0.4.1"
     },
     "peerDependenciesMeta": {
@@ -49,11 +49,11 @@
     },
     "devDependencies": {
         "@types/node": "*",
-        "@wxn0brp/db": "^0.40.1",
-        "@wxn0brp/db-core": "^0.2.5",
-        "@wxn0brp/falcon-frame": "^0.5.1",
+        "@wxn0brp/db": "^0.40.2",
+        "@wxn0brp/db-core": "^0.2.7",
+        "@wxn0brp/falcon-frame": "^0.5.3",
         "@wxn0brp/gate-warden": "^0.4.1",
-        "esbuild": "^0.25.11",
+        "esbuild": "*",
         "tsc-alias": "*",
         "typescript": "*"
     },
