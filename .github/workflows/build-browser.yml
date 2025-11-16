@@ -40,14 +40,8 @@ jobs:
           node build-browser.js
           cp dist-browser/* browser
 
-      - name: Push
-        run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-
-          git checkout --orphan browser
-          git reset -q HEAD --
-
-          git add LICENSE browser
-          git commit -m "Deploy browser"
-          git push origin browser --force
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./browser
