@@ -1,14 +1,10 @@
 name: Build Browser
 
 on:
-  push:
-    branches:
-      - master
-    paths:
-      - "src/**/*.ts"
-      - "browser/**/*"
-      - "package.json"
-      - "tsconfig.json"
+  workflow_run:
+    workflows: ["Build"]
+    types:
+      - completed
 
   workflow_dispatch:
 
@@ -19,6 +15,7 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     permissions:
       contents: write
 
@@ -45,3 +42,5 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./browser
+          destination_dir: demo
+          keep_files: true
