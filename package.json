@@ -48,6 +48,7 @@
         }
     },
     "devDependencies": {
+        "@types/bun": "*",
         "@types/node": "*",
         "@wxn0brp/db": "^0.40.2",
         "@wxn0brp/db-core": "^0.2.7",
