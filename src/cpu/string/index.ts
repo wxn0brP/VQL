@@ -27,7 +27,9 @@ export function parseVQLS(query: string): VQL_Query {
             const key = keys[i];
             if (i < keys.length - 1) {
                 if (!(key in obj)) {
-                    obj[key] = {};
+                    const nextKey = keys[i + 1];
+                    const isArrayIndex = /^\d+$/.test(nextKey);
+                    obj[key] = isArrayIndex ? [] : {};
                 }
                 obj = obj[key];
             } else {
