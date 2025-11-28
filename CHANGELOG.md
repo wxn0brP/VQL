@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.8.4](https://github.com/wxn0brP/VQL/compare/v0.8.3...v0.8.4) (2025-11-28)
+
+
+### Features
+
+* toggleOne operation & bump deps & fix bugs ([4035778](https://github.com/wxn0brP/VQL/commit/40357783411f63c2c53c3216fae7ce29db3f8527))
+* VQLS support $or/$and ([4bbc100](https://github.com/wxn0brP/VQL/commit/4bbc1008b9dcfa37e9f7cc11739e15f3552e6c45))
+* **VQLS:** prefix updateOneOrAdd & toggleOne support ([88d9cd7](https://github.com/wxn0brP/VQL/commit/88d9cd7c4e173084bbd396b6777a34584fbce906))
+
+
+### Bug Fixes
+
+* browser version ([f33e580](https://github.com/wxn0brP/VQL/commit/f33e58005f64e1f40438b42b369e0ea1617d9a3c))
+* toggleOne valid fn ([4ec046b](https://github.com/wxn0brP/VQL/commit/4ec046b83b065dd0ded864879ab552bbb1e7cd96))
+
 ### [0.8.3](https://github.com/wxn0brP/VQL/compare/v0.8.2...v0.8.3) (2025-11-01)
 
 
