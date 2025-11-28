@@ -1,5 +1,5 @@
-import { VQL_Query_Relation, VQL_Query, VQLError, VQL_Query_CRUD } from "../types/vql";
 import { RelationTypes } from "@wxn0brp/db";
+import { VQL_Query, VQL_Query_CRUD, VQL_Query_CRUD_Keys, VQL_Query_Relation, VQLError } from "../types/vql";
 
 function emptyErr(msg: string = "Bad query"): VQLError {
     return {
@@ -60,7 +60,7 @@ function validR(query: VQL_Query_Relation): true | VQLError {
 
 function validD(query: VQL_Query_CRUD): true | VQLError {
     const { d } = query as any;
-    const key = Object.keys(d)[0];
+    const key = Object.keys(d)[0] as VQL_Query_CRUD_Keys;
     const value = d[key]; // Cast for common property
 
     if (key === "getCollections") return true;
@@ -120,6 +120,14 @@ function validD(query: VQL_Query_CRUD): true | VQLError {
         return true;
     }
 
+    if (key === "toggleOne") {
+        const op = d.toggleOne!;
+        if (!isObj(op.search, false)) return emptyErr("'toggleOne' operation requires a 'search' object.");
+        if ("data" in op && !isObj(op.data, false)) return emptyErr("'toggleOne' operation 'data' property must be an object.");
+        return true;
+    }
+
+    const n: never = key;
     return emptyErr(`Unknown or invalid CRUD operation: '${key}'`);
 }
 
