@@ -46,6 +46,12 @@ export interface VQL_OP_UpdateOneOrAdd<T = any> {
     id_gen?: boolean;
 }
 
+export interface VQL_OP_ToggleOne<T = any> {
+    collection: string;
+    search: Search<T>;
+    data?: Arg<T>;
+}
+
 export interface VQL_OP_CollectionOperation {
     collection: string;
 }
@@ -62,10 +68,18 @@ export type VQL_Query_CRUD_Data<T = any> =
     | { remove: VQL_OP_Remove<T> }
     | { removeOne: VQL_OP_Remove<T> }
     | { updateOneOrAdd: VQL_OP_UpdateOneOrAdd<T> }
+    | { toggleOne: VQL_OP_ToggleOne<T> }
     | { removeCollection: VQL_OP_CollectionOperation }
     | { ensureCollection: VQL_OP_CollectionOperation }
     | { issetCollection: VQL_OP_CollectionOperation }
     | { getCollections: {} }
+
+export type VQL_Query_CRUD_Keys =
+    VQL_Query_CRUD_Data extends infer U
+    ? U extends Record<string, unknown>
+    ? keyof U
+    : never
+    : never;
 
 export interface VQL_Query_CRUD<T = any> {
     db: string;
