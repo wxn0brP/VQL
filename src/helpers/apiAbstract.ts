@@ -1,3 +1,4 @@
+import { VQL_Query_CRUD_Keys } from "#types/vql";
 import { ValtheraCompatible } from "@wxn0brp/db-core";
 import CollectionManager from "@wxn0brp/db-core/helpers/CollectionManager";
 import updateFindObject from "@wxn0brp/db-core/utils/updateFindObject";
@@ -38,6 +39,7 @@ export interface ValtheraResolver {
         [collection: string, search: any, updater: any, add_arg?: any, context?: any, id_gen?: boolean],
         boolean
     >;
+    toggleOne?: ResolverFn<[collection: string, search: any, data: any, context?: any], boolean>,
 
     remove?: ResolverFn<[collection: string, search: any, context?: any], boolean>;
     removeOne?: ResolverFn<[collection: string, search: any, context?: any], boolean>;
@@ -45,11 +47,13 @@ export interface ValtheraResolver {
     removeCollection?: ResolverFn<[collection: string], boolean>;
 }
 
-const list = [
+export type Operation = Exclude<VQL_Query_CRUD_Keys, "f">;
+const list: Operation[] = [
     "ensureCollection", "issetCollection", "getCollections", "removeCollection",
     "add",
     "find", "findOne",
-    "update", "updateOne", "updateOneOrAdd",
+    "update", "updateOne",
+    "updateOneOrAdd", "toggleOne",
     "remove", "removeOne"
 ];
 
@@ -94,8 +98,6 @@ export function createValtheraAdapter(resolver: ValtheraResolver, extendedFind: 
     return adapter;
 }
 
-export type Operation = "add" | "find" | "findOne" | "update" | "updateOne" | "updateOneOrAdd" | "remove" | "removeOne" | "removeCollection";
-
 export class AdapterBuilder {
     private handlers: Map<string, Function> = new Map();
     private collections: Set<string> = new Set();
@@ -134,6 +136,10 @@ export class AdapterBuilder {
         return this.register("updateOneOrAdd", collection, fn);
     }
 
+    toggleOne(collection: string, fn: ResolverFn<[collection: string, search: any, data: any, context?: any], boolean>) {
+        return this.register("toggleOne", collection, fn);
+    }
+
     remove(collection: string, fn: ResolverFn<[search: any], boolean>) {
         return this.register("remove", collection, fn);
     }
@@ -169,9 +175,8 @@ export class AdapterBuilder {
             },
         }, extendedFind);
 
-        for (const name of ["add", "find", "findOne", "update", "updateOne", "updateOneOrAdd", "remove", "removeOne", "removeCollection"]) {
+        for (const name of list.slice(4))
             adapter[name] = (...args: any[]) => resolve(name, ...args);
-        }
 
         return adapter;
     }
