@@ -14,12 +14,15 @@ import {
     VQL_Query_CRUD_Keys
 } from "../types/vql";
 import { parseSelect } from "./utils";
+import { LowAdapter } from "#helpers/lowAdapter";
 
 export async function executeQuery(cpu: VQLProcessor, query: VQL_Query_CRUD, user: any): Promise<any> {
     if (!query.db || !cpu.dbInstances[query.db])
         return { err: true, msg: `Invalid query - db "${query.db || "undefined"}" not found`, c: 400 };
 
     const db = cpu.dbInstances[query.db];
+
+    if (db instanceof LowAdapter) return await db.resolver(query, user);
 
     const operation = Object.keys(query.d)[0] as VQL_Query_CRUD_Keys;
 
