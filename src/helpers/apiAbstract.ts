@@ -25,21 +25,18 @@ export interface ValtheraResolver {
 
     add?: ResolverFn<[collection: string, data: any, id_gen?: boolean], any>;
     find?: ResolverFn<
-        [collection: string, search: any, context?: any, options?: any, findOpts?: any],
+        [collection: string, search: any, options?: any, findOpts?: any, context?: any],
         any[]
     >;
     findOne?: ResolverFn<
-        [collection: string, search: any, context?: any, findOpts?: any],
+        [collection: string, search: any, findOpts?: any, context?: any],
         any | null
     >;
 
     update?: ResolverFn<[collection: string, search: any, updater: any, context?: any], boolean>;
     updateOne?: ResolverFn<[collection: string, search: any, updater: any, context?: any], boolean>;
-    updateOneOrAdd?: ResolverFn<
-        [collection: string, search: any, updater: any, add_arg?: any, context?: any, id_gen?: boolean],
-        boolean
-    >;
-    toggleOne?: ResolverFn<[collection: string, search: any, data: any, context?: any], boolean>,
+    updateOneOrAdd?: ResolverFn<[collection: string, search: any, updater: any, opts?: any], boolean>;
+    toggleOne?: ResolverFn<[collection: string, search: any, data?: any, context?: any], boolean>,
 
     remove?: ResolverFn<[collection: string, search: any, context?: any], boolean>;
     removeOne?: ResolverFn<[collection: string, search: any, context?: any], boolean>;
@@ -112,43 +109,43 @@ export class AdapterBuilder {
         return this;
     }
 
-    add(collection: string, fn: ResolverFn<[data: any, id_gen?: boolean], any>) {
+    add(collection: string, fn: ValtheraResolver["add"]) {
         return this.register("add", collection, fn);
     }
 
-    find(collection: string, fn: ResolverFn<[search: any, context?: any, options?: any, findOpts?: any], any[]>) {
+    find(collection: string, fn: ValtheraResolver["find"]) {
         return this.register("find", collection, fn);
     }
 
-    findOne(collection: string, fn: ResolverFn<[search: any, context?: any, findOpts?: any], any | null>) {
+    findOne(collection: string, fn: ValtheraResolver["findOne"]) {
         return this.register("findOne", collection, fn);
     }
 
-    update(collection: string, fn: ResolverFn<[collection: string, search: any, updater: any], boolean>) {
+    update(collection: string, fn: ValtheraResolver["update"]) {
         return this.register("update", collection, fn);
     }
 
-    updateOne(collection: string, fn: ResolverFn<[search: any, updater: any], boolean>) {
+    updateOne(collection: string, fn: ValtheraResolver["updateOne"]) {
         return this.register("updateOne", collection, fn);
     }
 
-    updateOneOrAdd(collection: string, fn: ResolverFn<[search: any, updater: any, add_arg?: any, context?: any, id_gen?: boolean], boolean>) {
+    updateOneOrAdd(collection: string, fn: ValtheraResolver["updateOneOrAdd"]) {
         return this.register("updateOneOrAdd", collection, fn);
     }
 
-    toggleOne(collection: string, fn: ResolverFn<[collection: string, search: any, data: any, context?: any], boolean>) {
+    toggleOne(collection: string, fn: ValtheraResolver["toggleOne"]) {
         return this.register("toggleOne", collection, fn);
     }
 
-    remove(collection: string, fn: ResolverFn<[search: any], boolean>) {
+    remove(collection: string, fn: ValtheraResolver["remove"]) {
         return this.register("remove", collection, fn);
     }
 
-    removeOne(collection: string, fn: ResolverFn<[search: any], boolean>) {
+    removeOne(collection: string, fn: ValtheraResolver["removeOne"]) {
         return this.register("removeOne", collection, fn);
     }
 
-    removeCollection(collection: string, fn: ResolverFn<[], boolean>) {
+    removeCollection(collection: string, fn: ValtheraResolver["removeCollection"]) {
         return this.register("removeCollection", collection, fn);
     }
 
