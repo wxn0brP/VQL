@@ -4,7 +4,7 @@ dist
 data
 yarn.lock
 package-lock.json
-tests
+src/tests
 .suglite_history
 .env
 dist-browser
