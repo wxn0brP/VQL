@@ -30,6 +30,7 @@ function replaceVariables(obj: any, variables: Record<string, any>): any {
 export function replaceVars(query: VQL_Query, user: any): VQL_Query {
     query.var = {
         _me: user?.id || user?._id || user,
+        _user: user,
         _now: Date.now(),
         _nowShort: Math.floor(Date.now() / 1000),
         __now: Date.now().toString(),
