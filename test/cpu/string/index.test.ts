@@ -252,7 +252,7 @@ describe("CPU/String/Index", () => {
         });
 
         it("should handle options alias (o -> options)", () => {
-            const result = parseVQLS("mydb find users s.name=John o.max=10 o.sortBy=name");
+            const result = parseVQLS("mydb find users s.name=John o.limit=10 o.sortBy=name");
             expect(result).toEqual({
                 db: "mydb",
                 d: {
@@ -262,7 +262,7 @@ describe("CPU/String/Index", () => {
                             name: "John"
                         },
                         options: {
-                            max: 10,
+                            limit: 10,
                             sortBy: "name",
                         }
                     }

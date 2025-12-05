@@ -77,8 +77,8 @@ export function createValtheraAdapter(resolver: ValtheraResolver, extendedFind: 
 
             if (options?.reverse) data.reverse();
 
-            if (options?.max !== -1 && data.length > options?.max)
-                data = data.slice(0, options?.max);
+            if (options?.limit !== -1 && data.length > options?.limit)
+                data = data.slice(0, options?.limit);
 
             data = data.map(d => updateFindObject(d, findOpts || {}));
 
