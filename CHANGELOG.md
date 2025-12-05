@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.9.0](https://github.com/wxn0brP/VQL/compare/v0.8.4...v0.9.0) (2025-12-05)
+
+
+### Features
+
+* _user predefined var ([def6425](https://github.com/wxn0brP/VQL/commit/def6425bbeac94d2d521b116c211bb3c9d66aee0))
+* custom resolver toggleOne support ([46c05df](https://github.com/wxn0brP/VQL/commit/46c05dfe04b79e6b1d2b0d4b3fd77877098774a3))
+* LowAdapter ([442e0d6](https://github.com/wxn0brP/VQL/commit/442e0d6c7db83094e90f779018cadb5b7b517684))
+
+
+### Bug Fixes
+
+* db compatible ([8dac1a6](https://github.com/wxn0brP/VQL/commit/8dac1a61a272eb2eb810f55413d2fbfab1911a89))
+* ValtheraResolver types (db api update) ([374641f](https://github.com/wxn0brP/VQL/commit/374641f5c965052ce7a0a7613f0a83d83b752528))
+
 ### [0.8.4](https://github.com/wxn0brP/VQL/compare/v0.8.3...v0.8.4) (2025-11-28)
 
 
