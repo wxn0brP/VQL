@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 - Page Not Found</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #121212;
+            color: #e0e0e0;
+            text-align: center;
+        }
+
+        .container {
+            padding: 20px;
+            border-radius: 8px;
+            background-color: #1e1e1e;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            font-size: 3em;
+            color: #cf6679;
+            margin-bottom: 10px;
+        }
+
+        p {
+            font-size: 1.2em;
+            margin-bottom: 20px;
+        }
+
+        a {
+            color: #bb86fc;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        #go-back {
+            background-color: #03dac6;
+            color: #121212;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1em;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>404</h1>
+        <p>Oops! The page you're looking for doesn't exist.</p>
+        <p>You might have mistyped the address or the page may have moved.</p>
+        <p><a id="home-link" href="/">Go to Homepage</a></p>
+        <button onclick="history.back()" id="go-back">Go Back</button>
+    </div>
+
+    <script type="module">
+        const segments = window.location.pathname.split("/").filter(Boolean);
+        document.querySelector("#home-link").href = "/" + (segments.length > 1 ? segments[0] : "");
+    </script>
+</body>
+
+</html>
