@@ -1,0 +1,23 @@
+site_name: VQL Docs
+site_url: https://wxn0brp.github.io/VQL
+repo_url: https://github.com/wxn0brP/VQL
+
+theme:
+  name: material
+  palette:
+    - scheme: slate
+      primary: indigo
+      accent: indigo
+
+nav:
+  - Home: index.md
+  - Getting Started: getting_started.md
+  - Core Concepts: core_concepts.md
+  - Languages:
+      - VQLS: lang/VQLS.md
+      - VQLR: lang/VQLR.md
+  - Permissions: permissions.md
+
+markdown_extensions:
+  - pymdownx.highlight
+  - pymdownx.superfences
