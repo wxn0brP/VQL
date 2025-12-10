@@ -16,7 +16,7 @@ export class VQLProcessor {
     constructor(
         public dbInstances: Record<string, ValtheraCompatible>,
         config: VQLConfig | Partial<VQLConfigInterface> = new VQLConfig(),
-        public permValidFn: PermValidFn = async () => ({ granted: true, via: "" })
+        public permValidFn: PermValidFn = async () => ({ granted: true, via: "resolver", reason: "no-resolver-match" })
     ) {
         this.relation = new Relation(dbInstances);
         this.config = config instanceof VQLConfig ? config : new VQLConfig(config);

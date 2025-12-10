@@ -32,7 +32,7 @@ export async function checkRelationPermission(
         }
 
         // If the result is "entity-404", check the next fallback level
-        if (!config.strictACL && result.via === "entity-404" && fallbackLevels.length > 0) {
+        if (!config.strictACL && result.reason === "entity-404" && fallbackLevels.length > 0) {
             const nextFallbackEntityId = await hashKey(config, fallbackLevels.slice(0, -1));
             return checkPermissionRecursively(nextFallbackEntityId, fallbackLevels.slice(0, -2), fallbackLevels.slice(0, -2));
         }
