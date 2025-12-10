@@ -1,23 +1,23 @@
-# Permissions in VQL
+# Uprawnienia w VQL
 
-VQL implements a highly flexible and powerful programmatic permission system. Instead of static rules defined in a schema, VQL allows you to inject a **Permission Validation Function (`permValidFn`)** directly into the `VQLProcessor`. This function is called for every field being accessed, giving you fine-grained, dynamic control over your data security.
+VQL implementuje wysoce elastyczny i potężny programistyczny system uprawnień. Zamiast statycznych reguł zdefiniowanych w schemacie, VQL pozwala na wstrzyknięcie **funkcji walidacji uprawnień (`permValidFn`)** bezpośrednio do `VQLProcessor`. Funkcja ta jest wywoływana dla każdego pola, do którego uzyskiwany jest dostęp, dając Ci szczegółową, dynamiczną kontrolę nad bezpieczeństwem Twoich danych.
 
-To simplify the creation of this validation function, VQL provides the `PermissionResolverEngine`.
+Aby uprościć tworzenie tej funkcji walidacyjnej, VQL dostarcza `PermissionResolverEngine`.
 
-## `PermissionResolverEngine`: The Core of Custom Logic
+## `PermissionResolverEngine`: Rdzeń Logiki Niestandardowej
 
-The `PermissionResolverEngine` is a helper class that lets you build a sophisticated `permValidFn` by registering custom resolver functions that are matched against data access paths.
+`PermissionResolverEngine` to klasa pomocnicza, która pozwala budować zaawansowaną funkcję `permValidFn` poprzez rejestrowanie niestandardowych funkcji resolvera, które są dopasowywane do ścieżek dostępu do danych.
 
-### How It Works
+### Jak to działa
 
-1.  **Instantiate the Engine:** Create a new `PermissionResolverEngine`.
-2.  **Add Resolvers:** Use the `.addResolver()` method to register your permission logic. Each resolver is paired with a `matcher` that determines when it should be executed.
-3.  **Generate the Validation Function:** Use the engine's `.create()` or `.createWithGw()` method to generate the final `permValidFn`.
-4.  **Inject into VQLProcessor:** Pass the generated function to the `VQLProcessor`'s constructor.
+1.  **Stworzenie instancji Engine'u:** Utwórz nową instancję `PermissionResolverEngine`.
+2.  **Dodawanie Resolverów:** Użyj metody `.addResolver()`, aby zarejestrować swoją logikę uprawnień. Każdy resolver jest sparowany z `matcherem`, który określa, kiedy powinien zostać wykonany.
+3.  **Generowanie Funkcji Walidacyjnej:** Użyj metody `.create()` lub `.createWithGw()`, aby wygenerować ostateczną funkcję `permValidFn`.
+4.  **Wstrzyknięcie do VQLProcessor:** Przekaż wygenerowaną funkcję do konstruktora `VQLProcessor`.
 
-## Step 1: Creating the `PermissionResolverEngine`
+## Krok 1: Tworzenie `PermissionResolverEngine`
 
-First, import and create an instance of the engine.
+Najpierw zaimportuj i utwórz instancję silnika.
 
 ```typescript
 import { PermissionResolverEngine } from "@wxn0brp/vql";
@@ -25,39 +25,43 @@ import { PermissionResolverEngine } from "@wxn0brp/vql";
 const resolverEngine = new PermissionResolverEngine();
 ```
 
-## Step 2: Adding Resolvers
+## Krok 2: Dodawanie Resolverów
 
-This is where you define your security logic. The `.addResolver()` method takes a `matcher` and a `resolver` function.
+Tutaj definiujesz swoją logikę bezpieczeństwa. Metoda `.addResolver()` przyjmuje `matcher` i funkcję `resolver`.
 
-### Matchers
+### Matchery
 
-A `matcher` tells the engine which data paths the resolver should apply to. The path is a string like `collection/field` (e.g., `users/email`). A matcher can be:
--   A **string:** For an exact path match (e.g., `'users/password'`).
--   A **RegExp:** For pattern-based matching (e.g., `/email$/` to match any field ending in "email").
--   A **function:** For complex, dynamic matching logic `(path: string) => boolean`.
+`Matcher` informuje silnik, do których ścieżek danych resolver powinien być stosowany. Ścieżka to ciąg znaków, taki jak `kolekcja/pole` (np. `users/email`). Matcher może być:
+-   **stringiem:** Dla dokładnego dopasowania ścieżki (np. `'users/password'`).
+-   **RegExp:** Dla dopasowania opartego na wzorcu (np. `/email$/`, aby dopasować każde pole kończące się na "email").
+-   **funkcją:** Dla złożonej, dynamicznej logiki dopasowania `(pathString: string, path: string[]) => boolean | Promise<boolean>`.
 
-### Resolver Function
+### Funkcja Resolvera
 
-A `resolver` is an `async` function that returns `true` (access granted) or `false` (access denied). It receives a `PermValidFnArgs` object with the following properties:
+`Resolver` to funkcja `async`, która zwraca `true` (dostęp przyznany) lub `false` (dostęp zabroniony). Otrzymuje obiekt `PermValidFnArgs` z następującymi właściwościami:
 
--   `user`: The user object passed to `processor.execute()`.
--   `path`: The current data path as an array of strings.
--   `field`: The specific field being accessed.
--   `rootData`: The complete data object for the current record being processed.
--   `p`: The permission arguments from the query (if any).
+-   `user`: Obiekt użytkownika przekazany do `processor.execute()`.
+-   `path`: Bieżąca ścieżka danych jako tablica ciągów znaków.
+-   `field`: Konkretne pole, do którego uzyskiwany jest dostęp.
+-   `rootData`: Kompletny obiekt danych dla bieżącego przetwarzanego rekordu.
+-   `p`: Argumenty uprawnień z zapytania (jeśli istnieją).
 
-### Example: Adding Different Resolvers
+### Obsługa Błędów
+
+Ważne jest, aby wiedzieć, że jeśli którakolwiek z funkcji resolvera zgłosi błąd podczas wykonania, `PermissionResolverEngine` automatycznie go przechwyci i odmówi dostępu do żądanej ścieżki. Zapewnia to, że nieoczekiwane błędy w logice uprawnień będą działać na zasadzie "fail-safe", zapobiegając przypadkowemu ujawnieniu danych. Powód odmowy (`via`) zostanie zgłoszony jako `'resolver-error'`.
+
+### Przykład: Dodawanie Różnych Resolverów
 
 ```typescript
-// Resolver 1: Block access to any field named 'password' using a RegExp
+// Resolver 1: Blokowanie dostępu do dowolnego pola o nazwie 'password' za pomocą RegExp
 resolverEngine.addResolver(/password$/, async (args) => {
-    // This resolver simply denies access, no matter who the user is.
+    // Ten resolver po prostu odmawia dostępu, bez względu na to, kim jest użytkownik.
     return false;
 });
 
-// Resolver 2: Restrict access to the 'email' field using a string matcher
+// Resolver 2: Ograniczanie dostępu do pola 'email' za pomocą matchera stringowego
 resolverEngine.addResolver("users/email", async (args) => {
-    // Logic: Allow if the user is an admin OR if they are requesting their own email.
+    // Logika: Zezwalaj, jeśli użytkownik jest administratorem LUB jeśli prosi o własny e-mail.
     const { user, rootData } = args;
     if (user.role === 'admin') {
         return true;
@@ -68,67 +72,67 @@ resolverEngine.addResolver("users/email", async (args) => {
     return false;
 });
 
-// Resolver 3: A function-based matcher for any field in a 'logs' collection
-const logsMatcher = (pathString) => pathString.startsWith('logs/');
+// Resolver 3: Matcher oparty na funkcji dla dowolnego pola w kolekcji 'logs'
+const logsMatcher = (pathString, path) => path[0] === 'logs';
 resolverEngine.addResolver(logsMatcher, async (args) => {
-    // Logic: Only admins can access anything in the logs.
+    // Logika: Tylko administratorzy mogą uzyskać dostęp do czegokolwiek w logach.
     return args.user.role === 'admin';
 });
 ```
 
-## Step 3: Generating the `permValidFn`
+## Krok 3: Generowanie `permValidFn`
 
-The engine can generate the final validation function in two ways.
+Silnik może wygenerować ostateczną funkcję walidacyjną na dwa sposoby.
 
 ### `create()`
 
-This method creates a `permValidFn` that uses *only* the custom resolvers you added.
+Ta metoda tworzy `permValidFn`, która używa *tylko* dodanych przez Ciebie niestandardowych resolverów.
 
 ```typescript
 const customPermValidFn = resolverEngine.create();
 ```
 
-If a data path is accessed that does not match any of your resolvers, access will be **denied** (`granted: false, via: 'no-resolver-match'`).
+Jeśli dostęp do ścieżki danych nie pasuje do żadnego z Twoich resolverów, dostęp zostanie **odmówiony** (`granted: false, via: 'no-resolver-match'`).
 
 ### `createWithGw(gateWardenInstance)`
 
-This method creates a `permValidFn` that first tries your custom resolvers. If no resolver matches a path, it falls back to a `GateWarden` instance. This is perfect for combining dynamic, path-based rules with a more traditional Role-Based Access Control (RBAC) system.
+Ta metoda tworzy `permValidFn`, która najpierw próbuje Twoich niestandardowych resolverów. Jeśli żaden resolver nie pasuje do ścieżki, wraca do instancji `GateWarden`. Jest to idealne rozwiązanie do łączenia dynamicznych reguł opartych na ścieżkach z bardziej tradycyjnym systemem kontroli dostępu opartej na rolach (RBAC). Ważne jest, aby pamiętać, że jeśli resolver *pasuje* do ścieżki i jawnie zwraca `false`, dostęp jest natychmiast odmawiany, a instancja `GateWarden` **nie** jest konsultowana dla tej ścieżki.
 
 ```typescript
 import { GateWarden } from "@wxn0brp/gate-warden";
 
-// Assume 'gw' is a fully configured GateWarden instance
+// Załóżmy, że 'gw' jest w pełni skonfigurowaną instancją GateWarden
 const gw = new GateWarden();
-// ... add roles and permissions to gw ...
+// ... dodaj role i uprawnienia do gw ...
 
-// Create a validation function that uses custom resolvers and falls back to GateWarden
+// Utwórz funkcję walidacyjną, która używa niestandardowych resolverów i wraca do GateWarden
 const combinedPermValidFn = resolverEngine.createWithGw(gw);
 ```
 
-## Step 4: Initializing `VQLProcessor`
+## Krok 4: Inicjalizacja `VQLProcessor`
 
-Finally, pass your generated `permValidFn` to the `VQLProcessor` constructor.
+Na koniec przekaż wygenerowaną funkcję `permValidFn` do konstruktora `VQLProcessor`.
 
 ```typescript
 import { VQLProcessor, VQLConfig } from "@wxn0brp/vql";
 
-// Assume dbInstances and a permValidFn are created
+// Załóżmy, że dbInstances i permValidFn są utworzone
 const processor = new VQLProcessor(
     dbInstances,
-    new VQLConfig(), // Optional config
-    combinedPermValidFn // Your generated permission function
+    new VQLConfig(), // Opcjonalna konfiguracja
+    combinedPermValidFn // Twoja wygenerowana funkcja uprawnień
 );
 
-// Now, all calls to processor.execute() will be protected by your rules
+// Teraz wszystkie wywołania processor.execute() będą chronione przez Twoje reguły
 async function runQuery() {
     const userContext = { id: 'user123', role: 'editor' };
-    const query = /* ... your VQLR or VQLS query ... */;
+    const query = /* ... Twoje zapytanie VQLR lub VQLS ... */;
 
-    // The 'userContext' will be available inside your permission resolvers
+    // 'userContext' będzie dostępny wewnątrz Twoich resolverów uprawnień
     const result = await processor.execute(query, userContext);
 
     console.log(result);
 }
 ```
 
-This programmatic approach provides a robust and highly adaptable security model, allowing you to define complex rules that are decoupled from your query logic and schemas.
+To programistyczne podejście zapewnia solidny i wysoce adaptowalny model bezpieczeństwa, pozwalając na definiowanie złożonych reguł, które są oddzielone od logiki zapytań i schematów.
