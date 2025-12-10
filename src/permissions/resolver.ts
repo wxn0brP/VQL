@@ -31,7 +31,7 @@ export class PermissionResolverEngine {
                 if (isMatch) {
                     try {
                         const resolverGranted = await resolver(args);
-                        return { granted: resolverGranted, via: `resolver` };
+                        return { granted: resolverGranted, via: `resolver`, reason: "resolver" };
                     } catch (error) {
                         console.error(`[Resolver Engine] Error in custom resolver for path ${originalPath}:`, error);
                         return { granted: false, via: `resolver`, reason: "resolver-error" };
@@ -48,8 +48,9 @@ export class PermissionResolverEngine {
 
         return async (args: PermValidFnArgs): Promise<ValidFnResult> => {
             const resolverResult = await resolver(args);
+
             if (resolverResult.granted) return resolverResult;
-            if (!resolverResult.granted && resolverResult.reason !== `no-resolver-match`) return resolverResult;
+            if (resolverResult.reason !== `no-resolver-match`) return resolverResult;
 
             const gwResult = await gw.hasAccess(args.user.id, args.field, args.p);
             return { granted: gwResult.granted, via: `gate-warden`, reason: gwResult.via };
