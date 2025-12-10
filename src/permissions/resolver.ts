@@ -1,7 +1,8 @@
 import {
     PathMatcher,
     PermissionResolver,
-    ResolverEntry
+    ResolverEntry,
+    ValidEngineOpts
 } from "../types/resolver";
 import { PermValidFn, PermValidFnArgs, ValidFnResult } from "../types/perm";
 import { GateWarden } from "@wxn0brp/gate-warden";
@@ -9,33 +10,38 @@ import { GateWarden } from "@wxn0brp/gate-warden";
 export class PermissionResolverEngine {
     private resolvers: ResolverEntry[] = [];
 
-    addResolver(matcher: PathMatcher, resolver: PermissionResolver): void {
-        this.resolvers.push({ matcher, resolver });
+    addResolver(matcher: PathMatcher, resolver: PermissionResolver, opts: ValidEngineOpts = {}): void {
+        this.resolvers.push({ matcher, resolver, opts });
     }
 
     create(): PermValidFn {
         return async (args: PermValidFnArgs): Promise<ValidFnResult> => {
             const originalPath: string = args.path.join("/");
 
-            for (const { matcher, resolver } of this.resolvers) {
+            for (const { matcher, resolver, opts } of this.resolvers) {
                 let isMatch = false;
 
                 if (typeof matcher === "string") {
-                    isMatch = originalPath === matcher;
+                    const { stringMode } = opts;
+                    if (stringMode === "endsWith") isMatch = originalPath.endsWith(matcher);
+                    else if (stringMode === "startsWith") isMatch = originalPath.startsWith(matcher);
+                    else isMatch = originalPath === matcher;
+
                 } else if (matcher instanceof RegExp) {
                     isMatch = matcher.test(originalPath);
+
                 } else if (typeof matcher === "function") {
                     isMatch = await matcher(originalPath, args.path);
                 }
 
-                if (isMatch) {
-                    try {
-                        const resolverGranted = await resolver(args);
-                        return { granted: resolverGranted, via: `resolver`, reason: "resolver" };
-                    } catch (error) {
-                        console.error(`[Resolver Engine] Error in custom resolver for path ${originalPath}:`, error);
-                        return { granted: false, via: `resolver`, reason: "resolver-error" };
-                    }
+                if (!isMatch) continue;
+
+                try {
+                    const resolverGranted = await resolver(args);
+                    return { granted: resolverGranted, via: `resolver`, reason: "resolver" };
+                } catch (error) {
+                    console.error(`[Resolver Engine] Error in custom resolver for path ${originalPath}:`, error);
+                    return { granted: false, via: `resolver`, reason: "resolver-error" };
                 }
             }
 
@@ -43,7 +49,7 @@ export class PermissionResolverEngine {
         };
     }
 
-    createWithGw(gw: GateWarden): PermValidFn {
+    createWithGw(gw: GateWarden,): PermValidFn {
         const resolver = this.create();
 
         return async (args: PermValidFnArgs): Promise<ValidFnResult> => {
