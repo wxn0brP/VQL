@@ -10,7 +10,8 @@ import { GateWarden } from "@wxn0brp/gate-warden";
 export class PermissionResolverEngine {
     private resolvers: ResolverEntry[] = [];
 
-    addResolver(matcher: PathMatcher, resolver: PermissionResolver, opts: ValidEngineOpts = {}): void {
+    addResolver(matcher: PathMatcher, resolver: PermissionResolver, opts: ValidEngineOpts | ValidEngineOpts["stringMode"] = {}): void {
+        if (typeof opts === "string") opts = { stringMode: opts };
         this.resolvers.push({ matcher, resolver, opts });
     }
 
