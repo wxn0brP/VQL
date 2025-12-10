@@ -22,11 +22,15 @@ export class VQLProcessor {
         this.config = config instanceof VQLConfig ? config : new VQLConfig(config);
     }
 
-    public async execute<T = any>(queryRaw: VQLUQ<T>, user: any = { _id: "null-null-null" }): Promise<T | VQLError> {
+    public async execute<T = any>(
+        queryRaw: VQLUQ<T>,
+        user: any = { _id: "null-null-null" },
+        cfg: VQLConfig = this.config
+    ): Promise<T | VQLError> {
         const result = this._preProcessQuery(queryRaw, user);
         if ("err" in result) return result.err;
 
-        return await this._runQuery(result.query, user);
+        return await this._runQuery(result.query, user, cfg);
     }
 
     public _preProcessQuery(queryRaw: VQLUQ, user: any) {
@@ -80,11 +84,11 @@ export class VQLProcessor {
         return { query: queryRaw }
     }
 
-    public async _runQuery(query: VQL_Query, user: any) {
+    public async _runQuery(query: VQL_Query, user: any, cfg: VQLConfig = this.config) {
         if ("r" in query) {
-            return await executeRelation(this, query, user);
+            return await executeRelation(this, query, user, cfg);
         } else if ("d" in query) {
-            return await executeQuery(this, query, user);
+            return await executeQuery(this, query, user, cfg);
         } else {
             return { err: true, msg: "Invalid query", c: 400 };
         }

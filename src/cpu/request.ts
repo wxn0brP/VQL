@@ -1,3 +1,5 @@
+import { VQLConfig } from "#helpers/config";
+import { LowAdapter } from "#helpers/lowAdapter";
 import { UpdateOneOrAdd } from "@wxn0brp/db-core/types/valthera";
 import { checkRequestPermission } from "../permissions";
 import { VQLProcessor } from "../processor";
@@ -14,9 +16,8 @@ import {
     VQL_Query_CRUD_Keys
 } from "../types/vql";
 import { parseSelect } from "./utils";
-import { LowAdapter } from "#helpers/lowAdapter";
 
-export async function executeQuery(cpu: VQLProcessor, query: VQL_Query_CRUD, user: any): Promise<any> {
+export async function executeQuery(cpu: VQLProcessor, query: VQL_Query_CRUD, user: any, cfg: VQLConfig): Promise<any> {
     if (!query.db || !cpu.dbInstances[query.db])
         return { err: true, msg: `Invalid query - db "${query.db || "undefined"}" not found`, c: 400 };
 
@@ -26,19 +27,19 @@ export async function executeQuery(cpu: VQLProcessor, query: VQL_Query_CRUD, use
 
     const operation = Object.keys(query.d)[0] as VQL_Query_CRUD_Keys;
 
-    if (!cpu.config.noCheckPermissions && !await checkRequestPermission(cpu.config, cpu.permValidFn, user, query)) {
+    if (!cfg.noCheckPermissions && !await checkRequestPermission(cfg, cpu.permValidFn, user, query)) {
         return { err: true, msg: "Permission denied", c: 403 };
     }
 
     if (operation === "find") {
         const params = query.d[operation] as VQL_OP_Find;
-        const select = parseSelect(cpu.config, params.fields || params.select || {});
+        const select = parseSelect(cfg, params.fields || params.select || {});
         if (select && typeof select === "object" && Object.keys(select).length !== 0) params.searchOpts = { ...params.searchOpts, select };
 
         return db.find(params.collection, params.search, params.options || {}, params.searchOpts);
     } else if (operation === "findOne" || operation === "f") {
         const params = query.d[operation] as VQL_OP_FindOne;
-        const select = parseSelect(cpu.config, params.fields || params.select || {});
+        const select = parseSelect(cfg, params.fields || params.select || {});
         if (select && typeof select === "object" && Object.keys(select).length !== 0) params.searchOpts = { ...params.searchOpts, select };
 
         return db.findOne(params.collection, params.search, params.searchOpts);
