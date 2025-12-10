@@ -51,7 +51,7 @@ export class PermissionResolverEngine {
         };
     }
 
-    createWithGw(gw: GateWarden,): PermValidFn {
+    createWithGw(gw: GateWarden): PermValidFn {
         const resolver = this.create();
 
         return async (args: PermValidFnArgs): Promise<ValidFnResult> => {
