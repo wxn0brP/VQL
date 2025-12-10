@@ -1,29 +1,17 @@
-import { Valthera, ValtheraRemote } from "@wxn0brp/db";
+import { ValtheraAutoCreate, ValtheraCompatible } from "@wxn0brp/db";
 import { config } from "./config";
-import { Remote } from "@wxn0brp/db/client/remote.js";
-
-type DB = Valthera | ValtheraRemote;
 
 interface TreeNode {
     name: string;
     children?: TreeNode[];
 }
 
-export function createDatabase(value: string | Remote): DB {
-    if (typeof value === "object") {
-        return new ValtheraRemote(value);
-    } else {
-        if (value.startsWith("http")) return new ValtheraRemote(value);
-        return new Valthera(value);
-    }
-}
-
-async function fetchCollections(db: DB): Promise<string[]> {
+async function fetchCollections(db: ValtheraCompatible): Promise<string[]> {
     return await db.getCollections();
 }
 
 async function inferFields(
-    db: DB,
+    db: ValtheraCompatible,
     collectionName: string
 ): Promise<Record<string, any>> {
     const sampleDoc = await db.findOne(collectionName, {});
@@ -47,7 +35,7 @@ export async function buildTree(): Promise<TreeNode[]> {
     const tree: TreeNode[] = [];
 
     for (const [dbName, dbConfig] of Object.entries(config.dbsList)) {
-        const db = createDatabase(dbConfig);
+        const db = ValtheraAutoCreate(dbConfig);
         const collections = await fetchCollections(db);
 
         const dbNode: TreeNode = {

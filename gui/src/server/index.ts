@@ -4,7 +4,6 @@ import { config, loadConfig } from "./config";
 import { buildTree } from "./struct";
 import FalconFrame from "@wxn0brp/falcon-frame";
 
-const port = process.env.PORT || 3000;
 const app = new FalconFrame();
 
 app.static("/", "public");
@@ -30,7 +29,7 @@ export function hashKey(path: any): string {
 
 app.get("/hidePath", (req, res) => {
     hidePath = req.query.hidePath !== "false";
-    res.json({ success: true });   
+    res.json({ success: true });
 })
 
 app.get("/tree", async (req, res) => {
@@ -78,7 +77,4 @@ app.post("/remove", async (req, res) => {
     res.json({ success: true });
 })
 
-// for security server available only on localhost
-app.listen(+port, () => {
-    console.log(`Listening on http://localhost:${port}`);
-});
+app.l(36777);
