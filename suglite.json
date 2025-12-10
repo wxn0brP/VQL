@@ -1,12 +1,10 @@
 {
-    "cmd": "yarn build && yarn test",
+    "cmd": "tsc --noEmit && bun test",
     "watch": [
         "src"
     ],
     "restart_cmd": "clear",
     "events": {
-        "rs": "clear",
-        "clean": "rm -rf dist",
-        "db": "node ./dist/tests/db.js"
+        "rs": "clear"
     }
 }
