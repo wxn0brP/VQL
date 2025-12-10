@@ -3,6 +3,7 @@ import { PermValidFn } from "../types/perm";
 
 export function createGwValidFn(gw: GateWarden): PermValidFn {
     return async (args) => {
-        return gw.hasAccess(args.user.id, args.field, args.p);
+        const res = await gw.hasAccess(args.user.id, args.field, args.p);
+        return { granted: res.granted, via: `gate-warden`, reason: res.via };
     }
 }
