@@ -19,5 +19,5 @@ export interface ResolverValidFnResult {
 }
 
 export interface ValidEngineOpts {
-    stringMode?: "equal" | "startsWith" | "endsWith";
+    stringMode?: "equal" | "startsWith" | "endsWith" | "includes";
 }

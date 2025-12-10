@@ -26,6 +26,7 @@ export class PermissionResolverEngine {
                     const { stringMode } = opts;
                     if (stringMode === "endsWith") isMatch = originalPath.endsWith(matcher);
                     else if (stringMode === "startsWith") isMatch = originalPath.startsWith(matcher);
+                    else if (stringMode === "includes") isMatch = originalPath.includes(matcher);
                     else isMatch = originalPath === matcher;
 
                 } else if (matcher instanceof RegExp) {
