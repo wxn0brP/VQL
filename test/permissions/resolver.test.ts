@@ -19,7 +19,7 @@ describe("PermissionResolverEngine", () => {
                 user: { id: "user1" }
             });
 
-            expect(result).toEqual({ granted: true, via: "resolver" });
+            expect(result).toEqual({ granted: true, via: "resolver", reason: "resolver" });
         });
     });
 
@@ -37,7 +37,7 @@ describe("PermissionResolverEngine", () => {
                 user: { id: "user1" }
             });
 
-            expect(result).toEqual({ granted: true, via: "resolver" });
+            expect(result).toEqual({ granted: true, via: "resolver", reason: "resolver" });
         });
 
         it("should return a function that does not match when string matcher doesn't match", async () => {
@@ -53,7 +53,7 @@ describe("PermissionResolverEngine", () => {
                 user: { id: "user1" }
             });
 
-            expect(result).toEqual({ granted: false, via: "no-resolver-match" });
+            expect(result).toEqual({ granted: false, via: "resolver", reason: "no-resolver-match" });
         });
 
         it("should return a function that checks regex matchers", async () => {
@@ -69,7 +69,7 @@ describe("PermissionResolverEngine", () => {
                 user: { id: "user1" }
             });
 
-            expect(result).toEqual({ granted: true, via: "resolver" });
+            expect(result).toEqual({ granted: true, via: "resolver", reason: "resolver" });
         });
 
         it("should return a function that checks function matchers", async () => {
@@ -89,7 +89,7 @@ describe("PermissionResolverEngine", () => {
                 user: { id: "user1" }
             });
 
-            expect(result).toEqual({ granted: true, via: "resolver" });
+            expect(result).toEqual({ granted: true, via: "resolver", reason: "resolver" });
         });
 
         it("should return correct value when resolver throws an error", async () => {
@@ -107,7 +107,7 @@ describe("PermissionResolverEngine", () => {
                 user: { id: "user1" }
             });
 
-            expect(result).toEqual({ granted: false, via: "resolver-error" });
+            expect(result).toEqual({ granted: false, via: "resolver", reason: "resolver-error" });
         });
 
         it("should check multiple resolvers and return on first match", async () => {
@@ -125,7 +125,7 @@ describe("PermissionResolverEngine", () => {
                 user: { id: "user1" }
             });
 
-            expect(result).toEqual({ granted: true, via: "resolver" });
+            expect(result).toEqual({ granted: true, via: "resolver", reason: "resolver" });
         });
 
         it("should return false when no resolvers match", async () => {
@@ -141,7 +141,7 @@ describe("PermissionResolverEngine", () => {
                 user: { id: "user1" }
             });
 
-            expect(result).toEqual({ granted: false, via: "no-resolver-match" });
+            expect(result).toEqual({ granted: false, via: "resolver", reason: "no-resolver-match" });
         });
     });
 
@@ -163,7 +163,7 @@ describe("PermissionResolverEngine", () => {
                 user: { id: "user1" }
             });
 
-            expect(result).toEqual({ granted: true, via: "resolver" });
+            expect(result).toEqual({ granted: true, via: "resolver", reason: "resolver" });
         });
 
         it("should return resolver result if resolver denies permission but matches", async () => {
@@ -183,13 +183,13 @@ describe("PermissionResolverEngine", () => {
                 user: { id: "user1" }
             });
 
-            expect(result).toEqual({ granted: false, via: "resolver" });
+            expect(result).toEqual({ granted: false, via: "resolver", reason: "resolver" });
         });
 
         it("should use GateWarden if no resolver matches and GateWarden grants", async () => {
             const engine = new PermissionResolverEngine();
             const mockGw = {
-                hasAccess: async () => ({ granted: true, via: "gw-result" })
+                hasAccess: async () => ({ granted: true, via: "ACL" })
             } as any as GateWarden;
 
             // No resolvers added that match this path
@@ -204,13 +204,13 @@ describe("PermissionResolverEngine", () => {
                 user: { id: "user1" }
             });
 
-            expect(result).toEqual({ granted: true, via: "gate-warden" });
+            expect(result).toEqual({ granted: true, via: "gate-warden", reason: "ACL" });
         });
 
         it("should use GateWarden if no resolver matches and GateWarden denies", async () => {
             const engine = new PermissionResolverEngine();
             const mockGw = {
-                hasAccess: async () => ({ granted: false, via: "gw-result" })
+                hasAccess: async () => ({ granted: false, via: "ACL" })
             } as any as GateWarden;
 
             // No resolvers added that match this path
@@ -225,7 +225,7 @@ describe("PermissionResolverEngine", () => {
                 user: { id: "user1" }
             });
 
-            expect(result).toEqual({ granted: false, via: "gate-warden" });
+            expect(result).toEqual({ granted: false, via: "gate-warden", reason: "ACL" });
         });
 
         it("should return false if resolver denies permission but matches", async () => {
@@ -245,7 +245,7 @@ describe("PermissionResolverEngine", () => {
                 user: { id: "user1" }
             });
 
-            expect(result).toEqual({ granted: false, via: "resolver" });
+            expect(result).toEqual({ granted: false, via: "resolver", reason: "resolver" });
         });
     });
 });
