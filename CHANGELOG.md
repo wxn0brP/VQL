@@ -2,6 +2,30 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.10.0](https://github.com/wxn0brP/VQL/compare/v0.9.0...v0.10.0) (2025-12-10)
+
+
+### ⚠ BREAKING CHANGES
+
+* gate warden user id
+* ValidFnResult.reason
+
+### Features
+
+* improve perm resolver matcher ([e049ac1](https://github.com/wxn0brP/VQL/commit/e049ac14b825e7d3186578ca2ac6752fedc79340))
+* improve ValidEngineOpts UX ([17105a0](https://github.com/wxn0brP/VQL/commit/17105a0ca321897a9e436902d23c20aa39dfc224))
+* improve ValidEngineOpts.stringMode ([d97d68d](https://github.com/wxn0brP/VQL/commit/d97d68d1c17978547c6b8151c291860338550913))
+* one time execute config ([d0c6b67](https://github.com/wxn0brP/VQL/commit/d0c6b67ce59fc1dd892b5b80f87148a83ac98381))
+* update PermissionResolverEngine ([3db3605](https://github.com/wxn0brP/VQL/commit/3db3605fdb90e9cbf89808ced0ee0cabb0b712c7))
+* ValidFnResult.reason ([23c393f](https://github.com/wxn0brP/VQL/commit/23c393f9fb690e22f4d3d23907fcdec56b04ef57))
+
+
+### Bug Fixes
+
+* createGwValidFn ([33b38b8](https://github.com/wxn0brP/VQL/commit/33b38b838aa11b01134c61e6e4ee21c5080a21ec))
+* gate warden user id ([21328a9](https://github.com/wxn0brP/VQL/commit/21328a9d1ae720f1efcd3a886a03713af236b1ea))
+* PermValidFn ([9a1dd23](https://github.com/wxn0brP/VQL/commit/9a1dd2344c59fe3ca0f45985a8b9b440a0bccd0e))
+
 ## [0.9.0](https://github.com/wxn0brP/VQL/compare/v0.8.4...v0.9.0) (2025-12-05)
 
 
