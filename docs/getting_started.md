@@ -220,17 +220,8 @@ async function runVQLSUpdateQuery() {
 runVQLSUpdateQuery().catch(console.error);
 ```
 
-The `u.` prefix stands for `update`, specifying the fields to change. The `s.` prefix works just like in a `find` query, specifying which document to target.
-
-Expected output for the update and verification:
-
-```json
-// VQLS Update Result: (output may vary, but indicates success)
-{ "updated": 1 }
-
-// Verified Item:
-{ "items": [ { "_id": "item2", "name": "Mouse", "price": 25, "stock": 45 } ] }
-```
+The `s.` prefix stands for `search`, specifying the conditions for the update.
+The `u.` prefix stands for `updater`, specifying the fields to change.
 
 ## Congratulations!
 
