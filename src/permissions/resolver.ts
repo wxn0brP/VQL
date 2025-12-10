@@ -1,10 +1,9 @@
 import {
-    GWUser,
     PathMatcher,
     PermissionResolver,
     ResolverEntry
 } from "../types/resolver";
-import { PermValidFn, PermValidFnArgs } from "../types/perm";
+import { PermValidFn, PermValidFnArgs, ValidFnResult } from "../types/perm";
 import { GateWarden } from "@wxn0brp/gate-warden";
 
 export class PermissionResolverEngine {
@@ -15,7 +14,7 @@ export class PermissionResolverEngine {
     }
 
     create(): PermValidFn {
-        return async (args: PermValidFnArgs): Promise<{ granted: boolean; via?: string }> => {
+        return async (args: PermValidFnArgs): Promise<ValidFnResult> => {
             const originalPath: string = args.path.join("/");
 
             for (const { matcher, resolver } of this.resolvers) {
@@ -35,25 +34,25 @@ export class PermissionResolverEngine {
                         return { granted: resolverGranted, via: `resolver` };
                     } catch (error) {
                         console.error(`[Resolver Engine] Error in custom resolver for path ${originalPath}:`, error);
-                        return { granted: false, via: `resolver-error` };
+                        return { granted: false, via: `resolver`, reason: "resolver-error" };
                     }
                 }
             }
 
-            return { granted: false, via: `no-resolver-match` };
+            return { granted: false, via: `resolver`, reason: "no-resolver-match" };
         };
     }
 
     createWithGw(gw: GateWarden): PermValidFn {
         const resolver = this.create();
 
-        return async (args: PermValidFnArgs): Promise<{ granted: boolean; via?: string }> => {
+        return async (args: PermValidFnArgs): Promise<ValidFnResult> => {
             const resolverResult = await resolver(args);
             if (resolverResult.granted) return resolverResult;
-            if (!resolverResult.granted && resolverResult.via !== `no-resolver-match`) return resolverResult;
+            if (!resolverResult.granted && resolverResult.reason !== `no-resolver-match`) return resolverResult;
 
             const gwResult = await gw.hasAccess(args.user.id, args.field, args.p);
-            return { granted: gwResult.granted, via: `gate-warden` };
+            return { granted: gwResult.granted, via: `gate-warden`, reason: gwResult.via };
         };
     }
 }

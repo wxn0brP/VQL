@@ -1,3 +1,5 @@
+import { AccessResult } from "@wxn0brp/gate-warden";
+
 export enum PermCRUD {
     CREATE = 1 << 0,
     READ = 1 << 1,
@@ -8,7 +10,8 @@ export enum PermCRUD {
 
 export interface ValidFnResult {
     granted: boolean;
-    via?: string;
+    via?: "resolver" | "gate-warden";
+    reason?: AccessResult["via"] | "resolver" | "no-resolver-match" | "resolver-error";
 }
 
 export interface PermValidFnArgs {
