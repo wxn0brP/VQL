@@ -37,3 +37,4 @@ VQL empowers you to:
 -   **[VQLS](./lang/VQLS.md):** Dive deep into the syntax and capabilities of the Simple VQL string language.
 -   **[VQLR](./lang/VQLR.md):** Explore the structure and power of the Runtime VQL object format.
 -   **[Permissions](permissions.md):** Discover how VQL's integrated permission system can secure your data interactions.
+-   **[HTTP API Integration](integration_http.md):** Learn how to expose VQL over an HTTP API for use in web applications.

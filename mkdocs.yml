@@ -17,6 +17,7 @@ nav:
       - VQLS: lang/VQLS.md
       - VQLR: lang/VQLR.md
   - Permissions: permissions.md
+  - HTTP API Integration: integration_http.md
 
 markdown_extensions:
   - pymdownx.highlight
