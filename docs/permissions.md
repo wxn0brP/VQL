@@ -27,14 +27,24 @@ const resolverEngine = new PermissionResolverEngine();
 
 ## Step 2: Adding Resolvers
 
-This is where you define your security logic. The `.addResolver()` method takes a `matcher` and a `resolver` function.
+This is where you define your security logic. The `.addResolver()` method takes a `matcher`, a `resolver` function, and optional `opts` for advanced matching.
 
 ### Matchers
 
 A `matcher` tells the engine which data paths the resolver should apply to. The path is a string like `collection/field` (e.g., `users/email`). A matcher can be:
--   A **string:** For an exact path match (e.g., `'users/password'`).
+
+-   A **string:** For path matching with configurable mode (exact match by default). See options below.
 -   A **RegExp:** For pattern-based matching (e.g., `/email$/` to match any field ending in "email").
--   A **function:** For complex, dynamic matching logic `(path: string) => boolean`.
+-   A **function:** For complex, dynamic matching logic `(pathString: string, pathArray: string[]) => boolean`.
+
+### Options for String Matchers
+
+When using a string matcher, you can specify different matching behaviors with the optional `opts` parameter:
+
+-   `"endsWith"`: Matches if the path ends with the string (e.g., `"email"` matches `users/email`, `accounts/primaryEmail`)
+-   `"startsWith"`: Matches if the path starts with the string (e.g., `"users/"` matches `users/email`, `users/name`)
+-   `"includes"`: Matches if the path contains the string (e.g., `"secret"` matches `private/secret/data`, `admin/config/secret_key`)
+-   `"exact"` (default): Matches only when the path is exactly equal to the string
 
 ### Resolver Function
 
@@ -49,13 +59,23 @@ A `resolver` is an `async` function that returns `true` (access granted) or `fal
 ### Example: Adding Different Resolvers
 
 ```typescript
-// Resolver 1: Block access to any field named 'password' using a RegExp
-resolverEngine.addResolver(/password$/, async (args) => {
+// Resolver 1: Block access to any field ending with 'password' using string mode
+resolverEngine.addResolver("password", async (args) => {
     // This resolver simply denies access, no matter who the user is.
+    return false;
+}, { stringMode: "endsWith" });
+
+// Resolver 2: Block access to any field containing 'secret' using string mode
+resolverEngine.addResolver("secret", async (args) => {
+    return false;
+}, "includes"); // shorthand notation
+
+// Resolver 3: Block access to fields that match a RegExp pattern
+resolverEngine.addResolver(/password$/, async (args) => {
     return false;
 });
 
-// Resolver 2: Restrict access to the 'email' field using a string matcher
+// Resolver 4: Restrict access to the 'email' field using exact string matching
 resolverEngine.addResolver("users/email", async (args) => {
     // Logic: Allow if the user is an admin OR if they are requesting their own email.
     const { user, rootData } = args;
@@ -68,8 +88,8 @@ resolverEngine.addResolver("users/email", async (args) => {
     return false;
 });
 
-// Resolver 3: A function-based matcher for any field in a 'logs' collection
-const logsMatcher = (pathString) => pathString.startsWith('logs/');
+// Resolver 5: A function-based matcher for any field in a 'logs' collection
+const logsMatcher = (pathString, pathArray) => pathString.startsWith('logs/');
 resolverEngine.addResolver(logsMatcher, async (args) => {
     // Logic: Only admins can access anything in the logs.
     return args.user.role === 'admin';
