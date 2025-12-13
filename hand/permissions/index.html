@@ -557,6 +557,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#options-for-string-matchers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Options for String Matchers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#resolver-function" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -757,6 +768,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#options-for-string-matchers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Options for String Matchers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#resolver-function" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -872,12 +894,22 @@
 <span class="kd">const</span><span class="w"> </span><span class="nx">resolverEngine</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">PermissionResolverEngine</span><span class="p">();</span>
 </code></pre></div>
 <h2 id="step-2-adding-resolvers">Step 2: Adding Resolvers</h2>
-<p>This is where you define your security logic. The <code>.addResolver()</code> method takes a <code>matcher</code> and a <code>resolver</code> function.</p>
+<p>This is where you define your security logic. The <code>.addResolver()</code> method takes a <code>matcher</code>, a <code>resolver</code> function, and optional <code>opts</code> for advanced matching.</p>
 <h3 id="matchers">Matchers</h3>
-<p>A <code>matcher</code> tells the engine which data paths the resolver should apply to. The path is a string like <code>collection/field</code> (e.g., <code>users/email</code>). A matcher can be:
--   A <strong>string:</strong> For an exact path match (e.g., <code>'users/password'</code>).
--   A <strong>RegExp:</strong> For pattern-based matching (e.g., <code>/email$/</code> to match any field ending in "email").
--   A <strong>function:</strong> For complex, dynamic matching logic <code>(path: string) =&gt; boolean</code>.</p>
+<p>A <code>matcher</code> tells the engine which data paths the resolver should apply to. The path is a string like <code>collection/field</code> (e.g., <code>users/email</code>). A matcher can be:</p>
+<ul>
+<li>A <strong>string:</strong> For path matching with configurable mode (exact match by default). See options below.</li>
+<li>A <strong>RegExp:</strong> For pattern-based matching (e.g., <code>/email$/</code> to match any field ending in "email").</li>
+<li>A <strong>function:</strong> For complex, dynamic matching logic <code>(pathString: string, pathArray: string[]) =&gt; boolean</code>.</li>
+</ul>
+<h3 id="options-for-string-matchers">Options for String Matchers</h3>
+<p>When using a string matcher, you can specify different matching behaviors with the optional <code>opts</code> parameter:</p>
+<ul>
+<li><code>"endsWith"</code>: Matches if the path ends with the string (e.g., <code>"email"</code> matches <code>users/email</code>, <code>accounts/primaryEmail</code>)</li>
+<li><code>"startsWith"</code>: Matches if the path starts with the string (e.g., <code>"users/"</code> matches <code>users/email</code>, <code>users/name</code>)</li>
+<li><code>"includes"</code>: Matches if the path contains the string (e.g., <code>"secret"</code> matches <code>private/secret/data</code>, <code>admin/config/secret_key</code>)</li>
+<li><code>"exact"</code> (default): Matches only when the path is exactly equal to the string</li>
+</ul>
 <h3 id="resolver-function">Resolver Function</h3>
 <p>A <code>resolver</code> is an <code>async</code> function that returns <code>true</code> (access granted) or <code>false</code> (access denied). It receives a <code>PermValidFnArgs</code> object with the following properties:</p>
 <ul>
@@ -888,13 +920,23 @@
 <li><code>p</code>: The permission arguments from the query (if any).</li>
 </ul>
 <h3 id="example-adding-different-resolvers">Example: Adding Different Resolvers</h3>
-<div class="highlight"><pre><span></span><code><span class="c1">// Resolver 1: Block access to any field named &#39;password&#39; using a RegExp</span>
-<span class="nx">resolverEngine</span><span class="p">.</span><span class="nx">addResolver</span><span class="p">(</span><span class="sr">/password$/</span><span class="p">,</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="p">(</span><span class="nx">args</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<div class="highlight"><pre><span></span><code><span class="c1">// Resolver 1: Block access to any field ending with &#39;password&#39; using string mode</span>
+<span class="nx">resolverEngine</span><span class="p">.</span><span class="nx">addResolver</span><span class="p">(</span><span class="s2">&quot;password&quot;</span><span class="p">,</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="p">(</span><span class="nx">args</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="c1">// This resolver simply denies access, no matter who the user is.</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span>
+<span class="p">},</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">stringMode</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;endsWith&quot;</span><span class="w"> </span><span class="p">});</span>
+
+<span class="c1">// Resolver 2: Block access to any field containing &#39;secret&#39; using string mode</span>
+<span class="nx">resolverEngine</span><span class="p">.</span><span class="nx">addResolver</span><span class="p">(</span><span class="s2">&quot;secret&quot;</span><span class="p">,</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="p">(</span><span class="nx">args</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span>
+<span class="p">},</span><span class="w"> </span><span class="s2">&quot;includes&quot;</span><span class="p">);</span><span class="w"> </span><span class="c1">// shorthand notation</span>
+
+<span class="c1">// Resolver 3: Block access to fields that match a RegExp pattern</span>
+<span class="nx">resolverEngine</span><span class="p">.</span><span class="nx">addResolver</span><span class="p">(</span><span class="sr">/password$/</span><span class="p">,</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="p">(</span><span class="nx">args</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span>
 <span class="p">});</span>
 
-<span class="c1">// Resolver 2: Restrict access to the &#39;email&#39; field using a string matcher</span>
+<span class="c1">// Resolver 4: Restrict access to the &#39;email&#39; field using exact string matching</span>
 <span class="nx">resolverEngine</span><span class="p">.</span><span class="nx">addResolver</span><span class="p">(</span><span class="s2">&quot;users/email&quot;</span><span class="p">,</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="p">(</span><span class="nx">args</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="c1">// Logic: Allow if the user is an admin OR if they are requesting their own email.</span>
 <span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">user</span><span class="p">,</span><span class="w"> </span><span class="nx">rootData</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">args</span><span class="p">;</span>
@@ -907,8 +949,8 @@
 <span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span>
 <span class="p">});</span>
 
-<span class="c1">// Resolver 3: A function-based matcher for any field in a &#39;logs&#39; collection</span>
-<span class="kd">const</span><span class="w"> </span><span class="nx">logsMatcher</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="nx">pathString</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">pathString</span><span class="p">.</span><span class="nx">startsWith</span><span class="p">(</span><span class="s1">&#39;logs/&#39;</span><span class="p">);</span>
+<span class="c1">// Resolver 5: A function-based matcher for any field in a &#39;logs&#39; collection</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">logsMatcher</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="nx">pathString</span><span class="p">,</span><span class="w"> </span><span class="nx">pathArray</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">pathString</span><span class="p">.</span><span class="nx">startsWith</span><span class="p">(</span><span class="s1">&#39;logs/&#39;</span><span class="p">);</span>
 <span class="nx">resolverEngine</span><span class="p">.</span><span class="nx">addResolver</span><span class="p">(</span><span class="nx">logsMatcher</span><span class="p">,</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="p">(</span><span class="nx">args</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="c1">// Logic: Only admins can access anything in the logs.</span>
 <span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">args</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">role</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;admin&#39;</span><span class="p">;</span>
