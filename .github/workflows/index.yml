@@ -17,16 +17,25 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          HOMEPAGE=$(curl -s \
+          HOMEPAGE_RAW=$(curl -s \
             -H "Authorization: Bearer $GITHUB_TOKEN" \
             -H "Accept: application/vnd.github+json" \
             https://api.github.com/repos/wxn0brP/VQL \
             | jq -r '.homepage')
 
-          if [ -z "$HOMEPAGE" ] || [ "$HOMEPAGE" = "null" ]; then
+          if [ -z "$HOMEPAGE_RAW" ] || [ "$HOMEPAGE_RAW" = "null" ]; then
             echo "Homepage is not set for repository."
             exit 1
           fi
+
+          # Escape for HTML attributes
+          HOMEPAGE_ESCAPED=$(printf '%s' "$HOMEPAGE_RAW" \
+            | sed \
+              -e 's/&/\&amp;/g' \
+              -e 's/"/\&quot;/g' \
+              -e "s/'/\&#39;/g" \
+              -e 's/</\&lt;/g' \
+              -e 's/>/\&gt;/g')
 
           mkdir -p site
 
@@ -35,11 +44,21 @@ jobs:
           <html lang="en">
           <head>
             <meta charset="utf-8">
-            <meta http-equiv="refresh" content="0; url=$HOMEPAGE">
             <title>Redirecting...</title>
+
+            <!-- Primary redirect -->
+            <script>
+              window.location.replace(${HOMEPAGE_RAW@Q});
+            </script>
+
+            <!-- Fallback redirect -->
+            <meta http-equiv="refresh" content="0; url=$HOMEPAGE_ESCAPED">
           </head>
           <body>
-            <p>Redirecting to <a href="$HOMEPAGE">$HOMEPAGE</a></p>
+            <p>
+              Redirecting to
+              <a href="$HOMEPAGE_ESCAPED">$HOMEPAGE_ESCAPED</a>
+            </p>
           </body>
           </html>
           EOF
