@@ -3,7 +3,11 @@ import { ValtheraCompatible } from "@wxn0brp/db-core";
 import CollectionManager from "@wxn0brp/db-core/helpers/CollectionManager";
 import updateFindObject from "@wxn0brp/db-core/utils/updateFindObject";
 
-type ResolverFn<TArgs extends any[] = any[], TReturn = any> = (...args: TArgs) => Promise<TReturn>;
+export type ResolverFn<TArgs extends any[] = any[], TReturn = any> = (...args: TArgs) => Promise<TReturn>;
+export type DropFirstFromTuple<T extends any[]> = T extends [any, ...infer Rest] ? Rest : never;
+export type DropFirst<T> = T extends (...args: infer Args) => infer R
+    ? (...args: DropFirstFromTuple<Args>) => R
+    : never;
 
 export interface ValtheraResolverMeta {
     type: "valthera" | "api" | "wrapper" | (string & {});
@@ -109,43 +113,63 @@ export class AdapterBuilder {
         return this;
     }
 
-    add(collection: string, fn: ValtheraResolver["add"]) {
+    add(collection: (string & {}), fn: DropFirst<ValtheraResolver["add"]>): this;
+    add(collection: "*", fn: ValtheraResolver["add"]): this;
+    add(collection: string, fn: Function) {
         return this.register("add", collection, fn);
     }
 
-    find(collection: string, fn: ValtheraResolver["find"]) {
+    find(collection: (string & {}), fn: DropFirst<ValtheraResolver["find"]>): this;
+    find(collection: "*", fn: ValtheraResolver["find"]): this;
+    find(collection: string, fn: Function) {
         return this.register("find", collection, fn);
     }
 
-    findOne(collection: string, fn: ValtheraResolver["findOne"]) {
+    findOne(collection: (string & {}), fn: DropFirst<ValtheraResolver["findOne"]>): this;
+    findOne(collection: "*", fn: ValtheraResolver["findOne"]): this;
+    findOne(collection: string, fn: Function) {
         return this.register("findOne", collection, fn);
     }
 
-    update(collection: string, fn: ValtheraResolver["update"]) {
+    update(collection: (string & {}), fn: DropFirst<ValtheraResolver["update"]>): this;
+    update(collection: "*", fn: ValtheraResolver["update"]): this;
+    update(collection: string, fn: Function) {
         return this.register("update", collection, fn);
     }
 
-    updateOne(collection: string, fn: ValtheraResolver["updateOne"]) {
+    updateOne(collection: (string & {}), fn: DropFirst<ValtheraResolver["updateOne"]>): this;
+    updateOne(collection: "*", fn: ValtheraResolver["updateOne"]): this;
+    updateOne(collection: string, fn: Function) {
         return this.register("updateOne", collection, fn);
     }
 
-    updateOneOrAdd(collection: string, fn: ValtheraResolver["updateOneOrAdd"]) {
+    updateOneOrAdd(collection: (string & {}), fn: DropFirst<ValtheraResolver["updateOneOrAdd"]>): this;
+    updateOneOrAdd(collection: "*", fn: ValtheraResolver["updateOneOrAdd"]): this;
+    updateOneOrAdd(collection: string, fn: Function) {
         return this.register("updateOneOrAdd", collection, fn);
     }
 
-    toggleOne(collection: string, fn: ValtheraResolver["toggleOne"]) {
+    toggleOne(collection: (string & {}), fn: DropFirst<ValtheraResolver["toggleOne"]>): this;
+    toggleOne(collection: "*", fn: ValtheraResolver["toggleOne"]): this;
+    toggleOne(collection: string, fn: Function) {
         return this.register("toggleOne", collection, fn);
     }
 
-    remove(collection: string, fn: ValtheraResolver["remove"]) {
+    remove(collection: (string & {}), fn: DropFirst<ValtheraResolver["remove"]>): this;
+    remove(collection: "*", fn: ValtheraResolver["remove"]): this;
+    remove(collection: string, fn: Function) {
         return this.register("remove", collection, fn);
     }
 
-    removeOne(collection: string, fn: ValtheraResolver["removeOne"]) {
+    removeOne(collection: (string & {}), fn: DropFirst<ValtheraResolver["removeOne"]>): this;
+    removeOne(collection: "*", fn: ValtheraResolver["removeOne"]): this;
+    removeOne(collection: string, fn: Function) {
         return this.register("removeOne", collection, fn);
     }
 
-    removeCollection(collection: string, fn: ValtheraResolver["removeCollection"]) {
+    removeCollection(collection: (string & {}), fn: DropFirst<ValtheraResolver["removeCollection"]>): this;
+    removeCollection(collection: "*", fn: ValtheraResolver["removeCollection"]): this;
+    removeCollection(collection: string, fn: Function) {
         return this.register("removeCollection", collection, fn);
     }
 
