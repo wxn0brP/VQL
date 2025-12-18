@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.10.1](https://github.com/wxn0brP/VQL/compare/v0.10.0...v0.10.1) (2025-12-18)
+
+
+### Features
+
+* update gui ([740f250](https://github.com/wxn0brP/VQL/commit/740f25063230bad0d10cc659166b25fbcb67b4bd))
+
+
+### Bug Fixes
+
+* api abstract types ([41176ed](https://github.com/wxn0brP/VQL/commit/41176ed2f5864a9b49609c7dfb473eff0b42fd60))
+
 ## [0.10.0](https://github.com/wxn0brP/VQL/compare/v0.9.0...v0.10.0) (2025-12-10)
 
 
