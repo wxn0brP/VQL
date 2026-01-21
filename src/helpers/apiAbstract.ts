@@ -1,6 +1,6 @@
 import { VQL_Query_CRUD_Keys } from "#types/vql";
 import { ValtheraCompatible } from "@wxn0brp/db-core";
-import CollectionManager from "@wxn0brp/db-core/helpers/CollectionManager";
+import { CollectionManager } from "@wxn0brp/db-core/helpers/collectionManager";
 import updateFindObject from "@wxn0brp/db-core/utils/updateFindObject";
 
 export type ResolverFn<TArgs extends any[] = any[], TReturn = any> = (...args: TArgs) => Promise<TReturn>;
