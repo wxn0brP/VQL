@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.10.3](https://github.com/wxn0brP/VQL/compare/v0.10.2...v0.10.3) (2026-01-31)
+
+
+### Features
+
+* improve falcon frame integration ([5e0ea8d](https://github.com/wxn0brP/VQL/commit/5e0ea8d0f9191f1b9e1cf380af332519ad63c363))
+
 ### [0.10.2](https://github.com/wxn0brP/VQL/compare/v0.10.1...v0.10.2) (2026-01-21)
 
 
