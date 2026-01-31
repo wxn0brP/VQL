@@ -1,0 +1,37 @@
+{
+  "name": "@wxn0brp/vql",
+  "version": "0.10.4",
+  "author": "wxn0brP",
+  "license": "MIT",
+  "type": "module",
+  "description": "VQL - Valthera Query Language",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wxn0brP/VQL.git"
+  },
+  "keywords": [
+    "vql",
+    "valthera",
+    "database",
+    "orm",
+    "api",
+    "crud",
+    "nosql",
+    "query",
+    "db",
+    "query-language"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    },
+    "./*": {
+      "types": "./dist/*.d.ts",
+      "import": "./dist/*.js",
+      "default": "./dist/*.js"
+    }
+  },
+  "types": "./vql.d.ts"
+}
