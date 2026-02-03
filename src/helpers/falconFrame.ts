@@ -1,6 +1,6 @@
-import { parseVQLS } from "../cpu/string";
-import { type VQLProcessor } from "../processor";
-import type { FalconFrame, FFRequest, FFResponse } from "@wxn0brp/falcon-frame";
+import type { FFRequest, FFResponse, RouteHandler } from "@wxn0brp/falcon-frame";
+import { Router } from "@wxn0brp/falcon-frame";
+import type { VQLProcessor } from "../processor";
 
 export type ContextFn = (req: FFRequest, res: FFResponse) => Promise<any> | any;
 
@@ -8,6 +8,7 @@ interface FF_VQL_Options {
     /** @default "/VQL" */
     path?: string;
     getUser?: ContextFn;
+    /** @deprecated */
     dev?: boolean;
 }
 
@@ -19,11 +20,14 @@ function formatMessage(e: any) {
             : JSON.stringify(e);
 }
 
-export function FF_VQL(app: FalconFrame<any>, processor: VQLProcessor, options: FF_VQL_Options = {}) {
-    const path = options.path || "/VQL";
+export function FF_VQL(router: Router, processor: VQLProcessor, options: FF_VQL_Options = {}) {
+    router.post(options.path || "/VQL", createVqlRouteHandler(processor, options));
+}
+
+export function createVqlRouteHandler(processor: VQLProcessor, options: FF_VQL_Options = {}): RouteHandler {
     const getContext = options.getUser || (() => ({}));
 
-    app.post(path, async (req, res) => {
+    return async (req, res) => {
         try {
             const ctx = await getContext(req, res);
             const result = await processor.execute(req.body.query, ctx);
@@ -33,16 +37,5 @@ export function FF_VQL(app: FalconFrame<any>, processor: VQLProcessor, options: 
             res.status(500);
             return { err: true, msg: formatMessage(e) };
         }
-    });
-
-    if (options.dev) {
-        app.get(path + "-query", (req, res) => {
-            try {
-                return parseVQLS(req.query?.query || "");
-            } catch (e) {
-                res.status(500);
-                return { err: true, msg: formatMessage(e) };
-            }
-        });
     }
 }
