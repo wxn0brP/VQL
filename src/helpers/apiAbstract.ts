@@ -1,7 +1,19 @@
 import { VQL_Query_CRUD_Keys } from "#types/vql";
 import { ValtheraCompatible } from "@wxn0brp/db-core";
-import { CollectionManager } from "@wxn0brp/db-core/helpers/collectionManager";
-import updateFindObject from "@wxn0brp/db-core/utils/updateFindObject";
+import { Collection } from "@wxn0brp/db-core/helpers/collection";
+import { Data } from "@wxn0brp/db-core/types/data";
+import {
+    AddQuery,
+    FindOneQuery,
+    FindQuery,
+    RemoveQuery,
+    ToggleOneQuery,
+    ToggleOneResult,
+    UpdateOneOrAddQuery,
+    UpdateOneOrAddResult,
+    UpdateQuery
+} from "@wxn0brp/db-core/types/query";
+import { updateFindObject } from "@wxn0brp/db-core/utils/updateFindObject";
 
 export type ResolverFn<TArgs extends any[] = any[], TReturn = any> = (...args: TArgs) => Promise<TReturn>;
 export type DropFirstFromTuple<T extends any[]> = T extends [any, ...infer Rest] ? Rest : never;
@@ -27,23 +39,17 @@ export interface ValtheraResolver {
     issetCollection?: ResolverFn<[collection: string], boolean>;
     ensureCollection?: ResolverFn<[collection: string], boolean>;
 
-    add?: ResolverFn<[collection: string, data: any, id_gen?: boolean], any>;
-    find?: ResolverFn<
-        [collection: string, search: any, options?: any, findOpts?: any, context?: any],
-        any[]
-    >;
-    findOne?: ResolverFn<
-        [collection: string, search: any, findOpts?: any, context?: any],
-        any | null
-    >;
+    add?: ResolverFn<[query: AddQuery], Object>;
+    find?: ResolverFn<[query: FindQuery], Object[]>;
+    findOne?: ResolverFn<[query: FindOneQuery], Object | null>;
 
-    update?: ResolverFn<[collection: string, search: any, updater: any, context?: any], boolean>;
-    updateOne?: ResolverFn<[collection: string, search: any, updater: any, context?: any], boolean>;
-    updateOneOrAdd?: ResolverFn<[collection: string, search: any, updater: any, opts?: any], boolean>;
-    toggleOne?: ResolverFn<[collection: string, search: any, data?: any, context?: any], boolean>,
+    update?: ResolverFn<[query: UpdateQuery], Object[] | null>;
+    updateOne?: ResolverFn<[query: UpdateQuery], Object | null>;
+    updateOneOrAdd?: ResolverFn<[query: UpdateOneOrAddQuery], UpdateOneOrAddResult<Object>>;
+    toggleOne?: ResolverFn<[query: ToggleOneQuery], ToggleOneResult<Object>>,
 
-    remove?: ResolverFn<[collection: string, search: any, context?: any], boolean>;
-    removeOne?: ResolverFn<[collection: string, search: any, context?: any], boolean>;
+    remove?: ResolverFn<[query: RemoveQuery], Object | null>;
+    removeOne?: ResolverFn<[query: RemoveQuery], Object | null>;
 
     removeCollection?: ResolverFn<[collection: string], boolean>;
 }
@@ -69,15 +75,17 @@ export function createValtheraAdapter(resolver: ValtheraResolver, extendedFind: 
         meta: resolver.meta ?? { type: "api", version: "0.0.1" },
     };
 
-    adapter.c = (collection: string) => new CollectionManager(adapter, collection);
+    adapter.c = (collection: string) => new Collection(adapter, collection);
 
     for (const name of list) {
-        adapter[name] = (...args: any[]) => safe(resolver[name])(...args);
+        // @ts-expect-error
+        adapter[name] = (query: any) => safe(resolver[name])(query);
     }
 
     if (extendedFind) {
-        adapter.find = async (col, search, options, findOpts, context) => {
-            let data = await safe(resolver.find)(col, search, options, findOpts, context);
+        adapter.find = async <T = Data>(query: FindQuery) => {
+            let data = await safe(resolver.find)(query);
+            const { dbFindOpts: options, findOpts } = query;
 
             if (options?.reverse) data.reverse();
 
@@ -86,13 +94,13 @@ export function createValtheraAdapter(resolver: ValtheraResolver, extendedFind: 
 
             data = data.map(d => updateFindObject(d, findOpts || {}));
 
-            return data;
+            return data as T[];
         };
 
-        adapter.findOne = async (col, search, context, findOpts) => {
-            const data = await safe(resolver.findOne)(col, search, context, findOpts);
+        adapter.findOne = async <T = Data>(query: FindOneQuery) => {
+            const data = await safe(resolver.findOne)(query);
             if (typeof data !== "object") return data;
-            return updateFindObject(data, findOpts || {}) as any;
+            return updateFindObject(data, query.findOpts || {}) as T;
         };
     }
 

@@ -32,9 +32,9 @@
         "query-language"
     ],
     "peerDependencies": {
-        "@wxn0brp/db-core": ">=0.4.0",
-        "@wxn0brp/falcon-frame": ">=0.7.0",
-        "@wxn0brp/gate-warden": ">=0.5.3"
+        "@wxn0brp/db-core": "~0.8.1",
+        "@wxn0brp/falcon-frame": "~0.7.0",
+        "@wxn0brp/gate-warden": "~0.5.3"
     },
     "peerDependenciesMeta": {
         "@wxn0brp/falcon-frame": {
@@ -50,16 +50,16 @@
     "devDependencies": {
         "@types/bun": "*",
         "@types/node": "*",
-        "@wxn0brp/db": "^0.42.0",
-        "@wxn0brp/db-core": "^0.4.0",
-        "@wxn0brp/falcon-frame": "^0.7.0",
-        "@wxn0brp/gate-warden": "^0.5.3",
+        "@wxn0brp/db": "~0.80.0",
+        "@wxn0brp/db-core": "~0.8.1",
+        "@wxn0brp/falcon-frame": "~0.7.0",
+        "@wxn0brp/gate-warden": "~0.5.3",
         "esbuild": "*",
         "tsc-alias": "*",
         "typescript": "*"
     },
     "dependencies": {
-        "@wxn0brp/lucerna-log": "^0.2.2"
+        "@wxn0brp/lucerna-log": "~0.2.2"
     },
     "exports": {
         ".": {
