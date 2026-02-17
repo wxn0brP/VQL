@@ -1,0 +1,10 @@
+{
+    cmd: "tsc --noEmit && bun test",
+    watch: [
+        "src",
+    ],
+    restart_cmd: "clear",
+    events: {
+        rs: "clear",
+    },
+}
