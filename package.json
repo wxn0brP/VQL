@@ -32,7 +32,7 @@
         "query-language"
     ],
     "peerDependencies": {
-        "@wxn0brp/db-core": "~0.8.1",
+        "@wxn0brp/db-core": "~0.9.0",
         "@wxn0brp/falcon-frame": "~0.7.0",
         "@wxn0brp/gate-warden": "~0.5.3"
     },
@@ -50,8 +50,8 @@
     "devDependencies": {
         "@types/bun": "*",
         "@types/node": "*",
-        "@wxn0brp/db": "~0.80.0",
-        "@wxn0brp/db-core": "~0.8.1",
+        "@wxn0brp/db": "~0.90.0",
+        "@wxn0brp/db-core": "~0.9.0",
         "@wxn0brp/falcon-frame": "~0.7.0",
         "@wxn0brp/gate-warden": "~0.5.3",
         "esbuild": "*",
