@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.11.1](https://github.com/wxn0brP/VQL/compare/v0.11.0...v0.11.1) (2026-02-18)
+
+
+### Bug Fixes
+
+* gate warden version ([6856bcc](https://github.com/wxn0brP/VQL/commit/6856bcc85b900463d6f2fb19a0822fcdf5bd36b3))
+
 ## [0.11.0](https://github.com/wxn0brP/VQL/compare/v0.10.4...v0.11.0) (2026-02-18)
 
 
