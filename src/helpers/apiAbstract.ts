@@ -15,11 +15,7 @@ import {
 } from "@wxn0brp/db-core/types/query";
 import { updateFindObject } from "@wxn0brp/db-core/utils/updateFindObject";
 
-export type ResolverFn<TArgs extends any[] = any[], TReturn = any> = (...args: TArgs) => Promise<TReturn>;
-export type DropFirstFromTuple<T extends any[]> = T extends [any, ...infer Rest] ? Rest : never;
-export type DropFirst<T> = T extends (...args: infer Args) => infer R
-    ? (...args: DropFirstFromTuple<Args>) => R
-    : never;
+export type ResolverFn<TArg = any, TReturn = any> = (query: TArg) => Promise<TReturn>;
 
 export interface ValtheraResolverMeta {
     type: "valthera" | "api" | "wrapper" | (string & {});
@@ -35,23 +31,23 @@ export interface ValtheraResolverMeta {
 export interface ValtheraResolver {
     meta?: ValtheraResolverMeta;
 
-    getCollections?: ResolverFn<[], string[]>;
-    issetCollection?: ResolverFn<[collection: string], boolean>;
-    ensureCollection?: ResolverFn<[collection: string], boolean>;
+    getCollections?: ResolverFn<void, string[]>;
+    issetCollection?: ResolverFn<string, boolean>;
+    ensureCollection?: ResolverFn<string, boolean>;
 
-    add?: ResolverFn<[query: AddQuery], Object>;
-    find?: ResolverFn<[query: FindQuery], Object[]>;
-    findOne?: ResolverFn<[query: FindOneQuery], Object | null>;
+    add?: ResolverFn<AddQuery, Object>;
+    find?: ResolverFn<FindQuery, Object[]>;
+    findOne?: ResolverFn<FindOneQuery, Object | null>;
 
-    update?: ResolverFn<[query: UpdateQuery], Object[] | null>;
-    updateOne?: ResolverFn<[query: UpdateQuery], Object | null>;
-    updateOneOrAdd?: ResolverFn<[query: UpdateOneOrAddQuery], UpdateOneOrAddResult<Object>>;
-    toggleOne?: ResolverFn<[query: ToggleOneQuery], ToggleOneResult<Object>>,
+    update?: ResolverFn<UpdateQuery, Object[] | null>;
+    updateOne?: ResolverFn<UpdateQuery, Object | null>;
+    updateOneOrAdd?: ResolverFn<UpdateOneOrAddQuery, UpdateOneOrAddResult<Object>>;
+    toggleOne?: ResolverFn<ToggleOneQuery, ToggleOneResult<Object>>,
 
-    remove?: ResolverFn<[query: RemoveQuery], Object | null>;
-    removeOne?: ResolverFn<[query: RemoveQuery], Object | null>;
+    remove?: ResolverFn<RemoveQuery, Object | null>;
+    removeOne?: ResolverFn<RemoveQuery, Object | null>;
 
-    removeCollection?: ResolverFn<[collection: string], boolean>;
+    removeCollection?: ResolverFn<string, boolean>;
 }
 
 export type Operation = Exclude<VQL_Query_CRUD_Keys, "f">;
@@ -71,7 +67,7 @@ export function createValtheraAdapter(resolver: ValtheraResolver, extendedFind: 
     };
 
     const adapter: ValtheraCompatible = {
-        // @ts-ignore
+        // @ts-expect-error
         meta: resolver.meta ?? { type: "api", version: "0.0.1" },
     };
 
@@ -112,7 +108,7 @@ export class AdapterBuilder {
     private collections: Set<string> = new Set();
 
     constructor(
-        private catchCb: (e: any, op: string, args: any[]) => void = (e) => { console.log(e); }
+        private catchCb: (e: any, op: string, arg: any) => void = (e) => { console.log(e); }
     ) { }
 
     register(op: Operation, collection: string, fn: Function) {
@@ -121,76 +117,59 @@ export class AdapterBuilder {
         return this;
     }
 
-    add(collection: (string & {}), fn: DropFirst<ValtheraResolver["add"]>): this;
-    add(collection: "*", fn: ValtheraResolver["add"]): this;
-    add(collection: string, fn: Function) {
+    add(collection: string, fn: ValtheraResolver["add"]) {
         return this.register("add", collection, fn);
     }
 
-    find(collection: (string & {}), fn: DropFirst<ValtheraResolver["find"]>): this;
-    find(collection: "*", fn: ValtheraResolver["find"]): this;
-    find(collection: string, fn: Function) {
+    find(collection: string, fn: ValtheraResolver["find"]) {
         return this.register("find", collection, fn);
     }
 
-    findOne(collection: (string & {}), fn: DropFirst<ValtheraResolver["findOne"]>): this;
-    findOne(collection: "*", fn: ValtheraResolver["findOne"]): this;
-    findOne(collection: string, fn: Function) {
+    findOne(collection: string, fn: ValtheraResolver["findOne"]) {
         return this.register("findOne", collection, fn);
     }
 
-    update(collection: (string & {}), fn: DropFirst<ValtheraResolver["update"]>): this;
-    update(collection: "*", fn: ValtheraResolver["update"]): this;
-    update(collection: string, fn: Function) {
+    update(collection: string, fn: ValtheraResolver["update"]) {
         return this.register("update", collection, fn);
     }
 
-    updateOne(collection: (string & {}), fn: DropFirst<ValtheraResolver["updateOne"]>): this;
-    updateOne(collection: "*", fn: ValtheraResolver["updateOne"]): this;
-    updateOne(collection: string, fn: Function) {
+    updateOne(collection: string, fn: ValtheraResolver["updateOne"]) {
         return this.register("updateOne", collection, fn);
     }
 
-    updateOneOrAdd(collection: (string & {}), fn: DropFirst<ValtheraResolver["updateOneOrAdd"]>): this;
-    updateOneOrAdd(collection: "*", fn: ValtheraResolver["updateOneOrAdd"]): this;
-    updateOneOrAdd(collection: string, fn: Function) {
+    updateOneOrAdd(collection: string, fn: ValtheraResolver["updateOneOrAdd"]) {
         return this.register("updateOneOrAdd", collection, fn);
     }
 
-    toggleOne(collection: (string & {}), fn: DropFirst<ValtheraResolver["toggleOne"]>): this;
-    toggleOne(collection: "*", fn: ValtheraResolver["toggleOne"]): this;
-    toggleOne(collection: string, fn: Function) {
+    toggleOne(collection: string, fn: ValtheraResolver["toggleOne"]) {
         return this.register("toggleOne", collection, fn);
     }
 
-    remove(collection: (string & {}), fn: DropFirst<ValtheraResolver["remove"]>): this;
-    remove(collection: "*", fn: ValtheraResolver["remove"]): this;
-    remove(collection: string, fn: Function) {
+    remove(collection: string, fn: ValtheraResolver["remove"]) {
         return this.register("remove", collection, fn);
     }
 
-    removeOne(collection: (string & {}), fn: DropFirst<ValtheraResolver["removeOne"]>): this;
-    removeOne(collection: "*", fn: ValtheraResolver["removeOne"]): this;
-    removeOne(collection: string, fn: Function) {
+    removeOne(collection: string, fn: ValtheraResolver["removeOne"]) {
         return this.register("removeOne", collection, fn);
     }
 
-    removeCollection(collection: (string & {}), fn: DropFirst<ValtheraResolver["removeCollection"]>): this;
-    removeCollection(collection: "*", fn: ValtheraResolver["removeCollection"]): this;
-    removeCollection(collection: string, fn: Function) {
+    removeCollection(collection: string, fn: ValtheraResolver["removeCollection"]) {
         return this.register("removeCollection", collection, fn);
     }
 
     getAdapter(extendedFind: boolean = true) {
-        const resolve = async (op: string, ...args: any[]) => {
-            const col: string = args.shift();
+        const resolve = async (op: string, arg: any) => {
+            const col: string =
+                typeof arg === "object" && "collection" in arg ?
+                    arg.collection :
+                    arg;
+
             const handler = this.handlers.get(`${op}:${col}`) || this.handlers.get(`${op}:*`) || null;
             if (!handler) throw new Error(`Unimplemented method: ${op}:${col}`);
-            if (col === "*") args.unshift(col);
             try {
-                return await handler(...args);
+                return await handler(arg);
             } catch (e) {
-                this.catchCb(e, op, args);
+                this.catchCb(e, op, arg);
             }
         };
 
@@ -205,7 +184,8 @@ export class AdapterBuilder {
         }, extendedFind);
 
         for (const name of list.slice(4))
-            adapter[name] = (...args: any[]) => resolve(name, ...args);
+            // @ts-expect-error
+            adapter[name] = (arg: any) => resolve(name, arg);
 
         return adapter;
     }
