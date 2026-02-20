@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.11.2](https://github.com/wxn0brP/VQL/compare/v0.11.1...v0.11.2) (2026-02-20)
+
+
+### Bug Fixes
+
+* apiAbstract ([eac6071](https://github.com/wxn0brP/VQL/commit/eac607155a0a8e9c7d42a6f0ec3be81ccc272e17))
+
 ### [0.11.1](https://github.com/wxn0brP/VQL/compare/v0.11.0...v0.11.1) (2026-02-18)
 
 
