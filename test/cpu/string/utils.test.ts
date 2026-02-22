@@ -3,7 +3,7 @@ import { describe, expect, it } from "bun:test";
 
 describe("CPU/String/Utils", () => {
     describe("extractMeta", () => {
-        it("should extract metadata for simple find query", () => {
+        it("1. should extract metadata for simple find query", () => {
             const result = extractMeta("mydb users");
             expect(result).toEqual({
                 db: "mydb",
@@ -13,7 +13,7 @@ describe("CPU/String/Utils", () => {
             });
         });
 
-        it("should extract metadata for query with explicit operation", () => {
+        it("2. should extract metadata for query with explicit operation", () => {
             const result = extractMeta("mydb find users");
             expect(result).toEqual({
                 db: "mydb",
@@ -23,7 +23,7 @@ describe("CPU/String/Utils", () => {
             });
         });
 
-        it("should extract metadata for query with operation and body", () => {
+        it("3. should extract metadata for query with operation and body", () => {
             const result = extractMeta("mydb update users s.name = 'John' u.name = 'Jane'");
             expect(result).toEqual({
                 db: "mydb",
@@ -33,7 +33,7 @@ describe("CPU/String/Utils", () => {
             });
         });
 
-        it("should extract metadata for 'getCollections' operation", () => {
+        it("4. should extract metadata for 'getCollections' operation", () => {
             const result = extractMeta("mydb getCollections");
             expect(result).toEqual({
                 db: "mydb",
@@ -43,7 +43,7 @@ describe("CPU/String/Utils", () => {
             });
         });
 
-        it("should handle operation with special character prefix", () => {
+        it("5. should handle operation with special character prefix", () => {
             const result = extractMeta("mydb +users"); // '+' means 'add'
             expect(result).toEqual({
                 db: "mydb",
@@ -53,7 +53,7 @@ describe("CPU/String/Utils", () => {
             });
         });
 
-        it("should handle operation with special character prefix and '!' suffix", () => {
+        it("6. should handle operation with special character prefix and '!' suffix", () => {
             const result = extractMeta("mydb +users!"); // '+' means 'add', '!' means 'One'
             expect(result).toEqual({
                 db: "mydb",
@@ -63,7 +63,7 @@ describe("CPU/String/Utils", () => {
             });
         });
 
-        it("should handle update operation with '!' suffix", () => {
+        it("7. should handle update operation with '!' suffix", () => {
             const result = extractMeta("mydb ~posts!"); // '~' means 'update', '!' means 'One'
             expect(result).toEqual({
                 db: "mydb",
@@ -73,7 +73,7 @@ describe("CPU/String/Utils", () => {
             });
         });
 
-        it("should handle different special character prefixes", () => {
+        it("8. should handle different special character prefixes", () => {
             expect(extractMeta("mydb -users")).toEqual({
                 db: "mydb",
                 op: "remove",
@@ -103,7 +103,7 @@ describe("CPU/String/Utils", () => {
             });
         });
 
-        it("should handle queries with comments", () => {
+        it("9. should handle queries with comments", () => {
             const input = `
                 # This is a comment
                 mydb find users
@@ -118,7 +118,7 @@ describe("CPU/String/Utils", () => {
             });
         });
 
-        it("should handle multi-line queries", () => {
+        it("10. should handle multi-line queries", () => {
             const input = `mydb
                            find
                            users
@@ -132,11 +132,11 @@ describe("CPU/String/Utils", () => {
             });
         });
 
-        it("should throw error for invalid query with less than 2 parts", () => {
+        it("11. should throw error for invalid query with less than 2 parts", () => {
             expect(() => extractMeta("mydb")).toThrow("Invalid query");
         });
 
-        it("should handle complex query body with special characters", () => {
+        it("12. should handle complex query body with special characters", () => {
             const result = extractMeta("mydb find users s._id == 123 and s.status in ['active', 'pending']");
             expect(result).toEqual({
                 db: "mydb",
@@ -148,7 +148,7 @@ describe("CPU/String/Utils", () => {
     });
 
     describe("convertSearchObjToSearchArray", () => {
-        it("should convert simple flat object to search array", () => {
+        it("13. should convert simple flat object to search array", () => {
             const obj = { name: "John", age: 30 };
             const result = convertSearchObjToSearchArray(obj);
             expect(result).toEqual([
@@ -157,7 +157,7 @@ describe("CPU/String/Utils", () => {
             ]);
         });
 
-        it("should convert nested object to search array", () => {
+        it("14. should convert nested object to search array", () => {
             const obj = {
                 user: {
                     profile: {
@@ -175,7 +175,7 @@ describe("CPU/String/Utils", () => {
             ]);
         });
 
-        it("should handle mixed nested and flat properties", () => {
+        it("15. should handle mixed nested and flat properties", () => {
             const obj = {
                 name: "John",
                 profile: {
@@ -193,7 +193,7 @@ describe("CPU/String/Utils", () => {
             ]);
         });
 
-        it("should handle object with null and undefined values", () => {
+        it("16. should handle object with null and undefined values", () => {
             const obj = {
                 name: "John",
                 nullValue: null,
@@ -208,7 +208,7 @@ describe("CPU/String/Utils", () => {
             ]);
         });
 
-        it("should handle object with falsy values", () => {
+        it("17. should handle object with falsy values", () => {
             const obj = {
                 name: "John",
                 emptyString: "",
@@ -226,13 +226,13 @@ describe("CPU/String/Utils", () => {
             ]);
         });
 
-        it("should handle empty object", () => {
+        it("18. should handle empty object", () => {
             const obj = {};
             const result = convertSearchObjToSearchArray(obj);
             expect(result).toEqual([]);
         });
 
-        it("should handle object with array values", () => {
+        it("19. should handle object with array values", () => {
             const obj = {
                 name: "John",
                 tags: ["tag1", "tag2"],
@@ -249,7 +249,7 @@ describe("CPU/String/Utils", () => {
             ]);
         });
 
-        it("should handle deeply nested structure", () => {
+        it("20. should handle deeply nested structure", () => {
             const obj = {
                 level1: {
                     level2: {

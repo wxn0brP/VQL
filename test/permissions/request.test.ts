@@ -9,25 +9,25 @@ describe("Permissions/Request", () => {
     const user = { _id: "test_user" };
 
     describe("processFieldPath", () => {
-        it("should process simple field path correctly", () => {
+        it("1. should process simple field path correctly", () => {
             const pathObj = { path: ["users"], key: "name" };
             const result = processFieldPath(pathObj);
             expect(result).toEqual(["users", "name"]);
         });
 
-        it("should handle subset mode correctly", () => {
+        it("2. should handle subset mode correctly", () => {
             const pathObj = { path: ["users", "$subset", "profile"], key: "email" };
             const result = processFieldPath(pathObj);
             expect(result).toEqual(["users", "profile", "email"]);
         });
 
-        it("should skip keys that start with $", () => {
+        it("3. should skip keys that start with $", () => {
             const pathObj = { path: ["users"], key: "$or" };
             const result = processFieldPath(pathObj);
             expect(result).toEqual(["users"]);
         });
 
-        it("should handle nested paths without subset", () => {
+        it("4. should handle nested paths without subset", () => {
             const pathObj = { path: ["posts", "author"], key: "name" };
             const result = processFieldPath(pathObj);
             expect(result).toEqual(["posts", "author", "name"]);
@@ -35,7 +35,7 @@ describe("Permissions/Request", () => {
     });
 
     describe("extractPaths", () => {
-        it("should extract paths for find operation", async () => {
+        it("1. should extract paths for find operation", async () => {
             const query: VQL_Query_CRUD = {
                 db: "test_db",
                 d: {
@@ -55,7 +55,7 @@ describe("Permissions/Request", () => {
             }));
         });
 
-        it("should extract paths for findOne operation", async () => {
+        it("2. should extract paths for findOne operation", async () => {
             const query: VQL_Query_CRUD = {
                 db: "test_db",
                 d: {
@@ -75,7 +75,7 @@ describe("Permissions/Request", () => {
             }));
         });
 
-        it("should extract paths for find alias (f) operation", async () => {
+        it("3. should extract paths for find alias (f) operation", async () => {
             const query: VQL_Query_CRUD = {
                 db: "test_db",
                 d: {
@@ -95,7 +95,7 @@ describe("Permissions/Request", () => {
             }));
         });
 
-        it("should extract collection permission for add operation", async () => {
+        it("4. should extract collection permission for add operation", async () => {
             const query: VQL_Query_CRUD = {
                 db: "test_db",
                 d: {
@@ -115,7 +115,7 @@ describe("Permissions/Request", () => {
             }));
         });
 
-        it("should extract paths for update operation", async () => {
+        it("5. should extract paths for update operation", async () => {
             const query: VQL_Query_CRUD = {
                 db: "test_db",
                 d: {
@@ -139,7 +139,7 @@ describe("Permissions/Request", () => {
             }));
         });
 
-        it("should extract paths for remove operation", async () => {
+        it("6. should extract paths for remove operation", async () => {
             const query: VQL_Query_CRUD = {
                 db: "test_db",
                 d: {
@@ -159,7 +159,7 @@ describe("Permissions/Request", () => {
             }));
         });
 
-        it("should extract paths for updateOneOrAdd operation", async () => {
+        it("7. should extract paths for updateOneOrAdd operation", async () => {
             const query: VQL_Query_CRUD = {
                 db: "test_db",
                 d: {
@@ -187,7 +187,7 @@ describe("Permissions/Request", () => {
             }));
         });
 
-        it("should extract paths for collection operations", async () => {
+        it("8. should extract paths for collection operations", async () => {
             const query: VQL_Query_CRUD = {
                 db: "test_db",
                 d: {
@@ -208,10 +208,10 @@ describe("Permissions/Request", () => {
     });
 
     describe("checkRequestPermission", () => {
-        it("should return false for undefined query", async () => {
+        it("1. should return false for undefined query", async () => {
             const result = await checkRequestPermission(
                 config,
-                async () => ({ granted: true, via: "test" }),
+                async () => ({ granted: true, via: "resolver", reason: "resolver" }),
                 user,
                 undefined as any
             );
@@ -219,11 +219,11 @@ describe("Permissions/Request", () => {
             expect(result).toBe(false);
         });
 
-        it("should return false when no user and permissionDeniedIfNoUser is true", async () => {
+        it("2. should return false when no user and permissionDeniedIfNoUser is true", async () => {
             const configWithPermissionCheck = new VQLConfig({ permissionDeniedIfNoUser: true });
             const result = await checkRequestPermission(
                 configWithPermissionCheck,
-                async () => ({ granted: true, via: "test" }),
+                async () => ({ granted: true, via: "resolver", reason: "resolver" }),
                 null,
                 {
                     db: "test_db",
@@ -234,13 +234,13 @@ describe("Permissions/Request", () => {
             expect(result).toBe(false);
         });
 
-        it("should return true when all permissions are granted for find operation", async () => {
+        it("3. should return true when all permissions are granted for find operation", async () => {
             const permValidFn: PermValidFn = async (args) => {
                 // For find operations, we check READ permissions for search fields
                 if (args.p === PermCRUD.READ) {
-                    return { granted: true, via: "test" };
+                    return { granted: true, via: "resolver", reason: "resolver" };
                 }
-                return { granted: false, via: "test" };
+                return { granted: false, via: "resolver", reason: "resolver" };
             };
 
             const query: VQL_Query_CRUD = {
@@ -263,13 +263,13 @@ describe("Permissions/Request", () => {
             expect(result).toBe(true);
         });
 
-        it("should return false when permission is denied for find operation", async () => {
+        it("4. should return false when permission is denied for find operation", async () => {
             const permValidFn: PermValidFn = async (args) => {
                 // Deny READ permission for search fields
                 if (args.p === PermCRUD.READ) {
-                    return { granted: false, via: "acl" };
+                    return { granted: false, via: "resolver", reason: "ACL" };
                 }
-                return { granted: true, via: "test" };
+                return { granted: true, via: "resolver", reason: "resolver" };
             };
 
             const query: VQL_Query_CRUD = {
@@ -292,13 +292,13 @@ describe("Permissions/Request", () => {
             expect(result).toBe(false);
         });
 
-        it("should return true when collection CREATE permission is granted for add operation", async () => {
+        it("5. should return true when collection CREATE permission is granted for add operation", async () => {
             const permValidFn: PermValidFn = async (args) => {
                 // For add operations, we check CREATE collection permission
                 if (args.p === PermCRUD.CREATE) {
-                    return { granted: true, via: "test" };
+                    return { granted: true, via: "resolver", reason: "resolver" };
                 }
-                return { granted: false, via: "test" };
+                return { granted: false, via: "resolver", reason: "resolver" };
             };
 
             const query: VQL_Query_CRUD = {
@@ -321,13 +321,13 @@ describe("Permissions/Request", () => {
             expect(result).toBe(true);
         });
 
-        it("should return false when collection CREATE permission is denied for add operation", async () => {
+        it("6. should return false when collection CREATE permission is denied for add operation", async () => {
             const permValidFn: PermValidFn = async (args) => {
                 // Deny CREATE permission
                 if (args.p === PermCRUD.CREATE) {
-                    return { granted: false, via: "acl" };
+                    return { granted: false, via: "resolver", reason: "ACL" };
                 }
-                return { granted: true, via: "test" };
+                return { granted: true, via: "resolver", reason: "resolver" };
             };
 
             const query: VQL_Query_CRUD = {
@@ -350,13 +350,13 @@ describe("Permissions/Request", () => {
             expect(result).toBe(false);
         });
 
-        it("should return true when all permissions are granted for update operation", async () => {
+        it("7. should return true when all permissions are granted for update operation", async () => {
             const permValidFn: PermValidFn = async (args) => {
                 // For update operations, we check READ permission for search fields and UPDATE for updater fields
                 if (args.p === PermCRUD.READ || args.p === PermCRUD.UPDATE) {
-                    return { granted: true, via: "test" };
+                    return { granted: true, via: "resolver", reason: "resolver" };
                 }
-                return { granted: false, via: "test" };
+                return { granted: false, via: "resolver", reason: "resolver" };
             };
 
             const query: VQL_Query_CRUD = {
@@ -380,17 +380,17 @@ describe("Permissions/Request", () => {
             expect(result).toBe(true);
         });
 
-        it("should return false when any permission is denied for update operation", async () => {
+        it("8. should return false when any permission is denied for update operation", async () => {
             const permValidFn: PermValidFn = async (args) => {
                 // Deny UPDATE permission
                 if (args.p === PermCRUD.UPDATE) {
-                    return { granted: false, via: "acl" };
+                    return { granted: false, via: "resolver", reason: "ACL" };
                 }
                 // Grant READ permission
                 if (args.p === PermCRUD.READ) {
-                    return { granted: true, via: "test" };
+                    return { granted: true, via: "resolver", reason: "resolver" };
                 }
-                return { granted: false, via: "test" };
+                return { granted: false, via: "resolver", reason: "resolver" };
             };
 
             const query: VQL_Query_CRUD = {

@@ -5,7 +5,7 @@ import { GateWarden } from "@wxn0brp/gate-warden";
 
 describe("PermissionResolverEngine", () => {
     describe("addResolver", () => {
-        it("should add a resolver with string matcher", async () => {
+        it("1. should add a resolver with string matcher", async () => {
             const engine = new PermissionResolverEngine();
             const resolver = async () => true;
             engine.addResolver("db/users", resolver);
@@ -24,7 +24,7 @@ describe("PermissionResolverEngine", () => {
     });
 
     describe("create", () => {
-        it("should return a function that checks string matchers", async () => {
+        it("1. should return a function that checks string matchers", async () => {
             const engine = new PermissionResolverEngine();
             engine.addResolver("db/users", async () => true);
 
@@ -40,7 +40,7 @@ describe("PermissionResolverEngine", () => {
             expect(result).toEqual({ granted: true, via: "resolver", reason: "resolver" });
         });
 
-        it("should return a function that does not match when string matcher doesn't match", async () => {
+        it("2. should return a function that does not match when string matcher doesn't match", async () => {
             const engine = new PermissionResolverEngine();
             engine.addResolver("db/users", async () => true);
 
@@ -56,7 +56,7 @@ describe("PermissionResolverEngine", () => {
             expect(result).toEqual({ granted: false, via: "resolver", reason: "no-resolver-match" });
         });
 
-        it("should return a function that checks regex matchers", async () => {
+        it("3. should return a function that checks regex matchers", async () => {
             const engine = new PermissionResolverEngine();
             engine.addResolver(/^db\/users\//, async () => true);
 
@@ -72,7 +72,7 @@ describe("PermissionResolverEngine", () => {
             expect(result).toEqual({ granted: true, via: "resolver", reason: "resolver" });
         });
 
-        it("should return a function that checks function matchers", async () => {
+        it("4. should return a function that checks function matchers", async () => {
             const engine = new PermissionResolverEngine();
             const customMatcher = async (originalPath: string, path: string[]) => {
                 return path.length >= 2 && path[0] === "db" && path[1] === "users";
@@ -92,7 +92,7 @@ describe("PermissionResolverEngine", () => {
             expect(result).toEqual({ granted: true, via: "resolver", reason: "resolver" });
         });
 
-        it("should return correct value when resolver throws an error", async () => {
+        it("5. should return correct value when resolver throws an error", async () => {
             const engine = new PermissionResolverEngine();
             engine.addResolver("db/users", async () => {
                 throw new Error("Resolver error");
@@ -110,7 +110,7 @@ describe("PermissionResolverEngine", () => {
             expect(result).toEqual({ granted: false, via: "resolver", reason: "resolver-error" });
         });
 
-        it("should check multiple resolvers and return on first match", async () => {
+        it("6. should check multiple resolvers and return on first match", async () => {
             const engine = new PermissionResolverEngine();
             engine.addResolver("db/posts", async () => false);
             engine.addResolver("db/users", async () => true);
@@ -128,7 +128,7 @@ describe("PermissionResolverEngine", () => {
             expect(result).toEqual({ granted: true, via: "resolver", reason: "resolver" });
         });
 
-        it("should return false when no resolvers match", async () => {
+        it("7. should return false when no resolvers match", async () => {
             const engine = new PermissionResolverEngine();
             engine.addResolver("db/posts", async () => true);
 
@@ -146,7 +146,7 @@ describe("PermissionResolverEngine", () => {
     });
 
     describe("createWithGw", () => {
-        it("should use resolver if it grants permission", async () => {
+        it("1. should use resolver if it grants permission", async () => {
             const engine = new PermissionResolverEngine();
             const mockGw = {
                 hasAccess: async () => ({ granted: false })
@@ -166,7 +166,7 @@ describe("PermissionResolverEngine", () => {
             expect(result).toEqual({ granted: true, via: "resolver", reason: "resolver" });
         });
 
-        it("should return resolver result if resolver denies permission but matches", async () => {
+        it("2. should return resolver result if resolver denies permission but matches", async () => {
             const engine = new PermissionResolverEngine();
             const mockGw = {
                 hasAccess: async () => ({ granted: true, via: "gw-result" })
@@ -186,7 +186,7 @@ describe("PermissionResolverEngine", () => {
             expect(result).toEqual({ granted: false, via: "resolver", reason: "resolver" });
         });
 
-        it("should use GateWarden if no resolver matches and GateWarden grants", async () => {
+        it("3. should use GateWarden if no resolver matches and GateWarden grants", async () => {
             const engine = new PermissionResolverEngine();
             const mockGw = {
                 hasAccess: async () => ({ granted: true, via: "ACL" })
@@ -207,7 +207,7 @@ describe("PermissionResolverEngine", () => {
             expect(result).toEqual({ granted: true, via: "gate-warden", reason: "ACL" });
         });
 
-        it("should use GateWarden if no resolver matches and GateWarden denies", async () => {
+        it("4. should use GateWarden if no resolver matches and GateWarden denies", async () => {
             const engine = new PermissionResolverEngine();
             const mockGw = {
                 hasAccess: async () => ({ granted: false, via: "ACL" })
@@ -228,7 +228,7 @@ describe("PermissionResolverEngine", () => {
             expect(result).toEqual({ granted: false, via: "gate-warden", reason: "ACL" });
         });
 
-        it("should return false if resolver denies permission but matches", async () => {
+        it("5. should return false if resolver denies permission but matches", async () => {
             const engine = new PermissionResolverEngine();
             const mockGw = {
                 hasAccess: async () => ({ granted: true })

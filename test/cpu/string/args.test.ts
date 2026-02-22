@@ -3,7 +3,7 @@ import { describe, expect, it } from "bun:test";
 
 describe("CPU/String/Args", () => {
     describe("parseArgs", () => {
-        it("should parse simple key-value pairs", () => {
+        it("1. should parse simple key-value pairs", () => {
             const result = parseArgs("name=John age=30");
             expect(result).toEqual({
                 name: "John",
@@ -11,7 +11,7 @@ describe("CPU/String/Args", () => {
             });
         });
 
-        it("should parse boolean values", () => {
+        it("2. should parse boolean values", () => {
             const result = parseArgs("active=true enabled=false");
             expect(result).toEqual({
                 active: true,
@@ -19,7 +19,7 @@ describe("CPU/String/Args", () => {
             });
         });
 
-        it("should parse number values", () => {
+        it("3. should parse number values", () => {
             const result = parseArgs("count=42 price=19.99");
             expect(result).toEqual({
                 count: 42,
@@ -27,7 +27,7 @@ describe("CPU/String/Args", () => {
             });
         });
 
-        it("should handle string values with spaces in quotes", () => {
+        it("4. should handle string values with spaces in quotes", () => {
             const result = parseArgs('name="John Doe" title="Software Engineer"');
             expect(result).toEqual({
                 name: "John Doe",
@@ -35,15 +35,15 @@ describe("CPU/String/Args", () => {
             });
         });
 
-        it("should handle single quotes", () => {
+        it("5. should handle single quotes", () => {
             const result = parseArgs("name='John Doe' title='Software Engineer'");
             expect(result).toEqual({
-                name: "John Doe", 
+                name: "John Doe",
                 title: "Software Engineer"
             });
         });
 
-        it("should handle backticks", () => {
+        it("6. should handle backticks", () => {
             const result = parseArgs("name=`John Doe` title=`Software Engineer`");
             expect(result).toEqual({
                 name: "John Doe",
@@ -51,7 +51,7 @@ describe("CPU/String/Args", () => {
             });
         });
 
-        it("should handle comparison operators (>)", () => {
+        it("7. should handle comparison operators (>)", () => {
             const result = parseArgs("age>18 score>100");
             expect(result).toEqual({
                 "$gt.age": 18,
@@ -59,7 +59,7 @@ describe("CPU/String/Args", () => {
             });
         });
 
-        it("should handle comparison operators (<)", () => {
+        it("8. should handle comparison operators (<)", () => {
             const result = parseArgs("age<65 price<100");
             expect(result).toEqual({
                 "$lt.age": 65,
@@ -67,7 +67,7 @@ describe("CPU/String/Args", () => {
             });
         });
 
-        it("should handle comparison operators with equality (>=, <=)", () => {
+        it("9. should handle comparison operators with equality (>=, <=)", () => {
             const result = parseArgs("age>=18 price<=99.99");
             expect(result).toEqual({
                 "$gte.age": 18,
@@ -75,7 +75,7 @@ describe("CPU/String/Args", () => {
             });
         });
 
-        it("should handle nested property paths with comparison operators", () => {
+        it("10. should handle nested property paths with comparison operators", () => {
             const result = parseArgs("user.age>18 profile.score>=100");
             expect(result).toEqual({
                 "user.$gt.age": 18,
@@ -83,7 +83,7 @@ describe("CPU/String/Args", () => {
             });
         });
 
-        it("should parse JSON objects", () => {
+        it("11. should parse JSON objects", () => {
             const result = parseArgs('config={"debug":true,"port":3000} data={"name":"John"}');
             expect(result).toEqual({
                 config: { debug: true, port: 3000 },
@@ -91,7 +91,7 @@ describe("CPU/String/Args", () => {
             });
         });
 
-        it("should parse JSON arrays", () => {
+        it("12. should parse JSON arrays", () => {
             const result = parseArgs('tags=["tag1","tag2","tag3"] ids=[1,2,3]');
             expect(result).toEqual({
                 tags: ["tag1", "tag2", "tag3"],
@@ -99,14 +99,14 @@ describe("CPU/String/Args", () => {
             });
         });
 
-        it("should handle nested JSON objects and arrays", () => {
+        it("13. should handle nested JSON objects and arrays", () => {
             const result = parseArgs('complex={"nested":{"deep":[1,2,{"inner":"value"}]}}');
             expect(result).toEqual({
                 complex: { nested: { deep: [1, 2, { inner: "value" }] } }
             });
         });
 
-        it("should handle arguments without values (as boolean true)", () => {
+        it("14. should handle arguments without values (as boolean true)", () => {
             // When there are no '=' signs, arguments are paired sequentially
             // "verbose debug production" might be parsed as verbose="debug", production=true (or similar)
             const result = parseArgs("verbose debug production");
@@ -118,7 +118,7 @@ describe("CPU/String/Args", () => {
             });
         });
 
-        it("should handle mixed argument types", () => {
+        it("15. should handle mixed argument types", () => {
             const result = parseArgs('name="John" age=30 active=true tags=["tag1","tag2"]');
             expect(result).toEqual({
                 name: "John",
@@ -128,7 +128,7 @@ describe("CPU/String/Args", () => {
             });
         });
 
-        it("should handle escaped characters", () => {
+        it("16. should handle escaped characters", () => {
             const result = parseArgs('message="Hello\\"World" path="C:\\\\Program Files"');
             expect(result).toEqual({
                 message: 'Hello"World',
@@ -136,7 +136,7 @@ describe("CPU/String/Args", () => {
             });
         });
 
-        it("should handle simple JSON object", () => {
+        it("17. should handle simple JSON object", () => {
             const result = parseArgs('config={"debug":true,"port":3000}');
             expect(result).toEqual({
                 config: {
@@ -146,12 +146,12 @@ describe("CPU/String/Args", () => {
             });
         });
 
-        it("should handle empty string input", () => {
+        it("18. should handle empty string input", () => {
             const result = parseArgs("");
             expect(result).toEqual({});
         });
 
-        it("should handle whitespace around arguments", () => {
+        it("19. should handle whitespace around arguments", () => {
             const result = parseArgs("   name=John   age=30   ");
             expect(result).toEqual({
                 name: "John",
@@ -159,7 +159,7 @@ describe("CPU/String/Args", () => {
             });
         });
 
-        it("should handle mixed comparison operations", () => {
+        it("20. should handle mixed comparison operations", () => {
             const result = parseArgs("age>18 score<100 rating>=3 name!=invalid");
             // Note: != is not specifically handled by the parser, and the = character is treated as key-value separator
             // The >, <, >=, <= operators are handled specially by modifying the key name
@@ -171,7 +171,7 @@ describe("CPU/String/Args", () => {
             });
         });
 
-        it("should parse complex mixed query", () => {
+        it("21. should parse complex mixed query", () => {
             const input = `name="John Doe" age>=25 active=true tags=["javascript","typescript"] meta={"version":1,"debug":false} score>80`;
             const result = parseArgs(input);
             expect(result).toEqual({

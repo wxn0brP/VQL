@@ -11,8 +11,12 @@ describe("checkRelationPermission", () => {
     };
 
     describe("when all permissions are granted", () => {
-        it("should return true for valid relation query", async () => {
-            const permValidFn: PermValidFn = async () => ({ granted: true, via: "test-fn" });
+        it("1. should return true for valid relation query", async () => {
+            const permValidFn: PermValidFn = async () => ({
+                granted: true,
+                via: "resolver",
+                reason: "resolver"
+            });
 
             const query: VQL_Query_Relation = {
                 r: {
@@ -40,12 +44,12 @@ describe("checkRelationPermission", () => {
     });
 
     describe("when permissions are denied", () => {
-        it("should return false when permission is denied for main relation path", async () => {
+        it("1. should return false when permission is denied for main relation path", async () => {
             const permValidFn: PermValidFn = async (args) => {
                 if (args.path.join("/") === "db/posts") {
-                    return { granted: false, via: "acl" };
+                    return { granted: false, via: "gate-warden", reason: "ACL" };
                 }
-                return { granted: true, via: "test-fn" };
+                return { granted: true, via: "resolver", reason: "resolver" };
             };
 
             const query: VQL_Query_Relation = {
@@ -72,12 +76,12 @@ describe("checkRelationPermission", () => {
             expect(res).toBe(false);
         });
 
-        it("should return false when permission is denied for nested relation", async () => {
+        it("2. should return false when permission is denied for nested relation", async () => {
             const permValidFn: PermValidFn = async (args) => {
                 if (args.path.join("/") === "db/comments") {
-                    return { granted: false, via: "acl" };
+                    return { granted: false, via: "resolver", reason: "ACL" };
                 }
-                return { granted: true, via: "test-fn" };
+                return { granted: true, via: "resolver", reason: "resolver" };
             };
 
             const query: VQL_Query_Relation = {
@@ -106,12 +110,12 @@ describe("checkRelationPermission", () => {
     });
 
     describe("when permissions are granted for specific CRUD operations", () => {
-        it("should check for READ permission on relation fields", async () => {
+        it("1. should check for READ permission on relation fields", async () => {
             let permissionCheckArgs: any[] = [];
 
             const permValidFn: PermValidFn = async (args) => {
                 permissionCheckArgs.push(args);
-                return { granted: true, via: "test-fn" };
+                return { granted: true, via: "resolver", reason: "resolver" };
             };
 
             const query: VQL_Query_Relation = {

@@ -4,7 +4,7 @@ import { describe, expect, it } from "bun:test";
 
 describe("Permissions/Utils", () => {
     describe("getHash", () => {
-        it("should generate a valid SHA-256 hash", async () => {
+        it("1. should generate a valid SHA-256 hash", async () => {
             const input = "test";
             const hash = await getHash(input);
 
@@ -13,7 +13,7 @@ describe("Permissions/Utils", () => {
             expect(hash).toMatch(/^[a-f0-9]+$/);
         });
 
-        it("should generate consistent hash for the same input", async () => {
+        it("2. should generate consistent hash for the same input", async () => {
             const input = "consistent-test";
             const hash1 = await getHash(input);
             const hash2 = await getHash(input);
@@ -21,14 +21,14 @@ describe("Permissions/Utils", () => {
             expect(hash1).toBe(hash2);
         });
 
-        it("should generate different hashes for different inputs", async () => {
+        it("3. should generate different hashes for different inputs", async () => {
             const hash1 = await getHash("input1");
             const hash2 = await getHash("input2");
 
             expect(hash1).not.toBe(hash2);
         });
 
-        it("should handle empty string", async () => {
+        it("4. should handle empty string", async () => {
             const hash = await getHash("");
             expect(hash).toHaveLength(64);
             expect(hash).toMatch(/^[a-f0-9]+$/);
@@ -36,7 +36,7 @@ describe("Permissions/Utils", () => {
     });
 
     describe("hashKey", () => {
-        it("should hash the path when hidePath is true", async () => {
+        it("1. should hash the path when hidePath is true", async () => {
             const config = new VQLConfig({ hidePath: true });
             const path = ["db", "users", "profile"];
             const result = await hashKey(config, path);
@@ -46,7 +46,7 @@ describe("Permissions/Utils", () => {
             expect(result).toMatch(/^[a-f0-9]+$/);
         });
 
-        it("should return JSON string when hidePath is false", async () => {
+        it("2. should return JSON string when hidePath is false", async () => {
             const config = new VQLConfig({ hidePath: false });
             const path = ["db", "users", "profile"];
             const result = await hashKey(config, path);
@@ -55,7 +55,7 @@ describe("Permissions/Utils", () => {
             expect(result).toBe(JSON.stringify(path));
         });
 
-        it("should handle complex nested paths", async () => {
+        it("3. should handle complex nested paths", async () => {
             const config = new VQLConfig({ hidePath: true });
             const path = ["db", "users", { id: "123", field: "name" }];
             const result = await hashKey(config, path);
@@ -67,7 +67,7 @@ describe("Permissions/Utils", () => {
     });
 
     describe("extractPathsFromData", () => {
-        it("should extract simple path from flat object", () => {
+        it("1. should extract simple path from flat object", () => {
             const data = { name: "John", age: 30 };
             const paths = extractPathsFromData(data);
 
@@ -77,7 +77,7 @@ describe("Permissions/Utils", () => {
             ]);
         });
 
-        it("should extract nested paths from object", () => {
+        it("2. should extract nested paths from object", () => {
             const data = {
                 user: {
                     profile: {
@@ -96,7 +96,7 @@ describe("Permissions/Utils", () => {
             ]);
         });
 
-        it("should handle mixed nested and flat properties", () => {
+        it("3. should handle mixed nested and flat properties", () => {
             const data = {
                 name: "John",
                 profile: {
@@ -115,7 +115,7 @@ describe("Permissions/Utils", () => {
             ]);
         });
 
-        it("should handle arrays properly", () => {
+        it("4. should handle arrays properly", () => {
             const data = {
                 posts: [
                     { title: "Post 1", content: "Content 1" },
@@ -132,14 +132,14 @@ describe("Permissions/Utils", () => {
             ]);
         });
 
-        it("should handle empty object", () => {
+        it("5. should handle empty object", () => {
             const data = {};
             const paths = extractPathsFromData(data);
 
             expect(paths).toEqual([]);
         });
 
-        it("should handle null and undefined values", () => {
+        it("6. should handle null and undefined values", () => {
             const data = {
                 nullValue: null,
                 stringValue: "test"
@@ -151,7 +151,7 @@ describe("Permissions/Utils", () => {
             ]);
         });
 
-        it("should handle various data types", () => {
+        it("7. should handle various data types", () => {
             const data = {
                 string: "test",
                 number: 42,

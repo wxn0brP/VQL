@@ -7,25 +7,25 @@ describe("CPU/Utils", () => {
         describe("when config.strictSelect is true", () => {
             const config = new VQLConfig({ strictSelect: true });
 
-            it("should handle non-object, non-array input", () => {
+            it("1. should handle non-object, non-array input", () => {
                 const result = parseSelect(config, 123 as any); // number instead of null
                 // With strictSelect = true, should return []
                 expect(result).toEqual([]);
             });
 
-            it("should return the array for array input when strictSelect is true", () => {
+            it("2. should return the array for array input when strictSelect is true", () => {
                 const arrayInput = ["field1", "field2"];
                 const result = parseSelect(config, arrayInput);
                 expect(result).toBe(arrayInput); // Should return same reference
             });
 
-            it("should return filtered keys for object input when strictSelect is true", () => {
+            it("3. should return filtered keys for object input when strictSelect is true", () => {
                 const objectInput = { field1: true, field2: false, field3: 1, field4: 0 };
                 const result = parseSelect(config, objectInput);
                 expect(result).toEqual(["field1", "field3"]);
             });
 
-            it("should return filtered keys for object with falsy values when strictSelect is true", () => {
+            it("4. should return filtered keys for object with falsy values when strictSelect is true", () => {
                 const objectInput = { field1: false, field2: null, field3: "", field4: 0 };
                 const result = parseSelect(config, objectInput);
                 expect(result).toEqual([]); // All falsy values are filtered out
@@ -35,37 +35,37 @@ describe("CPU/Utils", () => {
         describe("when config.strictSelect is false", () => {
             const config = new VQLConfig({ strictSelect: false });
 
-            it("should return undefined for non-object, non-array input", () => {
+            it("1. should return undefined for non-object, non-array input", () => {
                 // Test with a value that's neither array nor object (like string, number)
                 const result = parseSelect(config, "not-an-object" as any);
                 expect(result).toBeUndefined();
             });
 
-            it("should return array for non-empty array input", () => {
+            it("2. should return array for non-empty array input", () => {
                 const arrayInput = ["field1", "field2"];
                 const result = parseSelect(config, arrayInput);
                 expect(result).toBe(arrayInput);
             });
 
-            it("should return undefined for empty array input", () => {
+            it("3. should return undefined for empty array input", () => {
                 const arrayInput: string[] = [];
                 const result = parseSelect(config, arrayInput);
                 expect(result).toBeUndefined();
             });
 
-            it("should return filtered keys for non-empty object input", () => {
+            it("4. should return filtered keys for non-empty object input", () => {
                 const objectInput = { field1: true, field2: false, field3: "value" };
                 const result = parseSelect(config, objectInput);
                 expect(result).toEqual(["field1", "field3"]);
             });
 
-            it("should return undefined for empty object input", () => {
+            it("5. should return undefined for empty object input", () => {
                 const objectInput = {};
                 const result = parseSelect(config, objectInput);
                 expect(result).toBeUndefined();
             });
 
-            it("should return filtered keys ignoring falsy values", () => {
+            it("6. should return filtered keys ignoring falsy values", () => {
                 const objectInput = { field1: true, field2: false, field3: null, field4: "", field5: 0, field6: 1 };
                 const result = parseSelect(config, objectInput);
                 expect(result).toEqual(["field1", "field6"]);
@@ -73,14 +73,14 @@ describe("CPU/Utils", () => {
         });
 
         describe("with mixed data types", () => {
-            it("should handle array with mixed values when strictSelect is true", () => {
+            it("1. should handle array with mixed values when strictSelect is true", () => {
                 const config = new VQLConfig({ strictSelect: true });
                 const mixedArray = ["field1", null, "field2", undefined, "field3"];
                 const result = parseSelect(config, mixedArray);
                 expect(result).toBe(mixedArray); // Should return same array, doesn't filter array contents
             });
 
-            it("should handle object with complex values", () => {
+            it("2. should handle object with complex values", () => {
                 const config = new VQLConfig({ strictSelect: true });
                 const complexObject = {
                     field1: true,
@@ -93,7 +93,7 @@ describe("CPU/Utils", () => {
                 expect(result).toEqual(["field1", "field2", "field3", "field4", "field5"]);
             });
 
-            it("should handle object with undefined and null values", () => {
+            it("3. should handle object with undefined and null values", () => {
                 const config = new VQLConfig({ strictSelect: true });
                 const objectWithNulls = {
                     field1: "value",
