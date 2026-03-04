@@ -1,4 +1,3 @@
-
 # VQLS (Simple)
 
 ## Overview

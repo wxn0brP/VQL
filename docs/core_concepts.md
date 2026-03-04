@@ -2,7 +2,7 @@
 
 ## What is VQL?
 
-VQL (Valthera Query Language) is not just a language; it"s a comprehensive framework for interacting with data stored in ValtheraDB. It provides a unified, secure, and flexible interface for querying and manipulating data, whether you are building a complex backend service or a dynamic front-end application.
+VQL (Valthera Query Language) is not just a language; it's a comprehensive framework for interacting with data stored in ValtheraDB. It provides a unified, secure, and flexible interface for querying and manipulating data, whether you are building a complex backend service or a dynamic front-end application.
 
 At its heart, VQL is designed to be a powerful data processing engine. It combines a versatile query language, a robust permissions system, and a set of tools that work together to create a cohesive and efficient data environment.
 
@@ -18,7 +18,7 @@ VQL was built with several core goals in mind:
 
 ## Key Architectural Components
 
-VQL"s architecture consists of several key components that work in concert:
+VQL's architecture consists of several key components that work in concert:
 
 ### 1. The `VQLProcessor`
 
@@ -32,9 +32,9 @@ The `VQLProcessor` is the brain of the entire operation and the main entry point
 
 VQL provides two ways to write queries to suit different needs.
 
--   **VQLR (Runtime)**: A JSON-based object structure that serves as VQL"s internal AST format. It is ideal for building complex, dynamic queries programmatically within your application code. Its structured nature makes it easy to compose, modify, and integrate with type-safe languages like TypeScript. **[Learn more about VQLR](./lang/VQLR.md)**.
+-   **VQLR (Runtime)**: A JSON-based object structure that serves as VQL's internal AST format. It is ideal for building complex, dynamic queries programmatically within your application code. Its structured nature makes it easy to compose, modify, and integrate with type-safe languages like TypeScript. **[Learn more about VQLR](./lang/VQLR.md)**.
 
--   **VQLS (Simple)**: A human-readable, one-liner syntax designed for simplicity and speed. It"s perfect for CLI operations, configuration files, simple scripts, or any scenario where a developer or admin might write a query by hand. **[Learn more about VQLS](./lang/VQLS.md)**.
+-   **VQLS (Simple)**: A human-readable, one-liner syntax designed for simplicity and speed. It's perfect for CLI operations, configuration files, simple scripts, or any scenario where a developer or admin might write a query by hand. **[Learn more about VQLS](./lang/VQLS.md)**.
 
 ### 3. The Permission Engine
 
@@ -57,7 +57,7 @@ Understanding the flow of a query helps to see how these components fit together
 3.  **Parsing & Validation**: The processor parses the query (if VQLS) and validates its structure.
 4.  **Permission Check**: If a `permValidFn` is configured, it is executed to authorize the request. It checks if the user has the right to access the requested data, potentially denying the query or redacting fields.
 5.  **Data Retrieval**: The processor determines which database(s) and collection(s) to target and fetches the raw data from the relevant ValtheraDB instances.
-6.  **Relational Processing**: VQL"s engine processes the results, performing any joins, filtering, or field selections. This is where the power of its relational model comes into play.
+6.  **Relational Processing**: VQL's engine processes the results, performing any joins, filtering, or field selections. This is where the power of its relational model comes into play.
 7.  **Response**: The final, processed data is returned to your application, containing only the information that the query requested and the user was permitted to see.
 
 ## Next Steps
