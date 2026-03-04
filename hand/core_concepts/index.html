@@ -21,7 +21,7 @@
       
       
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.2">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.4">
     
     
       
@@ -787,7 +787,7 @@
 
 <h1 id="core-concepts-of-vql">Core Concepts of VQL</h1>
 <h2 id="what-is-vql">What is VQL?</h2>
-<p>VQL (Valthera Query Language) is not just a language; it"s a comprehensive framework for interacting with data stored in ValtheraDB. It provides a unified, secure, and flexible interface for querying and manipulating data, whether you are building a complex backend service or a dynamic front-end application.</p>
+<p>VQL (Valthera Query Language) is not just a language; it's a comprehensive framework for interacting with data stored in ValtheraDB. It provides a unified, secure, and flexible interface for querying and manipulating data, whether you are building a complex backend service or a dynamic front-end application.</p>
 <p>At its heart, VQL is designed to be a powerful data processing engine. It combines a versatile query language, a robust permissions system, and a set of tools that work together to create a cohesive and efficient data environment.</p>
 <h2 id="the-philosophy-behind-vql">The Philosophy Behind VQL</h2>
 <p>VQL was built with several core goals in mind:</p>
@@ -799,7 +799,7 @@
 <li><strong>Extensibility by Design</strong>: No two applications are the same. VQL is built to be extensible through custom configurations and "sheets," allowing developers to tailor its functionality to their specific needs.</li>
 </ol>
 <h2 id="key-architectural-components">Key Architectural Components</h2>
-<p>VQL"s architecture consists of several key components that work in concert:</p>
+<p>VQL's architecture consists of several key components that work in concert:</p>
 <h3 id="1-the-vqlprocessor">1. The <code>VQLProcessor</code></h3>
 <p>The <code>VQLProcessor</code> is the brain of the entire operation and the main entry point for all interactions. You initialize it with your database instances, and it handles the entire lifecycle of a query.</p>
 <ul>
@@ -811,10 +811,10 @@
 <p>VQL provides two ways to write queries to suit different needs.</p>
 <ul>
 <li>
-<p><strong>VQLR (Runtime)</strong>: A JSON-based object structure that serves as VQL"s internal AST format. It is ideal for building complex, dynamic queries programmatically within your application code. Its structured nature makes it easy to compose, modify, and integrate with type-safe languages like TypeScript. <strong><a href="../lang/VQLR/">Learn more about VQLR</a></strong>.</p>
+<p><strong>VQLR (Runtime)</strong>: A JSON-based object structure that serves as VQL's internal AST format. It is ideal for building complex, dynamic queries programmatically within your application code. Its structured nature makes it easy to compose, modify, and integrate with type-safe languages like TypeScript. <strong><a href="../lang/VQLR/">Learn more about VQLR</a></strong>.</p>
 </li>
 <li>
-<p><strong>VQLS (Simple)</strong>: A human-readable, one-liner syntax designed for simplicity and speed. It"s perfect for CLI operations, configuration files, simple scripts, or any scenario where a developer or admin might write a query by hand. <strong><a href="../lang/VQLS/">Learn more about VQLS</a></strong>.</p>
+<p><strong>VQLS (Simple)</strong>: A human-readable, one-liner syntax designed for simplicity and speed. It's perfect for CLI operations, configuration files, simple scripts, or any scenario where a developer or admin might write a query by hand. <strong><a href="../lang/VQLS/">Learn more about VQLS</a></strong>.</p>
 </li>
 </ul>
 <h3 id="3-the-permission-engine">3. The Permission Engine</h3>
@@ -831,7 +831,7 @@
 <li><strong>Parsing &amp; Validation</strong>: The processor parses the query (if VQLS) and validates its structure.</li>
 <li><strong>Permission Check</strong>: If a <code>permValidFn</code> is configured, it is executed to authorize the request. It checks if the user has the right to access the requested data, potentially denying the query or redacting fields.</li>
 <li><strong>Data Retrieval</strong>: The processor determines which database(s) and collection(s) to target and fetches the raw data from the relevant ValtheraDB instances.</li>
-<li><strong>Relational Processing</strong>: VQL"s engine processes the results, performing any joins, filtering, or field selections. This is where the power of its relational model comes into play.</li>
+<li><strong>Relational Processing</strong>: VQL's engine processes the results, performing any joins, filtering, or field selections. This is where the power of its relational model comes into play.</li>
 <li><strong>Response</strong>: The final, processed data is returned to your application, containing only the information that the query requested and the user was permitted to see.</li>
 </ol>
 <h2 id="next-steps">Next Steps</h2>
