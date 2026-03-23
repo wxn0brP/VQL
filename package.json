@@ -56,7 +56,7 @@
         "@wxn0brp/gate-warden": "~0.6.0",
         "esbuild": "*",
         "tsc-alias": "*",
-        "typescript": "*"
+        "typescript": "^5"
     },
     "dependencies": {
         "@wxn0brp/lucerna-log": "~0.2.2"
