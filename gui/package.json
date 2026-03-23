@@ -14,7 +14,7 @@
     "devDependencies": {
         "@types/node": "*",
         "tsc-alias": "*",
-        "typescript": "^5"
+        "typescript": "^6.0.0"
     },
     "dependencies": {
         "@wxn0brp/db": "^0.41.0",
