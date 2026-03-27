@@ -1,13 +1,16 @@
 import type { FFRequest, FFResponse, RouteHandler } from "@wxn0brp/falcon-frame";
 import { Router } from "@wxn0brp/falcon-frame";
 import type { VQLProcessor } from "../processor";
+import { VQLUQ } from "../types/vql";
 
 export type ContextFn = (req: FFRequest, res: FFResponse) => Promise<any> | any;
+export type GetQueryFn = (req: FFRequest, res: FFResponse) => Promise<VQLUQ> | VQLUQ;
 
 interface FF_VQL_Options {
     /** @default "/VQL" */
     path?: string;
     getUser?: ContextFn;
+    getQuery?: GetQueryFn;
     /** @deprecated */
     dev?: boolean;
 }
@@ -30,7 +33,8 @@ export function createVqlRouteHandler(processor: VQLProcessor, options: FF_VQL_O
     return async (req, res) => {
         try {
             const ctx = await getContext(req, res);
-            const result = await processor.execute(req.body.query, ctx);
+            const query = options.getQuery ? await options.getQuery(req, res) : req.body?.query;
+            const result = await processor.execute(query, ctx);
             if (result && result.err) return result;
             return { err: false, result };
         } catch (e) {
