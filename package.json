@@ -54,7 +54,7 @@
         "@wxn0brp/db-core": "^0.10.1",
         "@wxn0brp/falcon-frame": "^0.8.0",
         "@wxn0brp/gate-warden": "^0.6.0",
-        "esbuild": "^0.27",
+        "esbuild": "^0.28.0",
         "tsc-alias": "^1",
         "typescript": "^6"
     },
