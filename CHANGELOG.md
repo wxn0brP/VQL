@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.11.5](https://github.com/wxn0brP/VQL/compare/v0.11.4...v0.11.5) (2026-04-15)
+
+
+### Features
+
+* FF_VQL getQuery ([3929080](https://github.com/wxn0brP/VQL/commit/3929080ab577beedd86f85f00db66fbbf40c8bd7))
+
+
+### Bug Fixes
+
+* AdapterBuilder types ([52bbfbd](https://github.com/wxn0brP/VQL/commit/52bbfbd6495f14b10a5c19e57fb7e7c5ce721eaa))
+
 ### [0.11.4](https://github.com/wxn0brP/VQL/compare/v0.11.3...v0.11.4) (2026-03-21)
 
 ### [0.11.3](https://github.com/wxn0brP/VQL/compare/v0.11.2...v0.11.3) (2026-03-20)
