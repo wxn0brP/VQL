@@ -2,20 +2,13 @@ import { VQL_Query_CRUD_Keys } from "#types/vql";
 import { ValtheraCompatible } from "@wxn0brp/db-core";
 import { Collection } from "@wxn0brp/db-core/helpers/collection";
 import { Data } from "@wxn0brp/db-core/types/data";
-import {
-    AddQuery,
-    FindOneQuery,
-    FindQuery,
-    RemoveQuery,
-    ToggleOneQuery,
-    ToggleOneResult,
-    UpdateOneOrAddQuery,
-    UpdateOneOrAddResult,
-    UpdateQuery
-} from "@wxn0brp/db-core/types/query";
+import { VQuery } from "@wxn0brp/db-core/types/query";
+import { VQueryT } from "@wxn0brp/db-core/types/query";
+import { SearchOptions } from "@wxn0brp/db-core/types/searchOpts";
 import { updateFindObject } from "@wxn0brp/db-core/utils/updateFindObject";
 
 export type ResolverFn<TArg = any, TReturn = any> = (query: TArg) => Promise<TReturn>;
+export type RemoveSearchFunction<Q extends VQuery> = Omit<Q, "search"> & { search: SearchOptions };
 
 export interface ValtheraResolverMeta {
     type: "valthera" | "api" | "wrapper" | (string & {});
@@ -35,17 +28,17 @@ export interface ValtheraResolver {
     issetCollection?: ResolverFn<string, boolean>;
     ensureCollection?: ResolverFn<string, boolean>;
 
-    add?: ResolverFn<AddQuery, Object>;
-    find?: ResolverFn<FindQuery, Object[]>;
-    findOne?: ResolverFn<FindOneQuery, Object | null>;
+    add?: ResolverFn<VQueryT.Add, Object>;
+    find?: ResolverFn<RemoveSearchFunction<VQueryT.Find>, Object[]>;
+    findOne?: ResolverFn<RemoveSearchFunction<VQueryT.FindOne>, Object | null>;
 
-    update?: ResolverFn<UpdateQuery, Object[] | null>;
-    updateOne?: ResolverFn<UpdateQuery, Object | null>;
-    updateOneOrAdd?: ResolverFn<UpdateOneOrAddQuery, UpdateOneOrAddResult<Object>>;
-    toggleOne?: ResolverFn<ToggleOneQuery, ToggleOneResult<Object>>,
+    update?: ResolverFn<RemoveSearchFunction<VQueryT.Update>, Object[] | null>;
+    updateOne?: ResolverFn<RemoveSearchFunction<VQueryT.Update>, Object | null>;
+    updateOneOrAdd?: ResolverFn<RemoveSearchFunction<VQueryT.UpdateOneOrAdd>, VQueryT.UpdateOneOrAddResult<Object>>;
+    toggleOne?: ResolverFn<RemoveSearchFunction<VQueryT.ToggleOne>, VQueryT.ToggleOneResult<Object>>,
 
-    remove?: ResolverFn<RemoveQuery, Object | null>;
-    removeOne?: ResolverFn<RemoveQuery, Object | null>;
+    remove?: ResolverFn<RemoveSearchFunction<VQueryT.Remove>, Object | null>;
+    removeOne?: ResolverFn<RemoveSearchFunction<VQueryT.Remove>, Object | null>;
 
     removeCollection?: ResolverFn<string, boolean>;
 }
@@ -79,8 +72,8 @@ export function createValtheraAdapter(resolver: ValtheraResolver, extendedFind: 
     }
 
     if (extendedFind) {
-        adapter.find = async <T = Data>(query: FindQuery) => {
-            let data = await safe(resolver.find)(query);
+        adapter.find = async <T = Data>(query: VQueryT.Find) => {
+            let data = await safe(resolver.find)(query as any);
             const { dbFindOpts: options, findOpts } = query;
 
             if (options?.reverse) data.reverse();
@@ -93,8 +86,8 @@ export function createValtheraAdapter(resolver: ValtheraResolver, extendedFind: 
             return data as T[];
         };
 
-        adapter.findOne = async <T = Data>(query: FindOneQuery) => {
-            const data = await safe(resolver.findOne)(query);
+        adapter.findOne = async <T = Data>(query: VQueryT.FindOne) => {
+            const data = await safe(resolver.findOne)(query as any);
             if (typeof data !== "object") return data;
             return updateFindObject(data, query.findOpts || {}) as T;
         };
