@@ -82,7 +82,6 @@ function validD(query: VQL_Query_CRUD): true | VQLError {
         const op = d.find!;
         if ("search" in op && !isObj(op.search, false)) return emptyErr("'find' operation 'search' property must be an object.");
         if ("limit" in op && typeof op.limit !== "number") return emptyErr("'find' operation 'limit' property must be a number.");
-        if ("fields" in op && !isObj(op.fields, false) && !Array.isArray(op.fields)) return emptyErr("'find' operation 'fields' property must be an object or an array.");
         if ("select" in op && !isObj(op.select, false) && !Array.isArray(op.select)) return emptyErr("'find' operation 'select' property must be an object or an array.");
         if ("options" in op && !isObj(op.options, false)) return emptyErr("'find' operation 'options' property must be an object.");
         if ("searchOpts" in op && !isObj(op.searchOpts, false)) return emptyErr("'find' operation 'searchOpts' property must be an object.");
@@ -92,7 +91,6 @@ function validD(query: VQL_Query_CRUD): true | VQLError {
     if (key === "findOne" || key === "f") {
         const op = d.findOne || d.f!;
         if (!isObj(op.search, false)) return emptyErr(`'${key}' operation requires a 'search' object.`);
-        if ("fields" in op && !isObj(op.fields, false) && !Array.isArray(op.fields)) return emptyErr(`'${key}' operation 'fields' property must be an object or an array.`);
         if ("select" in op && !isObj(op.select, false) && !Array.isArray(op.select)) return emptyErr(`'${key}' operation 'select' property must be an object or an array.`);
         if ("searchOpts" in op && !isObj(op.searchOpts, false)) return emptyErr(`'${key}' operation 'searchOpts' property must be an object.`);
         return true;

@@ -5,7 +5,6 @@ import { extractMeta } from "./utils";
 
 const aliases = {
     s: "search",
-    f: "fields",
     o: "options",
     r: "relations",
     d: "data",

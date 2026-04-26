@@ -300,7 +300,7 @@ describe("CPU/String/Index", () => {
         });
 
         it("19. should handle complex query with multiple features", () => {
-            const query = 'mydb find users s.age>18 s.name="John Doe" e.name=true e.email=true f.active=true';
+            const query = 'mydb find users s.age>18 s.name="John Doe" e.name=true e.email=true e.active=true';
             const result = parseVQLS(query);
             expect(result).toEqual({
                 db: "mydb",
@@ -313,8 +313,7 @@ describe("CPU/String/Index", () => {
                             },
                             name: "John Doe"
                         },
-                        select: ["name", "email"],
-                        fields: { active: true }
+                        select: ["name", "email", "active"]
                     }
                 }
             });

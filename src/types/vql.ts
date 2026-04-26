@@ -8,7 +8,6 @@ export interface VQL_OP_Find<T = any> {
     collection: string;
     search?: Search<T>;
     limit?: number;
-    fields?: VQL_Fields;
     select?: VQL_Fields;
     options?: DbFindOpts<T>;
     searchOpts?: FindOpts<T>;
@@ -17,7 +16,6 @@ export interface VQL_OP_Find<T = any> {
 export interface VQL_OP_FindOne<T = any> {
     collection: string;
     search: Search<T>;
-    fields?: VQL_Fields;
     select?: VQL_Fields;
     searchOpts?: FindOpts<T>;
 }

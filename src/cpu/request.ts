@@ -51,13 +51,13 @@ export async function executeQuery(cpu: VQLProcessor, query: VQL_Query_CRUD, use
 
     if (operation === "find") {
         const params = query.d[operation] as VQL_OP_Find;
-        const select = parseSelect(cfg, params.fields || params.select || {});
+        const select = parseSelect(cfg, params.select || {});
         if (select && typeof select === "object" && Object.keys(select).length !== 0) params.searchOpts = { ...params.searchOpts, select };
 
         return collection.find(params.search, params.options || {}, params.searchOpts);
     } else if (operation === "findOne" || operation === "f") {
         const params = query.d[operation] as VQL_OP_FindOne;
-        const select = parseSelect(cfg, params.fields || params.select || {});
+        const select = parseSelect(cfg, params.select || {});
         if (select && typeof select === "object" && Object.keys(select).length !== 0) params.searchOpts = { ...params.searchOpts, select };
 
         return collection.findOne(params.search, params.searchOpts);

@@ -33,11 +33,6 @@ function buildRelation(db: string, collection: string, query: Record<string, any
 }
 
 function buildQuery(db: string, op: string, collection: string, query: Record<string, any>) {
-    if (query.fields && !query.select) {
-        query.select = query.fields;
-        delete query.fields;
-    }
-
     if ("select" in query)
         query.select = [...new Set(convertSearchObjToSearchArray(query.select).map(k => k[0]).flat())];
 
