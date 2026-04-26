@@ -1,4 +1,4 @@
-import { Remote, ValtheraAutoCreate, ValtheraCompatible } from "@wxn0brp/db";
+import { Remote, ValtheraAutoRemoteCreate, ValtheraCompatible } from "@wxn0brp/db";
 import { UserManager, WardenManager } from "@wxn0brp/gate-warden";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
 
@@ -21,10 +21,7 @@ export const config: {
 export function loadConfig() {
     config.dbsList = JSON.parse(readFileSync("config/dbs.list.json", "utf-8"));
     const gwCfg = JSON.parse(readFileSync("config/gw.json", "utf-8"));
-    config.gwDB = ValtheraAutoCreate(gwCfg);
+    config.gwDB = ValtheraAutoRemoteCreate(gwCfg);
     config.mgr = new WardenManager(config.gwDB as any);
     config.user = new UserManager(config.gwDB as any);
 }
-
-
-

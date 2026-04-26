@@ -46,7 +46,7 @@ app.get("/list", async (req, res) => {
     }
 
     const hash = hashKey(entityId);
-    const rules = await config.gwDB.find("acl/" + hash, {});
+    const rules = await config.gwDB.find({ collection: "acl/" + hash, search: {} });
 
     res.json(rules);
 });

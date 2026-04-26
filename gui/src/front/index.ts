@@ -7,7 +7,7 @@ function renderTree(container: HTMLElement, nodes: TreeNode[], path: string[] = 
         nodes.forEach((node) => {
             const details = document.createElement("details");
             const summary = document.createElement("summary");
-            summary.textContent = (path.length === 0 ? "🧰" : "📁" ) + " " + node.name;
+            summary.textContent = (path.length === 0 ? "🧰" : "📁") + " " + node.name;
 
             const currentPath = [...path, node.name];
 

@@ -24,13 +24,13 @@ export function showAddRuleForm(entityId: string) {
 
     permFlags.forEach(({ name, value }) => {
         const label = document.createElement("label");
-        
+
         const checkbox = document.createElement("input");
         checkbox.type = "checkbox";
         checkbox.value = value.toString();
-        
+
         label.appendChild(checkbox);
-        
+
         label.appendChild(document.createTextNode(name));
 
         permissionsDiv.appendChild(label);

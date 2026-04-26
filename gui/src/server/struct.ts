@@ -1,4 +1,4 @@
-import { ValtheraAutoCreate, ValtheraCompatible } from "@wxn0brp/db";
+import { ValtheraAutoRemoteCreate, ValtheraCompatible } from "@wxn0brp/db";
 import { config } from "./config";
 
 interface TreeNode {
@@ -12,9 +12,9 @@ async function fetchCollections(db: ValtheraCompatible): Promise<string[]> {
 
 async function inferFields(
     db: ValtheraCompatible,
-    collectionName: string
+    collection: string
 ): Promise<Record<string, any>> {
-    const sampleDoc = await db.findOne(collectionName, {});
+    const sampleDoc = await db.findOne({ collection, search: {} });
     if (!sampleDoc) return {};
     return sampleDoc;
 }
@@ -35,7 +35,7 @@ export async function buildTree(): Promise<TreeNode[]> {
     const tree: TreeNode[] = [];
 
     for (const [dbName, dbConfig] of Object.entries(config.dbsList)) {
-        const db = ValtheraAutoCreate(dbConfig);
+        const db = ValtheraAutoRemoteCreate(dbConfig);
         const collections = await fetchCollections(db);
 
         const dbNode: TreeNode = {

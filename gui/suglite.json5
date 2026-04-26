@@ -1,0 +1,6 @@
+{
+    cmd: "bun run bun",
+    watch: [
+        "src"
+    ]
+}
