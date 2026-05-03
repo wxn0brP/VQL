@@ -28,12 +28,12 @@
 <tr>
 <td><code>~</code></td>
 <td>update</td>
-<td><code>db1 ~users s._id=123 d.name=&quot;Bob&quot;</code></td>
+<td><code>db1 ~users s._id=123 u.name=&quot;Bob&quot;</code></td>
 </tr>
 <tr>
 <td><code>~!</code></td>
 <td>updateOne</td>
-<td><code>db1 ~users! s._id=123 d.name=&quot;Bob&quot;</code></td>
+<td><code>db1 ~users! s._id=123 u.name=&quot;Bob&quot;</code></td>
 </tr>
 <tr>
 <td><code>-</code></td>
@@ -44,6 +44,16 @@
 <td><code>-!</code></td>
 <td>removeOne</td>
 <td><code>db1 -user! s._id=123</code></td>
+</tr>
+<tr>
+<td><code>?</code></td>
+<td>updateOneOrAdd</td>
+<td><code>db1 ?users s._id=123 u.name=&quot;Bob&quot;</code></td>
+</tr>
+<tr>
+<td><code>^</code></td>
+<td>toggleOne</td>
+<td><code>db1 ^users s._id=123</code></td>
 </tr>
 </tbody>
 </table>
@@ -70,7 +80,7 @@
 <tr>
 <td><code>u.</code></td>
 <td>Update payload</td>
-<td><code>d.name=&quot;John&quot;</code></td>
+<td><code>u.name=&quot;John&quot;</code></td>
 </tr>
 <tr>
 <td><code>o.</code></td>
@@ -81,6 +91,11 @@
 <td><code>r.</code></td>
 <td>Relations</td>
 <td><code>r.orders.path=[&quot;db1&quot;, &quot;orders&quot;]</code></td>
+</tr>
+<tr>
+<td><code>e.</code></td>
+<td>Select fields</td>
+<td><code>e.email=true</code></td>
 </tr>
 </tbody>
 </table>
