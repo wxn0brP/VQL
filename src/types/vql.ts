@@ -1,4 +1,4 @@
-import { RelationTypes } from "@wxn0brp/db";
+import { RelationTypes } from "@wxn0brp/db-core";
 import { Arg, Search } from "@wxn0brp/db-core/types/arg";
 import { DbFindOpts, FindOpts } from "@wxn0brp/db-core/types/options";
 import { UpdaterArg } from "@wxn0brp/db-core/types/updater";
