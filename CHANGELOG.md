@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.12.0](https://github.com/wxn0brP/VQL/compare/v0.11.5...v0.12.0) (2026-05-03)
+
+
+### ⚠ BREAKING CHANGES
+
+* remove fields and select duplicate
+
+### Features
+
+* **gui:** update ([f4c49ab](https://github.com/wxn0brP/VQL/commit/f4c49ab0c8e960cbb9afac4dd83763e7e6658cf6))
+* reexport VQueryT ([4f70007](https://github.com/wxn0brP/VQL/commit/4f70007a845b677384469a39ddfae266498a9383))
+
+
+### Bug Fixes
+
+* bundle types ([63f69e6](https://github.com/wxn0brP/VQL/commit/63f69e6c28a47fc2f1bbd5f9f018ed9b39fe0d75))
+
+
+* remove fields and select duplicate ([7e1fd8b](https://github.com/wxn0brP/VQL/commit/7e1fd8b79e7215000008e632c9444230880674ce))
+
 ### [0.11.5](https://github.com/wxn0brP/VQL/compare/v0.11.4...v0.11.5) (2026-04-15)
 
 
