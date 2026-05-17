@@ -72,7 +72,7 @@ export function createValtheraAdapter(resolver: ValtheraResolver, extendedFind: 
     }
 
     if (extendedFind) {
-        adapter.find = async <T = Data>(query: VQueryT.Find) => {
+        adapter.find = async <T = Data>(query: VQueryT.Find<T>) => {
             let data = await safe(resolver.find)(query as any);
             const { dbFindOpts: options, findOpts } = query;
 
@@ -86,7 +86,7 @@ export function createValtheraAdapter(resolver: ValtheraResolver, extendedFind: 
             return data as T[];
         };
 
-        adapter.findOne = async <T = Data>(query: VQueryT.FindOne) => {
+        adapter.findOne = async <T = Data>(query: VQueryT.FindOne<T>) => {
             const data = await safe(resolver.findOne)(query as any);
             if (typeof data !== "object") return data;
             return updateFindObject(data, query.findOpts || {}) as T;
