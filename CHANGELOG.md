@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.12.2](https://github.com/wxn0brP/VQL/compare/v0.12.1...v0.12.2) (2026-06-18)
+
+
+### Features
+
+* improve api abstract types ([06cda28](https://github.com/wxn0brP/VQL/commit/06cda282ead23620aac8250f1c4a3ef217fd9468))
+
 ### [0.12.1](https://github.com/wxn0brP/VQL/compare/v0.12.0...v0.12.1) (2026-05-17)
 
 ## [0.12.0](https://github.com/wxn0brP/VQL/compare/v0.11.5...v0.12.0) (2026-05-03)
