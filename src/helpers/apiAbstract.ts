@@ -2,13 +2,10 @@ import { VQL_Query_CRUD_Keys } from "#types/vql";
 import { ValtheraCompatible } from "@wxn0brp/db-core";
 import { Collection } from "@wxn0brp/db-core/helpers/collection";
 import { Data } from "@wxn0brp/db-core/types/data";
-import { VQuery } from "@wxn0brp/db-core/types/query";
 import { VQueryT } from "@wxn0brp/db-core/types/query";
-import { SearchOptions } from "@wxn0brp/db-core/types/searchOpts";
 import { updateFindObject } from "@wxn0brp/db-core/utils/updateFindObject";
 
 export type ResolverFn<TArg = any, TReturn = any> = (query: TArg) => Promise<TReturn>;
-export type RemoveSearchFunction<Q extends VQuery> = Omit<Q, "search"> & { search: SearchOptions };
 
 export interface ValtheraResolverMeta {
     type: "valthera" | "api" | "wrapper" | (string & {});
@@ -29,16 +26,16 @@ export interface ValtheraResolver {
     ensureCollection?: ResolverFn<string, boolean>;
 
     add?: ResolverFn<VQueryT.Add, Object>;
-    find?: ResolverFn<RemoveSearchFunction<VQueryT.Find>, Object[]>;
-    findOne?: ResolverFn<RemoveSearchFunction<VQueryT.FindOne>, Object | null>;
+    find?: ResolverFn<VQueryT.Find<Data, false>, Object[]>;
+    findOne?: ResolverFn<VQueryT.FindOne<Data, false>, Object | null>;
 
-    update?: ResolverFn<RemoveSearchFunction<VQueryT.Update>, Object[] | null>;
-    updateOne?: ResolverFn<RemoveSearchFunction<VQueryT.Update>, Object | null>;
-    updateOneOrAdd?: ResolverFn<RemoveSearchFunction<VQueryT.UpdateOneOrAdd>, VQueryT.UpdateOneOrAddResult<Object>>;
-    toggleOne?: ResolverFn<RemoveSearchFunction<VQueryT.ToggleOne>, VQueryT.ToggleOneResult<Object>>,
+    update?: ResolverFn<VQueryT.Update<Data, false>, Object[] | null>;
+    updateOne?: ResolverFn<VQueryT.Update<Data, false>, Object | null>;
+    updateOneOrAdd?: ResolverFn<VQueryT.UpdateOneOrAdd<Data, false>, VQueryT.UpdateOneOrAddResult<Object>>;
+    toggleOne?: ResolverFn<VQueryT.ToggleOne<Data, false>, VQueryT.ToggleOneResult<Object>>,
 
-    remove?: ResolverFn<RemoveSearchFunction<VQueryT.Remove>, Object | null>;
-    removeOne?: ResolverFn<RemoveSearchFunction<VQueryT.Remove>, Object | null>;
+    remove?: ResolverFn<VQueryT.Remove<Data, false>, Object | null>;
+    removeOne?: ResolverFn<VQueryT.Remove<Data, false>, Object | null>;
 
     removeCollection?: ResolverFn<string, boolean>;
 }
