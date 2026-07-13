@@ -8,7 +8,7 @@
     "scripts": {
         "build": "tsc && tsc-alias",
         "test": "bun run src/tests/index.ts",
-        "types": "bunx dts-bundle-generator src/types/vql.ts -o dist/vql.d.ts --external-inlines @wxn0brp/db-core"
+        "types": "api-extractor run --config config/api-extractor.json"
     },
     "description": "VQL - Valthera Query Language",
     "homepage": "https://github.com/wxn0brP/VQL",
@@ -48,6 +48,7 @@
         }
     },
     "devDependencies": {
+        "@microsoft/api-extractor": "^7.58.9",
         "@types/bun": "*",
         "@types/node": "*",
         "@wxn0brp/db": "^0.112.0",
