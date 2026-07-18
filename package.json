@@ -33,7 +33,7 @@
     ],
     "peerDependencies": {
         "@wxn0brp/db-core": "^0.11.5",
-        "@wxn0brp/falcon-frame": "^0.8.2",
+        "@wxn0brp/falcon-frame": "^0.8.5",
         "@wxn0brp/gate-warden": "^0.6.2"
     },
     "peerDependenciesMeta": {
@@ -48,19 +48,19 @@
         }
     },
     "devDependencies": {
-        "@microsoft/api-extractor": "^7.58.9",
+        "@microsoft/api-extractor": "^7.58.11",
         "@types/bun": "*",
         "@types/node": "*",
         "@wxn0brp/db": "^0.112.0",
         "@wxn0brp/db-core": "^0.11.5",
-        "@wxn0brp/falcon-frame": "^0.8.2",
+        "@wxn0brp/falcon-frame": "^0.8.5",
         "@wxn0brp/gate-warden": "^0.6.2",
         "esbuild": "^0.28",
         "tsc-alias": "^1",
         "typescript": "^7"
     },
     "dependencies": {
-        "@wxn0brp/lucerna-log": "^0.2.4"
+        "@wxn0brp/lucerna-log": "^0.2.5"
     },
     "exports": {
         ".": {
