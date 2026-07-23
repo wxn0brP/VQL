@@ -202,9 +202,10 @@ export class AdapterBuilder {
 			extendedFind,
 		);
 
-		// @ts-expect-error
-		for (const name of list.slice(4))
+		for (const name of list.slice(4)) {
+			// @ts-expect-error
 			adapter[name] = (arg: any) => resolve(name, arg);
+		}
 
 		return adapter;
 	}
