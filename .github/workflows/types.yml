@@ -2,7 +2,8 @@ name: Build and Deploy Type Definitions Only
 
 on:
   workflow_run:
-    workflows: ["Build"]
+    workflows:
+      - Build
     types:
       - completed
 
@@ -21,7 +22,7 @@ jobs:
 
     steps:
       - name: Checkout Repo
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           ref: dist
 
