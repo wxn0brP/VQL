@@ -51,6 +51,7 @@
         "@microsoft/api-extractor": "^7.58.11",
         "@types/bun": "*",
         "@types/node": "*",
+        "@wxn0brp/biome": "*",
         "@wxn0brp/db": "^0.112.0",
         "@wxn0brp/db-core": "^0.11.5",
         "@wxn0brp/falcon-frame": "^0.8.5",

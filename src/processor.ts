@@ -10,87 +10,125 @@ import { parseVQLS } from "./cpu/string";
 import { PermValidFn } from "./types/perm";
 
 export class VQLProcessor {
-    public relation: Relation;
-    public config: VQLConfig;
+	public relation: Relation;
+	public config: VQLConfig;
 
-    constructor(
-        public dbInstances: Record<string, ValtheraCompatible>,
-        config: VQLConfig | Partial<VQLConfigInterface> = new VQLConfig(),
-        public permValidFn: PermValidFn = async () => ({ granted: true, via: "resolver", reason: "no-resolver-match" })
-    ) {
-        this.relation = new Relation(dbInstances);
-        this.config = config instanceof VQLConfig ? config : new VQLConfig(config);
-    }
+	constructor(
+		public dbInstances: Record<string, ValtheraCompatible>,
+		config: VQLConfig | Partial<VQLConfigInterface> = new VQLConfig(),
+		public permValidFn: PermValidFn = async () => ({
+			granted: true,
+			via: "resolver",
+			reason: "no-resolver-match",
+		}),
+	) {
+		this.relation = new Relation(dbInstances);
+		this.config = config instanceof VQLConfig ? config : new VQLConfig(config);
+	}
 
-    public async execute<T = any>(
-        queryRaw: VQLUQ<T>,
-        user: any = { _id: "null-null-null" },
-        cfg: VQLConfig = this.config
-    ): Promise<T | VQLError> {
-        const result = this._preProcessQuery(queryRaw, user);
-        if ("err" in result) return result.err;
+	public async execute<T = any>(
+		queryRaw: VQLUQ<T>,
+		user: any = {
+			_id: "null-null-null",
+		},
+		cfg: VQLConfig = this.config,
+	): Promise<T | VQLError> {
+		const result = this._preProcessQuery(queryRaw, user);
+		if ("err" in result) return result.err;
 
-        return await this._runQuery(result.query, user, cfg);
-    }
+		return await this._runQuery(result.query, user, cfg);
+	}
 
-    public _preProcessQuery(queryRaw: VQLUQ, user: any) {
-        const { query: parsedQuery, err: parseErr } = this._parseQuery(queryRaw);
-        if (parseErr) {
-            return { err: parseErr };
-        }
+	public _preProcessQuery(queryRaw: VQLUQ, user: any) {
+		const { query: parsedQuery, err: parseErr } = this._parseQuery(queryRaw);
+		if (parseErr) {
+			return {
+				err: parseErr,
+			};
+		}
 
-        const validateRawResult = validateRaw(parsedQuery);
-        if (validateRawResult !== true) {
-            logger.warn("Raw validation failed:", validateRawResult);
-            return { err: validateRawResult };
-        }
+		const validateRawResult = validateRaw(parsedQuery);
+		if (validateRawResult !== true) {
+			logger.warn("Raw validation failed:", validateRawResult);
+			return {
+				err: validateRawResult,
+			};
+		}
 
-        const query = replaceVars(parsedQuery, user);
-        logger.debug("Executed sheet (expanded query):", query);
+		const query = replaceVars(parsedQuery, user);
+		logger.debug("Executed sheet (expanded query):", query);
 
-        const validateVqlResult = validateVql(query);
-        if (validateVqlResult !== true) {
-            logger.warn("VQL validation failed:", validateVqlResult);
-            return { err: validateVqlResult };
-        }
+		const validateVqlResult = validateVql(query);
+		if (validateVqlResult !== true) {
+			logger.warn("VQL validation failed:", validateVqlResult);
+			return {
+				err: validateVqlResult,
+			};
+		}
 
-        return { query };
-    }
+		return {
+			query,
+		};
+	}
 
-    public _parseQuery(queryRaw: VQLUQ): { query?: VQL_Query; err?: VQLError } {
-        if (typeof queryRaw === "string" || "query" in queryRaw) {
-            logger.info("Incoming string query");
-            const q = typeof queryRaw === "string" ? queryRaw : queryRaw.query;
-            const vars = typeof queryRaw === "string" ? null : queryRaw.var;
-            logger.debug(q);
+	public _parseQuery(queryRaw: VQLUQ): {
+		query?: VQL_Query;
+		err?: VQLError;
+	} {
+		if (typeof queryRaw === "string" || "query" in queryRaw) {
+			logger.info("Incoming string query");
+			const q = typeof queryRaw === "string" ? queryRaw : queryRaw.query;
+			const vars = typeof queryRaw === "string" ? null : queryRaw.var;
+			logger.debug(q);
 
-            try {
-                queryRaw = parseVQLS(q);
-                logger.debug("transformed query: ", queryRaw);
-            } catch (e) {
-                logger.error("Error parsing string query: ", { error: e, msg: e.message });
-                return {
-                    err: { err: true, c: 400, msg: `String query parsing error: ${e.message}` }
-                };
-            }
+			try {
+				queryRaw = parseVQLS(q);
+				logger.debug("transformed query: ", queryRaw);
+			} catch (e) {
+				logger.error("Error parsing string query: ", {
+					error: e,
+					msg: e.message,
+				});
+				return {
+					err: {
+						err: true,
+						c: 400,
+						msg: `String query parsing error: ${e.message}`,
+					},
+				};
+			}
 
-            if (vars) queryRaw = { ...queryRaw, var: vars };
-            logger.debug("Final string query: ", queryRaw);
-        } else {
-            logger.info("Incoming object query");
-            logger.debug("Raw query: ", queryRaw);
-        }
+			if (vars)
+				queryRaw = {
+					...queryRaw,
+					var: vars,
+				};
+			logger.debug("Final string query: ", queryRaw);
+		} else {
+			logger.info("Incoming object query");
+			logger.debug("Raw query: ", queryRaw);
+		}
 
-        return { query: queryRaw }
-    }
+		return {
+			query: queryRaw,
+		};
+	}
 
-    public async _runQuery(query: VQL_Query, user: any, cfg: VQLConfig = this.config) {
-        if ("r" in query) {
-            return await executeRelation(this, query, user, cfg);
-        } else if ("d" in query) {
-            return await executeQuery(this, query, user, cfg);
-        } else {
-            return { err: true, msg: "Invalid query", c: 400 };
-        }
-    }
+	public async _runQuery(
+		query: VQL_Query,
+		user: any,
+		cfg: VQLConfig = this.config,
+	) {
+		if ("r" in query) {
+			return await executeRelation(this, query, user, cfg);
+		} else if ("d" in query) {
+			return await executeQuery(this, query, user, cfg);
+		} else {
+			return {
+				err: true,
+				msg: "Invalid query",
+				c: 400,
+			};
+		}
+	}
 }

@@ -8,11 +8,11 @@ import { createGwValidFn } from "./helpers/gw";
 
 export default VQLProcessor;
 export {
-    VQLProcessor,
-    createValtheraAdapter,
-    VQLConfig,
-    logger as VQLLogger,
-    LogLevel as VQLLogLevel,
-    FF_VQL,
-    createGwValidFn
-}
+	VQLProcessor,
+	createValtheraAdapter,
+	VQLConfig,
+	logger as VQLLogger,
+	LogLevel as VQLLogLevel,
+	FF_VQL,
+	createGwValidFn,
+};
