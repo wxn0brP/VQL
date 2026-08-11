@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.12.3](https://github.com/wxn0brP/VQL/compare/v0.12.2...v0.12.3) (2026-08-11)
+
+
+### Bug Fixes
+
+* biome ([0d463d7](https://github.com/wxn0brP/VQL/commit/0d463d7415175463bedc83ea1b974bec3fff3111))
+* bundle types ([27efe48](https://github.com/wxn0brP/VQL/commit/27efe48a14800cafd7cfc8fbb812ffe359775a79))
+
 ### [0.12.2](https://github.com/wxn0brP/VQL/compare/v0.12.1...v0.12.2) (2026-06-18)
 
 
