@@ -170,6 +170,10 @@ function validD(query: VQL_Query_CRUD): true | VQLError {
 		const op = d.remove || d.removeOne!;
 		if (!isObj(op.search, false))
 			return emptyErr(`'${key}' operation requires a 'search' object.`);
+		if ("select" in op && !isObj(op.select, false) && !Array.isArray(op.select))
+			return emptyErr(
+				`'${key}' operation 'select' property must be an object or an array.`,
+			);
 		return true;
 	}
 
@@ -179,6 +183,10 @@ function validD(query: VQL_Query_CRUD): true | VQLError {
 			return emptyErr(`'${key}' operation requires a 'search' object.`);
 		if (!isObj(op.updater, false))
 			return emptyErr(`'${key}' operation requires an 'updater' object.`);
+		if ("select" in op && !isObj(op.select, false) && !Array.isArray(op.select))
+			return emptyErr(
+				`'${key}' operation 'select' property must be an object or an array.`,
+			);
 		return true;
 	}
 
@@ -198,6 +206,10 @@ function validD(query: VQL_Query_CRUD): true | VQLError {
 			return emptyErr(
 				"'updateOneOrAdd' operation 'id_gen' property must be a boolean.",
 			);
+		if ("select" in op && !isObj(op.select, false) && !Array.isArray(op.select))
+			return emptyErr(
+				"'updateOneOrAdd' operation 'select' property must be an object or an array.",
+			);
 		return true;
 	}
 
@@ -208,6 +220,10 @@ function validD(query: VQL_Query_CRUD): true | VQLError {
 		if ("data" in op && !isObj(op.data, false))
 			return emptyErr(
 				"'toggleOne' operation 'data' property must be an object.",
+			);
+		if ("select" in op && !isObj(op.select, false) && !Array.isArray(op.select))
+			return emptyErr(
+				"'toggleOne' operation 'select' property must be an object or an array.",
 			);
 		return true;
 	}

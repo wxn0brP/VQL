@@ -9,6 +9,7 @@ import {
 	VQL_Query_CRUD_Keys,
 } from "../types/vql";
 import { extractPathsFromData, hashKey } from "./utils";
+import { updateFindObject } from "@wxn0brp/db-core/utils/updateFindObject";
 
 export async function extractPaths(
 	config: VQLConfig,
@@ -267,4 +268,111 @@ export async function checkRequestPermission(
 
 	// All permissions must be granted
 	return results.every(result => result);
+}
+
+function extractAllPaths(obj: any, prefix: string[] = []): string[][] {
+	const paths: string[][] = [];
+	for (const key of Object.keys(obj)) {
+		const path = [
+			...prefix,
+			key,
+		];
+		paths.push(path);
+		const value = obj[key];
+		if (typeof value === "object" && value !== null && !Array.isArray(value)) {
+			paths.push(...extractAllPaths(value, path));
+		}
+	}
+	return paths;
+}
+
+export async function filterObjectByPermissions(
+	config: VQLConfig,
+	permValidFn: PermValidFn,
+	user: any,
+	db: string,
+	collection: string,
+	obj: Object,
+): Promise<Object> {
+	if (!obj || typeof obj !== "object") return obj;
+
+	const allPaths = extractAllPaths(obj);
+
+	const checkFieldPermission = async (
+		path: string[],
+	): Promise<{
+		path: string[];
+		granted: boolean;
+	}> => {
+		const fullPath = [
+			db,
+			collection,
+			...path,
+		];
+		const hashedPath = await hashKey(config, fullPath);
+		const result = await permValidFn({
+			field: hashedPath,
+			path: fullPath,
+			p: PermCRUD.READ,
+			user,
+		});
+
+		if (result.granted)
+			return {
+				path,
+				granted: true,
+			};
+
+		if (
+			!config.strictACL &&
+			result.reason === "entity-404" &&
+			path.length > 0
+		) {
+			const parentResult = await checkFieldPermission(path.slice(0, -1));
+			return parentResult;
+		}
+
+		return {
+			path,
+			granted: false,
+		};
+	};
+
+	const results = await Promise.all(allPaths.map(checkFieldPermission));
+
+	const excludePaths = results
+		.filter(r => !r.granted)
+		.map(r => r.path.join("."));
+
+	if (excludePaths.length === 0) return obj;
+
+	return updateFindObject(obj, {
+		exclude: excludePaths,
+	});
+}
+
+export async function filterObjectsByPermissions(
+	config: VQLConfig,
+	permValidFn: PermValidFn,
+	user: any,
+	db: string,
+	collection: string,
+	objects: Object[],
+): Promise<Object[]> {
+	if (!Array.isArray(objects)) return objects;
+
+	const result: Object[] = [];
+	for (const obj of objects) {
+		result.push(
+			await filterObjectByPermissions(
+				config,
+				permValidFn,
+				user,
+				db,
+				collection,
+				obj,
+			),
+		);
+	}
+	return result;
 }

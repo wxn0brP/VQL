@@ -3,6 +3,33 @@ import { parseSelect } from "#cpu/utils";
 import { describe, expect, it } from "bun:test";
 
 describe("CPU/Utils", () => {
+    describe("VQLConfig", () => {
+        it("1. should throw when noCheckPermissions is false and strictSelect is false", () => {
+            expect(() => new VQLConfig({
+                noCheckPermissions: false,
+                strictSelect: false,
+            })).toThrow("strictSelect must be true when permissions are enabled");
+        });
+
+        it("2. should not throw when noCheckPermissions is true and strictSelect is false", () => {
+            expect(() => new VQLConfig({
+                noCheckPermissions: true,
+                strictSelect: false,
+            })).not.toThrow();
+        });
+
+        it("3. should not throw when noCheckPermissions is false and strictSelect is true", () => {
+            expect(() => new VQLConfig({
+                noCheckPermissions: false,
+                strictSelect: true,
+            })).not.toThrow();
+        });
+
+        it("4. should not throw with default config (noCheckPermissions: true)", () => {
+            expect(() => new VQLConfig()).not.toThrow();
+        });
+    });
+
     describe("parseSelect", () => {
         describe("when config.strictSelect is true", () => {
             const config = new VQLConfig({ strictSelect: true });

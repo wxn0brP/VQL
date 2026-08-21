@@ -1,7 +1,12 @@
 import { VQLConfig } from "#helpers/config";
 import { LowAdapter } from "#helpers/lowAdapter";
 import { UpdateOneOrAdd } from "@wxn0brp/db-core/types/collection";
-import { checkRequestPermission } from "../permissions";
+import { updateFindObject } from "@wxn0brp/db-core/utils/updateFindObject";
+import {
+	checkRequestPermission,
+	filterObjectByPermissions,
+	filterObjectsByPermissions,
+} from "../permissions";
 import { VQLProcessor } from "../processor";
 import {
 	VQL_OP_Add,
@@ -16,6 +21,21 @@ import {
 } from "../types/vql";
 import { VQL_Query_CRUD } from "./../types/vql";
 import { parseSelect } from "./utils";
+
+function applySelect(obj: Object, select: string[] | undefined): Object {
+	if (!select || select.length === 0) return obj;
+	return updateFindObject(obj, {
+		select,
+	});
+}
+
+function applySelectToArray(
+	arr: Object[],
+	select: string[] | undefined,
+): Object[] {
+	if (!select || select.length === 0) return arr;
+	return arr.map(obj => applySelect(obj, select));
+}
 
 export async function executeQuery(
 	cpu: VQLProcessor,
@@ -60,7 +80,8 @@ export async function executeQuery(
 		return db.getCollections();
 	}
 
-	const collection = db.c(query.d[operation].collection);
+	const collectionName = query.d[operation].collection;
+	const collection = db.c(collectionName);
 
 	if (operation === "find") {
 		const params = query.d[operation] as VQL_OP_Find;
@@ -75,11 +96,24 @@ export async function executeQuery(
 				select,
 			};
 
-		return collection.find(
+		const result = await collection.find(
 			params.search,
 			params.options || {},
 			params.searchOpts,
 		);
+
+		if (!cfg.noCheckPermissions) {
+			return filterObjectsByPermissions(
+				cfg,
+				cpu.permValidFn,
+				user,
+				query.db,
+				collectionName,
+				result,
+			);
+		}
+
+		return result;
 	} else if (operation === "findOne" || operation === "f") {
 		const params = query.d[operation] as VQL_OP_FindOne;
 		const select = parseSelect(cfg, params.select || {});
@@ -93,31 +127,166 @@ export async function executeQuery(
 				select,
 			};
 
-		return collection.findOne(params.search, params.searchOpts);
+		const result = await collection.findOne(params.search, params.searchOpts);
+
+		if (!cfg.noCheckPermissions && result) {
+			return filterObjectByPermissions(
+				cfg,
+				cpu.permValidFn,
+				user,
+				query.db,
+				collectionName,
+				result,
+			);
+		}
+
+		return result;
 	} else if (operation === "add") {
 		const params = query.d[operation] as VQL_OP_Add;
-		return collection.add(params.data, (params.id_gen ?? true) as false);
+		const result = await collection.add(
+			params.data,
+			(params.id_gen ?? true) as false,
+		);
+
+		if (!cfg.noCheckPermissions) {
+			return filterObjectByPermissions(
+				cfg,
+				cpu.permValidFn,
+				user,
+				query.db,
+				collectionName,
+				result,
+			);
+		}
+
+		return result;
 	} else if (operation === "update") {
 		const params = query.d[operation] as VQL_OP_Update;
-		return collection.update(params.search, params.updater);
+		const select = parseSelect(cfg, params.select || {});
+		const result = await collection.update(params.search, params.updater);
+
+		if (!cfg.noCheckPermissions) {
+			const filtered = await filterObjectsByPermissions(
+				cfg,
+				cpu.permValidFn,
+				user,
+				query.db,
+				collectionName,
+				result,
+			);
+			return applySelectToArray(filtered, select);
+		}
+
+		return applySelectToArray(result, select);
 	} else if (operation === "updateOne") {
 		const params = query.d[operation] as VQL_OP_Update;
-		return collection.updateOne(params.search, params.updater);
+		const select = parseSelect(cfg, params.select || {});
+		const result = await collection.updateOne(params.search, params.updater);
+
+		if (!cfg.noCheckPermissions && result) {
+			const filtered = await filterObjectByPermissions(
+				cfg,
+				cpu.permValidFn,
+				user,
+				query.db,
+				collectionName,
+				result,
+			);
+			return applySelect(filtered, select);
+		}
+
+		return result ? applySelect(result, select) : result;
 	} else if (operation === "remove") {
 		const params = query.d[operation] as VQL_OP_Remove;
-		return collection.remove(params.search);
+		const select = parseSelect(cfg, params.select || {});
+		const result = await collection.remove(params.search);
+
+		if (!cfg.noCheckPermissions) {
+			const filtered = await filterObjectsByPermissions(
+				cfg,
+				cpu.permValidFn,
+				user,
+				query.db,
+				collectionName,
+				result,
+			);
+			return applySelectToArray(filtered, select);
+		}
+
+		return applySelectToArray(result, select);
 	} else if (operation === "removeOne") {
 		const params = query.d[operation] as VQL_OP_Remove;
-		return collection.removeOne(params.search);
+		const select = parseSelect(cfg, params.select || {});
+		const result = await collection.removeOne(params.search);
+
+		if (!cfg.noCheckPermissions && result) {
+			const filtered = await filterObjectByPermissions(
+				cfg,
+				cpu.permValidFn,
+				user,
+				query.db,
+				collectionName,
+				result,
+			);
+			return applySelect(filtered, select);
+		}
+
+		return result ? applySelect(result, select) : result;
 	} else if (operation === "updateOneOrAdd") {
 		const params = query.d[operation] as VQL_OP_UpdateOneOrAdd;
+		const select = parseSelect(cfg, params.select || {});
 		const opts: UpdateOneOrAdd<any> = {};
 		if (params.add_arg) opts.add_arg = params.add_arg;
 		if (params.id_gen) opts.id_gen = params.id_gen;
-		return collection.updateOneOrAdd(params.search, params.updater, opts);
+		const result = await collection.updateOneOrAdd(
+			params.search,
+			params.updater,
+			opts,
+		);
+
+		if (result?.data) {
+			let data = result.data;
+			if (!cfg.noCheckPermissions) {
+				data = await filterObjectByPermissions(
+					cfg,
+					cpu.permValidFn,
+					user,
+					query.db,
+					collectionName,
+					data,
+				);
+			}
+			return {
+				...result,
+				data: applySelect(data, select),
+			};
+		}
+
+		return result;
 	} else if (operation === "toggleOne") {
 		const params = query.d[operation] as VQL_OP_ToggleOne;
-		return collection.toggleOne(params.search, params.data);
+		const select = parseSelect(cfg, params.select || {});
+		const result = await collection.toggleOne(params.search, params.data);
+
+		if (result?.data) {
+			let data = result.data;
+			if (!cfg.noCheckPermissions) {
+				data = await filterObjectByPermissions(
+					cfg,
+					cpu.permValidFn,
+					user,
+					query.db,
+					collectionName,
+					data,
+				);
+			}
+			return {
+				...result,
+				data: applySelect(data, select),
+			};
+		}
+
+		return result;
 	} else {
 		const n: never = operation;
 		throw new Error("Unknown operation " + n);

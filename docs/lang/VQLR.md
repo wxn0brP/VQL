@@ -63,9 +63,10 @@ interface VQL_OP_Update {
   collection: string;
   search: Search;
   updater: UpdaterArg;
+  select?: VQL_Fields;  // Filter returned fields
 }
 
-{ db: "main", d: { update: { collection: "users", search: { role: "guest" }, updater: { role: "user" } } } }
+{ db: "main", d: { update: { collection: "users", search: { role: "guest" }, updater: { role: "user" }, select: ["name"] } } }
 { db: "main", d: { updateOne: { collection: "users", search: { _id: "123" }, updater: { name: "Bob" } } } }
 ```
 
@@ -75,10 +76,11 @@ interface VQL_OP_Update {
 interface VQL_OP_Remove {
   collection: string;
   search: Search;
+  select?: VQL_Fields;  // Filter returned fields
 }
 
 { db: "main", d: { remove: { collection: "users", search: { active: false } } } }
-{ db: "main", d: { removeOne: { collection: "users", search: { _id: "123" } } } }
+{ db: "main", d: { removeOne: { collection: "users", search: { _id: "123" }, select: { name: 1 } } } }
 ```
 
 ### updateOneOrAdd
@@ -90,6 +92,7 @@ interface VQL_OP_UpdateOneOrAdd {
   updater: UpdaterArg;
   add_arg?: Arg;
   id_gen?: boolean;
+  select?: VQL_Fields;  // Filter returned fields
 }
 
 { db: "main", d: { updateOneOrAdd: { collection: "users", search: { _id: "123" }, updater: { name: "Bob" }, add_arg: { name: "Bob", email: "b@x.com" } } } }
@@ -102,9 +105,10 @@ interface VQL_OP_ToggleOne {
   collection: string;
   search: Search;
   data?: Arg;
+  select?: VQL_Fields;  // Filter returned fields
 }
 
-{ db: "main", d: { toggleOne: { collection: "favorites", search: { userId: "123", itemId: "456" } } } }
+{ db: "main", d: { toggleOne: { collection: "favorites", search: { userId: "123", itemId: "456" }, select: ["_id"] } } }
 ```
 
 ## Collection Management

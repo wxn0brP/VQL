@@ -114,18 +114,21 @@ db users s.status="active" s.age>18 e.name=1 e.email=1 o.limit=10
 # Add record
 db +users d.name="Alice" d.email="alice@example.com" d.age=30
 
-# Update single record
-db ~users! s._id="123" u.name="Bob" u.updatedAt=$_now
+# Update single record with field selection (return only specified fields)
+db ~users! s._id="123" u.name="Bob" u.updatedAt=$_now e.name=1 e.updatedAt=1
 
-# Upsert
-db ?users s._id="123" u.name="Bob" u.lastSeen=$_now
+# Update multiple records with field selection
+db ~users s.role="guest" u.role="user" e._id=1 e.name=1
 
-# Delete
-db -users s.active=false
-db -users! s._id="123"
+# Upsert with field selection
+db ?users s._id="123" u.name="Bob" u.lastSeen=$_now e.name=1
 
-# Toggle
-db ^users s._id="123"
+# Delete with field selection (return deleted records with only specified fields)
+db -users s.active=false e._id=1 e.name=1
+db -users! s._id="123" e.name=1
+
+# Toggle with field selection
+db ^users s._id="123" e._id=1
 
 # Relations
 db users r.orders.path=["db", "orders"] r.orders.search.status="pending"

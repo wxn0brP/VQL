@@ -11,8 +11,7 @@ const processor = new VQLProcessor(
   dbInstances,
   new VQLConfig({
     noCheckPermissions: false,
-    // recommended
-    strictSelect: true,
+    strictSelect: true,   // REQUIRED when permissions are enabled
     strictACL: true,
   }),
   permValidFn
@@ -141,7 +140,7 @@ const permValidFn = engine.createWithGw(gw);
 
 const processor = new VQLProcessor(
   dbInstances,
-  new VQLConfig({ noCheckPermissions: false }),
+  new VQLConfig({ noCheckPermissions: false, strictSelect: true }),
   permValidFn
 );
 

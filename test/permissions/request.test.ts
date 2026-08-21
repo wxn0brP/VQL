@@ -1,5 +1,11 @@
 import { VQLConfig } from "#helpers/config";
-import { checkRequestPermission, extractPaths, processFieldPath } from "#permissions/request";
+import {
+	checkRequestPermission,
+	extractPaths,
+	filterObjectByPermissions,
+	filterObjectsByPermissions,
+	processFieldPath,
+} from "#permissions/request";
 import { PermCRUD, PermValidFn } from "#types/perm";
 import { VQL_Query_CRUD } from "#types/vql";
 import { describe, expect, it } from "bun:test";
@@ -412,6 +418,223 @@ describe("Permissions/Request", () => {
             );
 
             expect(result).toBe(false);
+        });
+    });
+
+    describe("filterObjectByPermissions", () => {
+        it("1. should return object unchanged when all fields have READ permission", async () => {
+            const permValidFn: PermValidFn = async () => ({
+                granted: true,
+                via: "resolver",
+                reason: "resolver",
+            });
+
+            const obj = { _id: "123", name: "John", email: "john@example.com" };
+            const result = await filterObjectByPermissions(
+                config,
+                permValidFn,
+                user,
+                "test_db",
+                "users",
+                obj,
+            );
+
+            expect(result).toEqual(obj);
+        });
+
+        it("2. should exclude fields without READ permission", async () => {
+            const permValidFn: PermValidFn = async (args) => {
+                const field = args.path[args.path.length - 1];
+                if (field === "password") {
+                    return { granted: false, via: "resolver", reason: "ACL" };
+                }
+                return { granted: true, via: "resolver", reason: "resolver" };
+            };
+
+            const obj = { _id: "123", name: "John", password: "secret" };
+            const result = await filterObjectByPermissions(
+                config,
+                permValidFn,
+                user,
+                "test_db",
+                "users",
+                obj,
+            );
+
+            expect(result).toEqual({ _id: "123", name: "John" });
+            expect(result).not.toHaveProperty("password");
+        });
+
+        it("3. should handle null/undefined objects", async () => {
+            const permValidFn: PermValidFn = async () => ({
+                granted: true,
+                via: "resolver",
+                reason: "resolver",
+            });
+
+            expect(await filterObjectByPermissions(config, permValidFn, user, "db", "col", null as any)).toBe(null);
+            expect(await filterObjectByPermissions(config, permValidFn, user, "db", "col", undefined as any)).toBe(undefined);
+        });
+    });
+
+    describe("filterObjectsByPermissions", () => {
+        it("4. should filter array of objects", async () => {
+            const permValidFn: PermValidFn = async (args) => {
+                const field = args.path[args.path.length - 1];
+                if (field === "secret") {
+                    return { granted: false, via: "resolver", reason: "ACL" };
+                }
+                return { granted: true, via: "resolver", reason: "resolver" };
+            };
+
+            const objects = [
+                { _id: "1", name: "John", secret: "a" },
+                { _id: "2", name: "Jane", secret: "b" },
+            ];
+
+            const result = await filterObjectsByPermissions(
+                config,
+                permValidFn,
+                user,
+                "test_db",
+                "users",
+                objects,
+            );
+
+            expect(result).toEqual([
+                { _id: "1", name: "John" },
+                { _id: "2", name: "Jane" },
+            ]);
+        });
+
+        it("5. should handle non-array input", async () => {
+            const permValidFn: PermValidFn = async () => ({
+                granted: true,
+                via: "resolver",
+                reason: "resolver",
+            });
+
+            const result = await filterObjectsByPermissions(
+                config,
+                permValidFn,
+                user,
+                "db",
+                "col",
+                "not an array" as any,
+            );
+
+            expect(result).toBe("not an array");
+        });
+
+        it("6. should filter nested fields recursively", async () => {
+            const permValidFn: PermValidFn = async (args) => {
+                const pathStr = args.path.join("/");
+                if (pathStr.includes("password")) {
+                    return { granted: false, via: "resolver", reason: "ACL" };
+                }
+                return { granted: true, via: "resolver", reason: "resolver" };
+            };
+
+            const obj = {
+                _id: "123",
+                profile: {
+                    name: "John",
+                    password: "secret",
+                    address: {
+                        city: "NYC",
+                        password: "nested-secret",
+                    },
+                },
+            };
+
+            const result = await filterObjectByPermissions(
+                config,
+                permValidFn,
+                user,
+                "test_db",
+                "users",
+                obj,
+            );
+
+            expect(result).toEqual({
+                _id: "123",
+                profile: {
+                    name: "John",
+                    address: {
+                        city: "NYC",
+                    },
+                },
+            });
+        });
+
+        it("7. should use strictACL fallback when entity-404", async () => {
+            const configWithFallback = new VQLConfig({
+                strictACL: false,
+                noCheckPermissions: false,
+                strictSelect: true,
+            });
+
+            const permValidFn: PermValidFn = async (args) => {
+                const pathStr = args.path.join("/");
+                // Grant at collection level
+                if (pathStr === "test_db/users") {
+                    return { granted: true, via: "resolver", reason: "resolver" };
+                }
+                // Deny at field level with entity-404
+                if (args.path.length === 3) {
+                    return { granted: false, via: "resolver", reason: "entity-404" };
+                }
+                return { granted: false, via: "resolver", reason: "ACL" };
+            };
+
+            const obj = { _id: "123", name: "John", email: "john@example.com" };
+
+            const result = await filterObjectByPermissions(
+                configWithFallback,
+                permValidFn,
+                user,
+                "test_db",
+                "users",
+                obj,
+            );
+
+            // Should keep all fields because collection-level permission is granted
+            expect(result).toEqual(obj);
+        });
+
+        it("8. should NOT use fallback when strictACL is true", async () => {
+            const configStrict = new VQLConfig({
+                strictACL: true,
+                noCheckPermissions: false,
+                strictSelect: true,
+            });
+
+            const permValidFn: PermValidFn = async (args) => {
+                const pathStr = args.path.join("/");
+                // Grant at collection level
+                if (pathStr === "test_db/users") {
+                    return { granted: true, via: "resolver", reason: "resolver" };
+                }
+                // Deny at field level with entity-404
+                if (args.path.length === 3) {
+                    return { granted: false, via: "resolver", reason: "entity-404" };
+                }
+                return { granted: false, via: "resolver", reason: "ACL" };
+            };
+
+            const obj = { _id: "123", name: "John", email: "john@example.com" };
+
+            const result = await filterObjectByPermissions(
+                configStrict,
+                permValidFn,
+                user,
+                "test_db",
+                "users",
+                obj,
+            );
+
+            // Should remove all fields because strictACL prevents fallback
+            expect(result).toEqual({});
         });
     });
 });

@@ -30,11 +30,13 @@ export interface VQL_OP_Update<T = any> {
 	collection: string;
 	search: Search<T>;
 	updater: UpdaterArg<T>;
+	select?: VQL_Fields;
 }
 
 export interface VQL_OP_Remove<T = any> {
 	collection: string;
 	search: Search<T>;
+	select?: VQL_Fields;
 }
 
 export interface VQL_OP_UpdateOneOrAdd<T = any> {
@@ -43,12 +45,14 @@ export interface VQL_OP_UpdateOneOrAdd<T = any> {
 	updater: UpdaterArg<T>;
 	add_arg?: Arg<T>;
 	id_gen?: boolean;
+	select?: VQL_Fields;
 }
 
 export interface VQL_OP_ToggleOne<T = any> {
 	collection: string;
 	search: Search<T>;
 	data?: Arg<T>;
+	select?: VQL_Fields;
 }
 
 export interface VQL_OP_CollectionOperation {
