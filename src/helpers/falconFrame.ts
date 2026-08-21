@@ -64,6 +64,7 @@ export function createVqlRouteHandler(
 			return {
 				err: true,
 				msg: formatMessage(e),
+				c: 500,
 			};
 		}
 	};

@@ -1,11 +1,12 @@
+import { createGwValidFn } from "#helpers/gw";
+import { GateWarden } from "@wxn0brp/gate-warden";
+import { PermValidFn, PermValidFnArgs, ValidFnResult } from "../types/perm";
 import {
 	PathMatcher,
 	PermissionResolver,
 	ResolverEntry,
 	ValidEngineOpts,
 } from "../types/resolver";
-import { PermValidFn, PermValidFnArgs, ValidFnResult } from "../types/perm";
-import { GateWarden } from "@wxn0brp/gate-warden";
 
 export class PermissionResolverEngine {
 	private resolvers: ResolverEntry[] = [];
@@ -80,6 +81,7 @@ export class PermissionResolverEngine {
 
 	createWithGw(gw: GateWarden): PermValidFn {
 		const resolver = this.create();
+		const gwValidFn = createGwValidFn(gw);
 
 		return async (args: PermValidFnArgs): Promise<ValidFnResult> => {
 			const resolverResult = await resolver(args);
@@ -87,12 +89,7 @@ export class PermissionResolverEngine {
 			if (resolverResult.granted) return resolverResult;
 			if (resolverResult.reason !== `no-resolver-match`) return resolverResult;
 
-			const gwResult = await gw.hasAccess(args.user.id, args.field, args.p);
-			return {
-				granted: gwResult.granted,
-				via: `gate-warden`,
-				reason: gwResult.via,
-			};
+			return await gwValidFn(args);
 		};
 	}
 }
