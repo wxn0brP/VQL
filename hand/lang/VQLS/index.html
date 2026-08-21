@@ -1042,18 +1042,21 @@ db<span class="w"> </span>users<span class="w"> </span>s.status<span class="o">=
 <span class="c1"># Add record</span>
 db<span class="w"> </span>+users<span class="w"> </span>d.name<span class="o">=</span><span class="s2">"Alice"</span><span class="w"> </span>d.email<span class="o">=</span><span class="s2">"alice@example.com"</span><span class="w"> </span>d.age<span class="o">=</span><span class="m">30</span>
 
-<span class="c1"># Update single record</span>
-db<span class="w"> </span>~users!<span class="w"> </span>s._id<span class="o">=</span><span class="s2">"123"</span><span class="w"> </span>u.name<span class="o">=</span><span class="s2">"Bob"</span><span class="w"> </span>u.updatedAt<span class="o">=</span><span class="nv">$_now</span>
+<span class="c1"># Update single record with field selection (return only specified fields)</span>
+db<span class="w"> </span>~users!<span class="w"> </span>s._id<span class="o">=</span><span class="s2">"123"</span><span class="w"> </span>u.name<span class="o">=</span><span class="s2">"Bob"</span><span class="w"> </span>u.updatedAt<span class="o">=</span><span class="nv">$_now</span><span class="w"> </span>e.name<span class="o">=</span><span class="m">1</span><span class="w"> </span>e.updatedAt<span class="o">=</span><span class="m">1</span>
 
-<span class="c1"># Upsert</span>
-db<span class="w"> </span>?users<span class="w"> </span>s._id<span class="o">=</span><span class="s2">"123"</span><span class="w"> </span>u.name<span class="o">=</span><span class="s2">"Bob"</span><span class="w"> </span>u.lastSeen<span class="o">=</span><span class="nv">$_now</span>
+<span class="c1"># Update multiple records with field selection</span>
+db<span class="w"> </span>~users<span class="w"> </span>s.role<span class="o">=</span><span class="s2">"guest"</span><span class="w"> </span>u.role<span class="o">=</span><span class="s2">"user"</span><span class="w"> </span>e._id<span class="o">=</span><span class="m">1</span><span class="w"> </span>e.name<span class="o">=</span><span class="m">1</span>
 
-<span class="c1"># Delete</span>
-db<span class="w"> </span>-users<span class="w"> </span>s.active<span class="o">=</span><span class="nb">false</span>
-db<span class="w"> </span>-users!<span class="w"> </span>s._id<span class="o">=</span><span class="s2">"123"</span>
+<span class="c1"># Upsert with field selection</span>
+db<span class="w"> </span>?users<span class="w"> </span>s._id<span class="o">=</span><span class="s2">"123"</span><span class="w"> </span>u.name<span class="o">=</span><span class="s2">"Bob"</span><span class="w"> </span>u.lastSeen<span class="o">=</span><span class="nv">$_now</span><span class="w"> </span>e.name<span class="o">=</span><span class="m">1</span>
 
-<span class="c1"># Toggle</span>
-db<span class="w"> </span>^users<span class="w"> </span>s._id<span class="o">=</span><span class="s2">"123"</span>
+<span class="c1"># Delete with field selection (return deleted records with only specified fields)</span>
+db<span class="w"> </span>-users<span class="w"> </span>s.active<span class="o">=</span><span class="nb">false</span><span class="w"> </span>e._id<span class="o">=</span><span class="m">1</span><span class="w"> </span>e.name<span class="o">=</span><span class="m">1</span>
+db<span class="w"> </span>-users!<span class="w"> </span>s._id<span class="o">=</span><span class="s2">"123"</span><span class="w"> </span>e.name<span class="o">=</span><span class="m">1</span>
+
+<span class="c1"># Toggle with field selection</span>
+db<span class="w"> </span>^users<span class="w"> </span>s._id<span class="o">=</span><span class="s2">"123"</span><span class="w"> </span>e._id<span class="o">=</span><span class="m">1</span>
 
 <span class="c1"># Relations</span>
 db<span class="w"> </span>users<span class="w"> </span>r.orders.path<span class="o">=[</span><span class="s2">"db"</span>,<span class="w"> </span><span class="s2">"orders"</span><span class="o">]</span><span class="w"> </span>r.orders.search.status<span class="o">=</span><span class="s2">"pending"</span>

@@ -829,8 +829,7 @@
 <span class="w">  </span><span class="nx">dbInstances</span><span class="p">,</span>
 <span class="w">  </span><span class="ow">new</span><span class="w"> </span><span class="nx">VQLConfig</span><span class="p">({</span>
 <span class="w">    </span><span class="nx">noCheckPermissions</span><span class="o">:</span><span class="w"> </span><span class="kt">false</span><span class="p">,</span>
-<span class="w">    </span><span class="c1">// recommended</span>
-<span class="w">    </span><span class="nx">strictSelect</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">strictSelect</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="p">,</span><span class="w">   </span><span class="c1">// REQUIRED when permissions are enabled</span>
 <span class="w">    </span><span class="nx">strictACL</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="p">,</span>
 <span class="w">  </span><span class="p">}),</span>
 <span class="w">  </span><span class="nx">permValidFn</span>
@@ -952,7 +951,7 @@
 
 <span class="kd">const</span><span class="w"> </span><span class="nx">processor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">VQLProcessor</span><span class="p">(</span>
 <span class="w">  </span><span class="nx">dbInstances</span><span class="p">,</span>
-<span class="w">  </span><span class="ow">new</span><span class="w"> </span><span class="nx">VQLConfig</span><span class="p">({</span><span class="w"> </span><span class="nx">noCheckPermissions</span><span class="o">:</span><span class="w"> </span><span class="kt">false</span><span class="w"> </span><span class="p">}),</span>
+<span class="w">  </span><span class="ow">new</span><span class="w"> </span><span class="nx">VQLConfig</span><span class="p">({</span><span class="w"> </span><span class="nx">noCheckPermissions</span><span class="o">:</span><span class="w"> </span><span class="kt">false</span><span class="p">,</span><span class="w"> </span><span class="nx">strictSelect</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="w"> </span><span class="p">}),</span>
 <span class="w">  </span><span class="nx">permValidFn</span>
 <span class="p">);</span>
 
