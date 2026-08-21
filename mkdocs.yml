@@ -12,8 +12,8 @@ theme:
 nav:
   - Home: index.md
   - Getting Started: getting_started.md
-  - Core Concepts: core_concepts.md
   - Languages:
+      - Overview: lang/base.md
       - VQLS: lang/VQLS.md
       - VQLR: lang/VQLR.md
   - Permissions: permissions.md
