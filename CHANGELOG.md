@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.13.0](https://github.com/wxn0brP/VQL/compare/v0.12.3...v0.13.0) (2026-08-30)
+
+
+### ⚠ BREAKING CHANGES
+
+* add select to operations and rebuild security
+
+### Features
+
+* add select to operations and rebuild security ([2976171](https://github.com/wxn0brP/VQL/commit/2976171e11066df31dfcc19fb73c05a41e7ceb1f))
+* improve perm & block set RESERVED_VARS ([e4498c4](https://github.com/wxn0brP/VQL/commit/e4498c49b6fa03c56db6b32ed84fed9e5fda06c5))
+
+
+### Bug Fixes
+
+* permission & http api ([55757a8](https://github.com/wxn0brP/VQL/commit/55757a8534e93bde909f93903ff2589543571fae))
+
 ### [0.12.3](https://github.com/wxn0brP/VQL/compare/v0.12.2...v0.12.3) (2026-08-11)
 
 
