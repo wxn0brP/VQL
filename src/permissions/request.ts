@@ -38,6 +38,9 @@ export async function extractPaths(
 		case "findOne": {
 			const qf = query.d[operation] as VQL_OP_Find | VQL_OP_FindOne;
 			permPaths.paths.push({
+				c: PermCRUD.READ,
+			});
+			permPaths.paths.push({
 				filed: extractPathsFromData(qf.search),
 				p: PermCRUD.READ,
 			});
@@ -206,15 +209,16 @@ export async function checkRequestPermission(
 			result.reason === "entity-404" &&
 			fallbackLevels.length > 0
 		) {
-			const nextFallbackEntityId = await hashKey(
-				config,
-				fallbackLevels.slice(0, -1),
-			);
+			const nextFallbackLevels = fallbackLevels.slice(0, -1);
+			if (nextFallbackLevels.length === 0) {
+				return false;
+			}
+			const nextFallbackEntityId = await hashKey(config, nextFallbackLevels);
 			return checkPermissionRecursively(
 				nextFallbackEntityId,
-				fallbackLevels.slice(0, -2),
+				nextFallbackLevels,
 				requiredPerm,
-				fallbackLevels.slice(0, -2),
+				nextFallbackLevels,
 			);
 		}
 

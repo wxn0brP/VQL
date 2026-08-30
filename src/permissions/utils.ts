@@ -40,7 +40,12 @@ export function extractPathsFromData(
 	}[] = [];
 	for (const key in data) {
 		const value = data[key];
-		if (typeof value === "object") {
+		if (Array.isArray(value)) {
+			paths.push({
+				path: stack,
+				key,
+			});
+		} else if (typeof value === "object" && value !== null) {
 			paths.push(
 				...extractPathsFromData(value, [
 					...stack,

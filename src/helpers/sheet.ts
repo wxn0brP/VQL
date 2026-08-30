@@ -31,15 +31,27 @@ function replaceVariables(obj: any, variables: Record<string, any>): any {
 	return obj;
 }
 
+const RESERVED_VARS = [
+	"_me",
+	"_user",
+	"_now",
+	"_nowShort",
+	"__now",
+	"__nowShort",
+];
+
 export function replaceVars(query: VQL_Query, user: any): VQL_Query {
+	const userVars = Object.fromEntries(
+		Object.entries(query.var || {}).filter(([k]) => !RESERVED_VARS.includes(k)),
+	);
 	query.var = {
+		...userVars,
 		_me: user?.id || user?._id || user,
 		_user: user,
 		_now: Date.now(),
 		_nowShort: Math.floor(Date.now() / 1000),
 		__now: Date.now().toString(),
 		__nowShort: Math.floor(Date.now() / 1000).toString(),
-		...(query.var || {}),
 	};
 	query = replaceVariables(query, query.var);
 	delete query.var;

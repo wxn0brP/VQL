@@ -125,10 +125,7 @@ describe("Permissions/Utils", () => {
             const paths = extractPathsFromData(data);
 
             expect(paths).toEqual([
-                { path: ["posts", "0"], key: "title" },
-                { path: ["posts", "0"], key: "content" },
-                { path: ["posts", "1"], key: "title" },
-                { path: ["posts", "1"], key: "content" }
+                { path: [], key: "posts" }
             ]);
         });
 
@@ -147,6 +144,7 @@ describe("Permissions/Utils", () => {
             const paths = extractPathsFromData(data);
 
             expect(paths).toEqual([
+                { path: [], key: "nullValue" },
                 { path: [], key: "stringValue" }
             ]);
         });
@@ -166,9 +164,8 @@ describe("Permissions/Utils", () => {
                 { path: [], key: "string" },
                 { path: [], key: "number" },
                 { path: [], key: "boolean" },
-                { path: ["array"], key: "0" },
-                { path: ["array"], key: "1" },
-                { path: ["array"], key: "2" },
+                { path: [], key: "nullValue" },
+                { path: [], key: "array" },
                 { path: ["object"], key: "nested" }
             ]);
         });
