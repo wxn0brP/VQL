@@ -32,9 +32,9 @@
         "query-language"
     ],
     "peerDependencies": {
-        "@wxn0brp/db-core": "^0.11.6",
+        "@wxn0brp/db-core": "^0.12.3",
         "@wxn0brp/falcon-frame": "^0.9.2",
-        "@wxn0brp/gate-warden": "^0.6.2"
+        "@wxn0brp/gate-warden": "^0.7.0"
     },
     "peerDependenciesMeta": {
         "@wxn0brp/falcon-frame": {
@@ -48,14 +48,14 @@
         }
     },
     "devDependencies": {
-        "@microsoft/api-extractor": "^7.58.12",
+        "@microsoft/api-extractor": "^7.59.1",
         "@types/bun": "*",
         "@types/node": "*",
         "@wxn0brp/biome": "*",
-        "@wxn0brp/db": "^0.112.1",
-        "@wxn0brp/db-core": "^0.11.6",
+        "@wxn0brp/db": "^0.120.0",
+        "@wxn0brp/db-core": "^0.12.3",
         "@wxn0brp/falcon-frame": "^0.9.2",
-        "@wxn0brp/gate-warden": "^0.6.2",
+        "@wxn0brp/gate-warden": "^0.7.0",
         "esbuild": "^0.28",
         "tsc-alias": "^1",
         "typescript": "^7"
