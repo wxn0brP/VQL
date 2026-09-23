@@ -1,4 +1,5 @@
 import { RelationTypes } from "@wxn0brp/db";
+import { VQLConfig } from "./config";
 import {
 	VQL_Query,
 	VQL_Query_CRUD,
@@ -103,7 +104,7 @@ function validR(query: VQL_Query_Relation): true | VQLError {
 	return true;
 }
 
-function validD(query: VQL_Query_CRUD): true | VQLError {
+function validD(query: VQL_Query_CRUD, cfg: VQLConfig): true | VQLError {
 	const { d } = query as any;
 	const key = Object.keys(d)[0] as VQL_Query_CRUD_Keys;
 	const value = d[key]; // Cast for common property
@@ -125,8 +126,13 @@ function validD(query: VQL_Query_CRUD): true | VQLError {
 
 	if (key === "add") {
 		const op = d.add!;
-		if (!isObj(op.data))
-			return emptyErr("'add' operation requires a 'data' object.");
+		if (cfg.allowEmptyAdd) {
+			if ("data" in op && !isObj(op.data, false))
+				return emptyErr("'add' operation 'data' property must be an object.");
+		} else {
+			if (!isObj(op.data))
+				return emptyErr("'add' operation requires a 'data' object.");
+		}
 		if ("id_gen" in op && typeof op.id_gen !== "boolean")
 			return emptyErr("'add' operation 'id_gen' property must be a boolean.");
 		return true;
@@ -232,9 +238,12 @@ function validD(query: VQL_Query_CRUD): true | VQLError {
 	return emptyErr(`Unknown or invalid CRUD operation: '${key}'`);
 }
 
-export function validateVql(query: VQL_Query): true | VQLError {
+export function validateVql(
+	query: VQL_Query,
+	cfg: VQLConfig = new VQLConfig(),
+): true | VQLError {
 	if ("r" in query && isObj(query.r)) return validR(query);
-	if ("d" in query && isObj(query.d)) return validD(query);
+	if ("d" in query && isObj(query.d)) return validD(query, cfg);
 	return emptyErr(
 		"Query must contain a valid 'r' (relation) or 'd' (database) property.",
 	);

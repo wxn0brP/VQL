@@ -33,13 +33,17 @@ export class VQLProcessor {
 		},
 		cfg: VQLConfig = this.config,
 	): Promise<T | VQLError> {
-		const result = this._preProcessQuery(queryRaw, user);
+		const result = this._preProcessQuery(queryRaw, user, cfg);
 		if ("err" in result) return result.err;
 
 		return await this._runQuery(result.query, user, cfg);
 	}
 
-	public _preProcessQuery(queryRaw: VQLUQ, user: any) {
+	public _preProcessQuery(
+		queryRaw: VQLUQ,
+		user: any,
+		cfg: VQLConfig = this.config,
+	) {
 		const { query: parsedQuery, err: parseErr } = this._parseQuery(queryRaw);
 		if (parseErr) {
 			return {
@@ -58,7 +62,7 @@ export class VQLProcessor {
 		const query = replaceVars(parsedQuery, user);
 		logger.debug("Executed sheet (expanded query):", query);
 
-		const validateVqlResult = validateVql(query);
+		const validateVqlResult = validateVql(query, cfg);
 		if (validateVqlResult !== true) {
 			logger.warn("VQL validation failed:", validateVqlResult);
 			return {

@@ -22,7 +22,7 @@ export interface VQL_OP_FindOne<T = any> {
 
 export interface VQL_OP_Add<T = any> {
 	collection: string;
-	data: Arg<T>;
+	data?: Arg<T>;
 	id_gen?: boolean;
 }
 

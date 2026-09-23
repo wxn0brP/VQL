@@ -144,7 +144,7 @@ export async function executeQuery(
 	} else if (operation === "add") {
 		const params = query.d[operation] as VQL_OP_Add;
 		const result = await collection.add(
-			params.data,
+			params.data ?? {},
 			(params.id_gen ?? true) as false,
 		);
 

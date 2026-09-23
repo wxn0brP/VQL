@@ -7,6 +7,7 @@ export interface VQLConfigInterface {
 	strictACL: boolean;
 	noCheckPermissions: boolean;
 	permissionDeniedIfNoUser: boolean;
+	allowEmptyAdd: boolean;
 }
 
 export class VQLConfig implements VQLConfigInterface {
@@ -15,6 +16,7 @@ export class VQLConfig implements VQLConfigInterface {
 	strictACL = false;
 	noCheckPermissions = true;
 	permissionDeniedIfNoUser = true;
+	allowEmptyAdd = true;
 
 	constructor(config?: Partial<VQLConfigInterface>) {
 		if (config) {
