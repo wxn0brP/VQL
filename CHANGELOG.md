@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.13.2](https://github.com/wxn0brP/VQL/compare/v0.13.1...v0.13.2) (2026-09-23)
+
+
+### Features
+
+* allowEmptyAdd ([369296f](https://github.com/wxn0brP/VQL/commit/369296fb23f34ba31bd926a2fea87e4e28d4cab9))
+
 ### [0.13.1](https://github.com/wxn0brP/VQL/compare/v0.13.0...v0.13.1) (2026-09-13)
 
 ## [0.13.0](https://github.com/wxn0brP/VQL/compare/v0.12.3...v0.13.0) (2026-08-30)
