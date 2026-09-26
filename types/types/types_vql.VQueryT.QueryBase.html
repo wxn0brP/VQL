@@ -12,13 +12,13 @@
 <li><a href="../modules/types_vql.VQueryT.html">VQueryT</a></li>
 <li><a href="" aria-current="page">QueryBase</a></li></ul>
 <h1>Type Alias QueryBase&lt;T&gt;</h1></div>
-<div class="tsd-signature"><span class="tsd-signature-keyword">type</span> <span class="tsd-kind-type-alias">QueryBase</span><span class="tsd-signature-symbol">&lt;</span><a class="tsd-signature-type tsd-kind-type-parameter" href="#t">T</a> <span class="tsd-signature-symbol">=</span> <span class="tsd-signature-type">Data</span><span class="tsd-signature-symbol">&gt;</span> <span class="tsd-signature-symbol">=</span> <span class="tsd-signature-symbol">{</span><br/>    <a class="tsd-kind-property" href="#collection">collection</a><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#control">control</a><span class="tsd-signature-symbol">?:</span> <a href="../interfaces/types_vql.VQuery_Control.html" class="tsd-signature-type tsd-kind-interface">VQuery_Control</a><span class="tsd-signature-symbol">;</span><br/><span class="tsd-signature-symbol">}</span></div>
+<div class="tsd-signature"><span class="tsd-signature-keyword">type</span> <span class="tsd-kind-type-alias">QueryBase</span><span class="tsd-signature-symbol">&lt;</span><a class="tsd-signature-type tsd-kind-type-parameter" href="#t">T</a> <span class="tsd-signature-symbol">=</span> <span class="tsd-signature-type">Data</span><span class="tsd-signature-symbol">&gt;</span> <span class="tsd-signature-symbol">=</span> <span class="tsd-signature-symbol">{</span><br/>    <a class="tsd-kind-property" href="#collection">collection</a><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#control">control</a><span class="tsd-signature-symbol">?:</span> <a href="../interfaces/types_vql.VQuery_Control.html" class="tsd-signature-type tsd-kind-interface">VQuery_Control</a><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#transaction">transaction</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">TransactionHandle</span><span class="tsd-signature-symbol">;</span><br/><span class="tsd-signature-symbol">}</span></div>
 <section class="tsd-panel">
 <h4>Type Parameters</h4>
 <ul class="tsd-type-parameter-list">
 <li><span id="t"><span class="tsd-kind-type-parameter">T</span> = <span class="tsd-signature-type">Data</span></span></li></ul></section><aside class="tsd-sources">
 <ul>
-<li>Defined in node_modules/@wxn0brp/db-core/dist/types/query.d.ts:30</li></ul></aside>
+<li>Defined in node_modules/@wxn0brp/db-core/dist/types/query.d.ts:34</li></ul></aside>
 <section class="tsd-panel-group tsd-index-group">
 <section class="tsd-panel tsd-index-panel">
 <details class="tsd-index-content tsd-accordion" open><summary class="tsd-accordion-summary tsd-index-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg>
@@ -28,6 +28,7 @@
 <h3 class="tsd-index-heading tsd-anchor-link" id="properties">Properties<a href="#properties" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-index-list"><a href="#collection" class="tsd-index-link tsd-is-external"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Property"><use href="../assets/icons.svg#icon-1024"></use></svg><span>collection</span></a>
 <a href="#control" class="tsd-index-link tsd-is-external"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Property"><use href="../assets/icons.svg#icon-1024"></use></svg><span>control?</span></a>
+<a href="#transaction" class="tsd-index-link tsd-is-external"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Property"><use href="../assets/icons.svg#icon-1024"></use></svg><span>transaction?</span></a>
 </div></section></div></details></section></section>
 <details class="tsd-panel-group tsd-member-group tsd-accordion" open><summary class="tsd-accordion-summary" data-key="section-Properties"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg>
 <h2 class="tsd-anchor-link" id="properties-1">Properties<a href="#properties-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2></summary>
@@ -36,12 +37,17 @@
 <h3 class="tsd-anchor-link" id="collection"><span>collection</span><a href="#collection" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">collection</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div><aside class="tsd-sources">
 <ul>
-<li>Defined in node_modules/@wxn0brp/db-core/dist/types/query.d.ts:31</li></ul></aside></section>
+<li>Defined in node_modules/@wxn0brp/db-core/dist/types/query.d.ts:35</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-external">
 <h3 class="tsd-anchor-link" id="control"><code class="tsd-tag">Optional</code><span>control</span><a href="#control" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">control</span><span class="tsd-signature-symbol">?:</span> <a href="../interfaces/types_vql.VQuery_Control.html" class="tsd-signature-type tsd-kind-interface">VQuery_Control</a></div><aside class="tsd-sources">
 <ul>
-<li>Defined in node_modules/@wxn0brp/db-core/dist/types/query.d.ts:32</li></ul></aside></section></section></details></div>
+<li>Defined in node_modules/@wxn0brp/db-core/dist/types/query.d.ts:36</li></ul></aside></section>
+<section class="tsd-panel tsd-member tsd-is-external">
+<h3 class="tsd-anchor-link" id="transaction"><code class="tsd-tag">Optional</code><span>transaction</span><a href="#transaction" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<div class="tsd-signature"><span class="tsd-kind-property">transaction</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">TransactionHandle</span></div><aside class="tsd-sources">
+<ul>
+<li>Defined in node_modules/@wxn0brp/db-core/dist/types/query.d.ts:37</li></ul></aside></section></section></details></div>
 <div class="col-sidebar">
 <div class="page-menu">
 <div class="tsd-navigation settings">
@@ -58,7 +64,7 @@
 <h3>On This Page</h3></summary>
 <div class="tsd-accordion-details">
 <details open class="tsd-accordion tsd-page-navigation-section"><summary class="tsd-accordion-summary" data-key="section-Properties"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg>Properties</summary>
-<div><a href="#collection" class="tsd-is-external"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Property"><use href="../assets/icons.svg#icon-1024"></use></svg><span>collection</span></a><a href="#control" class="tsd-is-external"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Property"><use href="../assets/icons.svg#icon-1024"></use></svg><span>control</span></a></div></details></div></details></div>
+<div><a href="#collection" class="tsd-is-external"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Property"><use href="../assets/icons.svg#icon-1024"></use></svg><span>collection</span></a><a href="#control" class="tsd-is-external"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Property"><use href="../assets/icons.svg#icon-1024"></use></svg><span>control</span></a><a href="#transaction" class="tsd-is-external"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Property"><use href="../assets/icons.svg#icon-1024"></use></svg><span>transaction</span></a></div></details></div></details></div>
 <div class="site-menu">
 <nav class="tsd-navigation"><a href="../modules.html">@wxn0brp/vql</a>
 <ul class="tsd-small-nested-navigation" id="tsd-nav-container">
