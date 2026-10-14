@@ -1,4 +1,4 @@
-import { Remote, ValtheraAutoRemoteCreate, ValtheraCompatible } from "@wxn0brp/db";
+import { RemoteConfig, ValtheraAutoRemoteCreate, ValtheraCompatible } from "@wxn0brp/db";
 import { UserManager, WardenManager } from "@wxn0brp/gate-warden";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
 
@@ -7,7 +7,7 @@ if (!existsSync("config/dbs.list.json")) writeFileSync("config/dbs.list.json", "
 if (!existsSync("config/gw.json")) writeFileSync("config/gw.json", "");
 
 export const config: {
-    dbsList: Record<string, Remote>,
+    dbsList: Record<string, string | RemoteConfig>,
     mgr: WardenManager,
     gwDB: ValtheraCompatible,
     user: UserManager
