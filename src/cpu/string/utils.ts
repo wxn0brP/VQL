@@ -4,6 +4,8 @@ const opPrefix = {
 	"~": "update",
 	"?": "updateOneOrAdd",
 	"^": "toggleOne",
+	"#": "count",
+	"*": "bulkAdd",
 };
 
 const operations = [
@@ -16,6 +18,8 @@ const operations = [
 	"removeOne",
 	"updateOneOrAdd",
 	"toggleOne",
+	"count",
+	"bulkAdd",
 	"ensureCollection",
 	"issetCollection",
 ];
@@ -101,6 +105,8 @@ export function extractMeta(input: string) {
 			"~",
 			"?",
 			"^",
+			"#",
+			"*",
 		].some(c => split[0].includes(c)) || // Check if operation is indicated by special character
 		[
 			".",

@@ -55,6 +55,17 @@ export interface VQL_OP_ToggleOne<T = any> {
 	select?: VQL_Fields;
 }
 
+export interface VQL_OP_Count<T = any> {
+	collection: string;
+	search?: Search<T>;
+}
+
+export interface VQL_OP_BulkAdd<T = any> {
+	collection: string;
+	datas: Arg<T>[];
+	id_gen?: boolean;
+}
+
 export interface VQL_OP_CollectionOperation {
 	collection: string;
 }
@@ -91,6 +102,12 @@ export type VQL_Query_CRUD_Data<T = any> =
 	  }
 	| {
 			toggleOne: VQL_OP_ToggleOne<T>;
+	  }
+	| {
+			count: VQL_OP_Count<T>;
+	  }
+	| {
+			bulkAdd: VQL_OP_BulkAdd<T>;
 	  }
 	| {
 			removeCollection: VQL_OP_CollectionOperation;

@@ -45,7 +45,10 @@ export function parseVQLS(query: string): VQL_Query {
 		}
 	}
 
-	if ((op === "find" || op === "findOne") && !("search" in parsed)) {
+	if (
+		(op === "find" || op === "findOne" || op === "count") &&
+		!("search" in parsed)
+	) {
 		parsed.search = {};
 	}
 

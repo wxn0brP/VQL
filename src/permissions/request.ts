@@ -1,6 +1,7 @@
 import { VQLConfig } from "../helpers/config";
 import { PermCRUD, PermValidFn } from "../types/perm";
 import {
+	VQL_OP_Count,
 	VQL_OP_Find,
 	VQL_OP_FindOne,
 	VQL_OP_Update,
@@ -94,6 +95,24 @@ export async function extractPaths(
 			permPaths.paths.push({
 				c: PermCRUD.DELETE,
 			});
+			permPaths.paths.push({
+				c: PermCRUD.CREATE,
+			});
+			break;
+
+		case "count": {
+			const qc = query.d[operation] as VQL_OP_Count;
+			permPaths.paths.push({
+				c: PermCRUD.READ,
+			});
+			permPaths.paths.push({
+				filed: extractPathsFromData(qc.search),
+				p: PermCRUD.READ,
+			});
+			break;
+		}
+
+		case "bulkAdd":
 			permPaths.paths.push({
 				c: PermCRUD.CREATE,
 			});

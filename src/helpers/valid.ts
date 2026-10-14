@@ -234,6 +234,24 @@ function validD(query: VQL_Query_CRUD, cfg: VQLConfig): true | VQLError {
 		return true;
 	}
 
+	if (key === "count") {
+		const op = d.count!;
+		if ("search" in op && !isObj(op.search, false))
+			return emptyErr("'count' operation 'search' property must be an object.");
+		return true;
+	}
+
+	if (key === "bulkAdd") {
+		const op = d.bulkAdd!;
+		if (!Array.isArray(op.datas))
+			return emptyErr("'bulkAdd' operation requires a 'datas' array.");
+		if ("id_gen" in op && typeof op.id_gen !== "boolean")
+			return emptyErr(
+				"'bulkAdd' operation 'id_gen' property must be a boolean.",
+			);
+		return true;
+	}
+
 	const n: never = key;
 	return emptyErr(`Unknown or invalid CRUD operation: '${key}'`);
 }

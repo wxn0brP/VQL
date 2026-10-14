@@ -10,7 +10,9 @@ import {
 import { VQLProcessor } from "../processor";
 import {
 	VQL_OP_Add,
+	VQL_OP_BulkAdd,
 	VQL_OP_CollectionOperation,
+	VQL_OP_Count,
 	VQL_OP_Find,
 	VQL_OP_FindOne,
 	VQL_OP_Remove,
@@ -284,6 +286,28 @@ export async function executeQuery(
 				...result,
 				data: applySelect(data, select),
 			};
+		}
+
+		return result;
+	} else if (operation === "count") {
+		const params = query.d[operation] as VQL_OP_Count;
+		return await collection.count(params.search ?? {});
+	} else if (operation === "bulkAdd") {
+		const params = query.d[operation] as VQL_OP_BulkAdd;
+		const result = await collection.bulkAdd(
+			params.datas,
+			(params.id_gen ?? true) as false,
+		);
+
+		if (!cfg.noCheckPermissions) {
+			return filterObjectsByPermissions(
+				cfg,
+				cpu.permValidFn,
+				user,
+				query.db,
+				collectionName,
+				result,
+			);
 		}
 
 		return result;

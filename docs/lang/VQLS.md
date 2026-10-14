@@ -26,6 +26,8 @@ Or shorthand:
 | `-!` | removeOne | `db -users!` |
 | `?` | updateOneOrAdd | `db ?users` |
 | `^` | toggleOne | `db ^users` |
+| `#` | count | `db #users` |
+| `*` | bulkAdd | `db *users` |
 
 ## Explicit Operations
 
@@ -39,6 +41,8 @@ db remove users s.active=false
 db removeOne users s._id="123"
 db updateOneOrAdd users s._id="123" u.name="Bob"
 db toggleOne users s._id="123"
+db count users s.status="active"
+db bulkAdd users datas=[{"name":"Alice"},{"name":"Bob"}]
 db ensureCollection logs
 db issetCollection logs
 db removeCollection temp_data
@@ -129,6 +133,12 @@ db -users! s._id="123" e.name=1
 
 # Toggle with field selection
 db ^users s._id="123" e._id=1
+
+# Count matching records
+db #users s.status="active"
+
+# Insert multiple records
+db *users datas=[{"name":"Alice"},{"name":"Bob"}]
 
 # Relations
 db users r.orders.path=["db", "orders"] r.orders.search.status="pending"

@@ -42,6 +42,9 @@ export interface ValtheraResolver {
 		VQueryT.ToggleOneResult<Object>
 	>;
 
+	count?: ResolverFn<VQueryT.Count, number>;
+	bulkAdd?: ResolverFn<VQueryT.BulkAdd, Object[]>;
+
 	remove?: ResolverFn<VQueryT.Remove<Data, false>, Object | null>;
 	removeOne?: ResolverFn<VQueryT.Remove<Data, false>, Object | null>;
 
@@ -61,6 +64,8 @@ const list: Operation[] = [
 	"updateOne",
 	"updateOneOrAdd",
 	"toggleOne",
+	"count",
+	"bulkAdd",
 	"remove",
 	"removeOne",
 ];
@@ -156,6 +161,14 @@ export class AdapterBuilder {
 
 	toggleOne(collection: string, fn: ValtheraResolver["toggleOne"]) {
 		return this.register("toggleOne", collection, fn);
+	}
+
+	count(collection: string, fn: ValtheraResolver["count"]) {
+		return this.register("count", collection, fn);
+	}
+
+	bulkAdd(collection: string, fn: ValtheraResolver["bulkAdd"]) {
+		return this.register("bulkAdd", collection, fn);
 	}
 
 	remove(collection: string, fn: ValtheraResolver["remove"]) {

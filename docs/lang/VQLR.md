@@ -111,6 +111,29 @@ interface VQL_OP_ToggleOne {
 { db: "main", d: { toggleOne: { collection: "favorites", search: { userId: "123", itemId: "456" }, select: ["_id"] } } }
 ```
 
+### count
+
+```typescript
+interface VQL_OP_Count {
+  collection: string;
+  search?: Search;
+}
+
+{ db: "main", d: { count: { collection: "users", search: { status: "active" } } } }
+```
+
+### bulkAdd
+
+```typescript
+interface VQL_OP_BulkAdd {
+  collection: string;
+  datas: Arg[];
+  id_gen?: boolean;  // default: true
+}
+
+{ db: "main", d: { bulkAdd: { collection: "users", datas: [{ name: "Alice" }, { name: "Bob" }] } } }
+```
+
 ## Collection Management
 
 ```typescript
@@ -180,7 +203,8 @@ import type {
   VQL_Query, VQL_Query_CRUD, VQL_Query_Relation,
   VQL_OP_Find, VQL_OP_FindOne, VQL_OP_Add,
   VQL_OP_Update, VQL_OP_Remove, VQL_OP_UpdateOneOrAdd,
-  VQL_OP_ToggleOne, VQL_Fields, VQL_Var
+  VQL_OP_ToggleOne, VQL_OP_Count, VQL_OP_BulkAdd,
+  VQL_Fields, VQL_Var
 } from "@wxn0brp/vql";
 ```
 

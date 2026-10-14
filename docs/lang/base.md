@@ -22,6 +22,8 @@ VQL provides two interchangeable query syntaxes that compile to the same interna
 | removeOne | `db -collection!` | `removeOne` | Delete single |
 | updateOneOrAdd | `db ?collection` | `updateOneOrAdd` | Upsert |
 | toggleOne | `db ^collection` | `toggleOne` | Add/remove toggle |
+| count | `db #collection` | `count` | Count matching records |
+| bulkAdd | `db *collection` | `bulkAdd` | Insert multiple records |
 | ensureCollection | `db ensureCollection name` | `ensureCollection` | Create if not exists |
 | issetCollection | `db issetCollection name` | `issetCollection` | Check exists |
 | removeCollection | `db removeCollection name` | `removeCollection` | Delete collection |
