@@ -18,7 +18,7 @@
     },
     "dependencies": {
         "@wxn0brp/db": "^0.100.1",
-        "@wxn0brp/falcon-frame": "^0.8.1",
+        "@wxn0brp/falcon-frame": "^0.9.0",
         "@wxn0brp/gate-warden": "^0.6.1"
     }
 }
