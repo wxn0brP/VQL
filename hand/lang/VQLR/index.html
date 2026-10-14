@@ -562,6 +562,28 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#count" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        count
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bulkadd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        bulkAdd
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -868,6 +890,28 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#count" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        count
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bulkadd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        bulkAdd
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1084,6 +1128,23 @@
 
 <span class="p">{</span><span class="w"> </span><span class="nx">db</span><span class="o">:</span><span class="w"> </span><span class="s2">"main"</span><span class="p">,</span><span class="w"> </span><span class="nx">d</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">toggleOne</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">collection</span><span class="o">:</span><span class="w"> </span><span class="s2">"favorites"</span><span class="p">,</span><span class="w"> </span><span class="nx">search</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">userId</span><span class="o">:</span><span class="w"> </span><span class="s2">"123"</span><span class="p">,</span><span class="w"> </span><span class="nx">itemId</span><span class="o">:</span><span class="w"> </span><span class="s2">"456"</span><span class="w"> </span><span class="p">},</span><span class="w"> </span><span class="nx">select</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"_id"</span><span class="p">]</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
 </code></pre></div>
+<h3 id="count">count</h3>
+<div class="highlight"><pre><span></span><code><span class="kd">interface</span><span class="w"> </span><span class="nx">VQL_OP_Count</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">collection</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+<span class="w">  </span><span class="nx">search?</span><span class="o">:</span><span class="w"> </span><span class="kt">Search</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="p">{</span><span class="w"> </span><span class="nx">db</span><span class="o">:</span><span class="w"> </span><span class="s2">"main"</span><span class="p">,</span><span class="w"> </span><span class="nx">d</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">count</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">collection</span><span class="o">:</span><span class="w"> </span><span class="s2">"users"</span><span class="p">,</span><span class="w"> </span><span class="nx">search</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">status</span><span class="o">:</span><span class="w"> </span><span class="s2">"active"</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+</code></pre></div>
+<h3 id="bulkadd">bulkAdd</h3>
+<div class="highlight"><pre><span></span><code><span class="kd">interface</span><span class="w"> </span><span class="nx">VQL_OP_BulkAdd</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">collection</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+<span class="w">  </span><span class="nx">datas</span><span class="o">:</span><span class="w"> </span><span class="kt">Arg</span><span class="p">[];</span>
+<span class="w">  </span><span class="nx">id_gen?</span><span class="o">:</span><span class="w"> </span><span class="kt">boolean</span><span class="p">;</span><span class="w">  </span><span class="c1">// default: true</span>
+<span class="p">}</span>
+
+<span class="p">{</span><span class="w"> </span><span class="nx">db</span><span class="o">:</span><span class="w"> </span><span class="s2">"main"</span><span class="p">,</span><span class="w"> </span><span class="nx">d</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">bulkAdd</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">collection</span><span class="o">:</span><span class="w"> </span><span class="s2">"users"</span><span class="p">,</span><span class="w"> </span><span class="nx">datas</span><span class="o">:</span><span class="w"> </span><span class="p">[{</span><span class="w"> </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="s2">"Alice"</span><span class="w"> </span><span class="p">},</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="s2">"Bob"</span><span class="w"> </span><span class="p">}]</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+</code></pre></div>
 <h2 id="collection-management">Collection Management</h2>
 <div class="highlight"><pre><span></span><code><span class="p">{</span><span class="w"> </span><span class="nx">db</span><span class="o">:</span><span class="w"> </span><span class="s2">"main"</span><span class="p">,</span><span class="w"> </span><span class="nx">d</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">ensureCollection</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">collection</span><span class="o">:</span><span class="w"> </span><span class="s2">"logs"</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
 <span class="p">{</span><span class="w"> </span><span class="nx">db</span><span class="o">:</span><span class="w"> </span><span class="s2">"main"</span><span class="p">,</span><span class="w"> </span><span class="nx">d</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">issetCollection</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">collection</span><span class="o">:</span><span class="w"> </span><span class="s2">"logs"</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
@@ -1138,7 +1199,8 @@
 <span class="w">  </span><span class="nx">VQL_Query</span><span class="p">,</span><span class="w"> </span><span class="nx">VQL_Query_CRUD</span><span class="p">,</span><span class="w"> </span><span class="nx">VQL_Query_Relation</span><span class="p">,</span>
 <span class="w">  </span><span class="nx">VQL_OP_Find</span><span class="p">,</span><span class="w"> </span><span class="nx">VQL_OP_FindOne</span><span class="p">,</span><span class="w"> </span><span class="nx">VQL_OP_Add</span><span class="p">,</span>
 <span class="w">  </span><span class="nx">VQL_OP_Update</span><span class="p">,</span><span class="w"> </span><span class="nx">VQL_OP_Remove</span><span class="p">,</span><span class="w"> </span><span class="nx">VQL_OP_UpdateOneOrAdd</span><span class="p">,</span>
-<span class="w">  </span><span class="nx">VQL_OP_ToggleOne</span><span class="p">,</span><span class="w"> </span><span class="nx">VQL_Fields</span><span class="p">,</span><span class="w"> </span><span class="nx">VQL_Var</span>
+<span class="w">  </span><span class="nx">VQL_OP_ToggleOne</span><span class="p">,</span><span class="w"> </span><span class="nx">VQL_OP_Count</span><span class="p">,</span><span class="w"> </span><span class="nx">VQL_OP_BulkAdd</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">VQL_Fields</span><span class="p">,</span><span class="w"> </span><span class="nx">VQL_Var</span>
 <span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">"@wxn0brp/vql"</span><span class="p">;</span>
 </code></pre></div>
 <h2 id="examples">Examples</h2>

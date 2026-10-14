@@ -883,6 +883,16 @@
 <td>toggleOne</td>
 <td><code>db ^users</code></td>
 </tr>
+<tr>
+<td><code>#</code></td>
+<td>count</td>
+<td><code>db #users</code></td>
+</tr>
+<tr>
+<td><code>*</code></td>
+<td>bulkAdd</td>
+<td><code>db *users</code></td>
+</tr>
 </tbody>
 </table>
 <h2 id="explicit-operations">Explicit Operations</h2>
@@ -895,6 +905,8 @@ db<span class="w"> </span>remove<span class="w"> </span>users<span class="w"> </
 db<span class="w"> </span>removeOne<span class="w"> </span>users<span class="w"> </span>s._id<span class="o">=</span><span class="s2">"123"</span>
 db<span class="w"> </span>updateOneOrAdd<span class="w"> </span>users<span class="w"> </span>s._id<span class="o">=</span><span class="s2">"123"</span><span class="w"> </span>u.name<span class="o">=</span><span class="s2">"Bob"</span>
 db<span class="w"> </span>toggleOne<span class="w"> </span>users<span class="w"> </span>s._id<span class="o">=</span><span class="s2">"123"</span>
+db<span class="w"> </span>count<span class="w"> </span>users<span class="w"> </span>s.status<span class="o">=</span><span class="s2">"active"</span>
+db<span class="w"> </span>bulkAdd<span class="w"> </span>users<span class="w"> </span><span class="nv">datas</span><span class="o">=[{</span><span class="s2">"name"</span>:<span class="s2">"Alice"</span><span class="o">}</span>,<span class="o">{</span><span class="s2">"name"</span>:<span class="s2">"Bob"</span><span class="o">}]</span>
 db<span class="w"> </span>ensureCollection<span class="w"> </span>logs
 db<span class="w"> </span>issetCollection<span class="w"> </span>logs
 db<span class="w"> </span>removeCollection<span class="w"> </span>temp_data
@@ -1057,6 +1069,12 @@ db<span class="w"> </span>-users!<span class="w"> </span>s._id<span class="o">=<
 
 <span class="c1"># Toggle with field selection</span>
 db<span class="w"> </span>^users<span class="w"> </span>s._id<span class="o">=</span><span class="s2">"123"</span><span class="w"> </span>e._id<span class="o">=</span><span class="m">1</span>
+
+<span class="c1"># Count matching records</span>
+db<span class="w"> </span><span class="c1">#users s.status="active"</span>
+
+<span class="c1"># Insert multiple records</span>
+db<span class="w"> </span>*users<span class="w"> </span><span class="nv">datas</span><span class="o">=[{</span><span class="s2">"name"</span>:<span class="s2">"Alice"</span><span class="o">}</span>,<span class="o">{</span><span class="s2">"name"</span>:<span class="s2">"Bob"</span><span class="o">}]</span>
 
 <span class="c1"># Relations</span>
 db<span class="w"> </span>users<span class="w"> </span>r.orders.path<span class="o">=[</span><span class="s2">"db"</span>,<span class="w"> </span><span class="s2">"orders"</span><span class="o">]</span><span class="w"> </span>r.orders.search.status<span class="o">=</span><span class="s2">"pending"</span>
