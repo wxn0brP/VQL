@@ -1,3 +1,5 @@
+import { VQLConfigError } from "../errors";
+
 /**
  * Use {@link VQLConfig} to configure the behavior of VQL.
  */
@@ -23,7 +25,8 @@ export class VQLConfig implements VQLConfigInterface {
 			Object.assign(this, config);
 		}
 		if (!this.noCheckPermissions && !this.strictSelect) {
-			throw new Error(
+			throw new VQLConfigError(
+				//
 				"strictSelect must be true when permissions are enabled (noCheckPermissions: false). " +
 					"Without strictSelect, nested fields without READ permission can be leaked.",
 			);

@@ -4,6 +4,7 @@ import { checkRelationPermission } from "../permissions";
 import { VQLProcessor } from "../processor";
 import { VQL_Query_Relation } from "../types/vql";
 import { parseSelect } from "./utils";
+import { VQLDBNotFoundError, VQLPermissionDeniedError } from "../errors";
 
 function standardizeRelationRequest(
 	config: VQLConfig,
@@ -19,22 +20,14 @@ function checkDBsExist(
 	const db = req.path[0];
 
 	if (!db || !cpu.dbInstances[db]) {
-		return {
-			err: true,
-			msg: `Invalid query - db "${db}" not found`,
-			c: 400,
-		};
+		throw new VQLDBNotFoundError(String(db));
 	}
 
 	if (req.relations) {
 		for (const relation of Object.values(req.relations)) {
-			const res = checkDBsExist(cpu, relation);
-			if (res.err) return res;
+			checkDBsExist(cpu, relation);
 		}
 	}
-	return {
-		err: false,
-	};
 }
 
 export async function executeRelation(
@@ -43,18 +36,13 @@ export async function executeRelation(
 	user: any,
 	cfg: VQLConfig,
 ): Promise<any> {
-	const checkDb = checkDBsExist(cpu, query.r);
-	if (checkDb.err) return checkDb;
+	checkDBsExist(cpu, query.r);
 
 	if (
 		!cfg.noCheckPermissions &&
 		!(await checkRelationPermission(cfg, cpu.permValidFn, user, query))
 	) {
-		return {
-			err: true,
-			msg: "Permission denied",
-			c: 403,
-		};
+		throw new VQLPermissionDeniedError("relation not permitted");
 	}
 
 	const req = query.r;

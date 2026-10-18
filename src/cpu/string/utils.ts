@@ -1,3 +1,5 @@
+import { VQLParseError } from "../../errors";
+
 const opPrefix = {
 	"-": "remove",
 	"+": "add",
@@ -49,7 +51,7 @@ export function extractMeta(input: string) {
 		.filter(Boolean);
 
 	// Ensure the query has at least database and collection
-	if (split.length < 2) throw new Error("Invalid query");
+	if (split.length < 2) throw new VQLParseError("Invalid query");
 
 	if (split.length === 2 && split[1] === "getCollections")
 		return {

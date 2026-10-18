@@ -7,13 +7,10 @@ import {
 	VQL_Query_Relation,
 	VQLError,
 } from "../types/vql";
+import { VQLValidationError } from "../errors";
 
 function emptyErr(msg: string = "Bad query"): VQLError {
-	return {
-		err: true,
-		msg,
-		c: 400,
-	};
+	return new VQLValidationError(msg);
 }
 
 function isObj(obj: any, one = true): boolean {

@@ -9,6 +9,11 @@ import {
 } from "../permissions";
 import { VQLProcessor } from "../processor";
 import {
+	VQLDBNotFoundError,
+	VQLOperationError,
+	VQLPermissionDeniedError,
+} from "../errors";
+import {
 	VQL_OP_Add,
 	VQL_OP_BulkAdd,
 	VQL_OP_CollectionOperation,
@@ -46,11 +51,7 @@ export async function executeQuery(
 	cfg: VQLConfig,
 ): Promise<any> {
 	if (!query.db || !cpu.dbInstances[query.db])
-		return {
-			err: true,
-			msg: `Invalid query - db "${query.db || "undefined"}" not found`,
-			c: 400,
-		};
+		throw new VQLDBNotFoundError(query.db || "undefined");
 
 	const db = cpu.dbInstances[query.db];
 
@@ -62,11 +63,10 @@ export async function executeQuery(
 		!cfg.noCheckPermissions &&
 		!(await checkRequestPermission(cfg, cpu.permValidFn, user, query))
 	) {
-		return {
-			err: true,
-			msg: "Permission denied",
-			c: 403,
-		};
+		throw new VQLPermissionDeniedError(
+			//
+			"operation not permitted",
+		);
 	}
 
 	if (operation === "removeCollection") {
@@ -313,6 +313,6 @@ export async function executeQuery(
 		return result;
 	} else {
 		const n: never = operation;
-		throw new Error("Unknown operation " + n);
+		throw new VQLOperationError(String(n));
 	}
 }

@@ -4,7 +4,9 @@ import type {
 	RouteHandler,
 } from "@wxn0brp/falcon-frame";
 import { Router } from "@wxn0brp/falcon-frame";
+import { wrapAdapterError } from "@wxn0brp/db-core/errors";
 import type { VQLProcessor } from "../processor";
+import { VQLError, isVQLError } from "../errors";
 import { VQLUQ } from "../types/vql";
 
 export type ContextFn = (req: FFRequest, res: FFResponse) => Promise<any> | any;
@@ -47,6 +49,27 @@ export function createVqlRouteHandler(
 ): RouteHandler {
 	const getContext = options.getUser || (() => ({}));
 
+	function toErrorResponse(err: unknown) {
+		const wrapped = wrapAdapterError(err);
+		const statusCode = isVQLError(err) ? (err as VQLError).statusCode : 500;
+		return {
+			err: true,
+			msg: wrapped.message,
+			c: statusCode,
+			code: wrapped.code,
+			...(wrapped.suggestion
+				? {
+						suggestion: wrapped.suggestion,
+					}
+				: {}),
+			...(wrapped.context
+				? {
+						context: wrapped.context,
+					}
+				: {}),
+		};
+	}
+
 	return async (req, res) => {
 		try {
 			const ctx = await getContext(req, res);
@@ -54,18 +77,34 @@ export function createVqlRouteHandler(
 				? await options.getQuery(req, res)
 				: req.body?.query;
 			const result = await processor.execute(query, ctx);
-			if (result && result.err) return result;
+
+			if (result instanceof VQLError) {
+				res.status(result.statusCode);
+				return {
+					err: true,
+					msg: result.message,
+					c: result.statusCode,
+					code: result.code,
+					...(result.suggestion
+						? {
+								suggestion: result.suggestion,
+							}
+						: {}),
+					...(result.context
+						? {
+								context: result.context,
+							}
+						: {}),
+				};
+			}
+
 			return {
 				err: false,
 				result,
 			};
 		} catch (e) {
 			res.status(500);
-			return {
-				err: true,
-				msg: formatMessage(e),
-				c: 500,
-			};
+			return toErrorResponse(e);
 		}
 	};
 }

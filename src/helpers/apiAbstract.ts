@@ -4,6 +4,7 @@ import { Collection } from "@wxn0brp/db-core/helpers/collection";
 import { Data } from "@wxn0brp/db-core/types/data";
 import { VQueryT } from "@wxn0brp/db-core/types/query";
 import { updateFindObject } from "@wxn0brp/db-core/utils/updateFindObject";
+import { VQLOperationError, VQLHandlerMissingError } from "../errors";
 
 export type ResolverFn<TArg = any, TReturn = any> = (
 	query: TArg,
@@ -75,7 +76,7 @@ export function createValtheraAdapter(
 	extendedFind: boolean = false,
 ): ValtheraCompatible {
 	const safe = <T>(fn?: T): T => {
-		if (!fn) throw new Error("Unimplemented method");
+		if (!fn) throw new VQLOperationError("Unimplemented method");
 		return fn;
 	};
 
@@ -195,7 +196,7 @@ export class AdapterBuilder {
 				this.handlers.get(`${op}:${col}`) ||
 				this.handlers.get(`${op}:*`) ||
 				null;
-			if (!handler) throw new Error(`Unimplemented method: ${op}:${col}`);
+			if (!handler) throw new VQLHandlerMissingError(op, col);
 			try {
 				return await handler(arg);
 			} catch (e) {

@@ -8,6 +8,7 @@ import { VQL_Query, VQLError, VQLUQ } from "./types/vql";
 import { validateRaw, validateVql } from "./helpers/valid";
 import { parseVQLS } from "./cpu/string";
 import { PermValidFn } from "./types/perm";
+import { VQLInternalError, VQLParseError } from "./errors";
 
 export class VQLProcessor {
 	public relation: Relation;
@@ -33,23 +34,33 @@ export class VQLProcessor {
 		},
 		cfg: VQLConfig = this.config,
 	): Promise<T | VQLError> {
-		const result = this._preProcessQuery(queryRaw, user, cfg);
-		if ("err" in result) return result.err;
+		try {
+			const result = this._preProcessQuery(queryRaw, user, cfg);
+			if ("err" in result) return result.err;
 
-		return await this._runQuery(result.query, user, cfg);
+			return await this._runQuery(result.query, user, cfg);
+		} catch (e) {
+			if (e instanceof VQLError) return e;
+			if (e instanceof Error) return new VQLInternalError(e);
+			return new VQLInternalError(String(e));
+		}
 	}
 
 	public _preProcessQuery(
 		queryRaw: VQLUQ,
 		user: any,
 		cfg: VQLConfig = this.config,
-	) {
-		const { query: parsedQuery, err: parseErr } = this._parseQuery(queryRaw);
-		if (parseErr) {
+	): {
+		query?: VQL_Query;
+		err?: VQLError;
+	} {
+		const parseResult = this._parseQuery(queryRaw);
+		if (parseResult.err)
 			return {
-				err: parseErr,
+				err: parseResult.err,
 			};
-		}
+
+		const parsedQuery = parseResult.query!;
 
 		const validateRawResult = validateRaw(parsedQuery);
 		if (validateRawResult !== true) {
@@ -91,14 +102,19 @@ export class VQLProcessor {
 			} catch (e) {
 				logger.error("Error parsing string query: ", {
 					error: e,
-					msg: e.message,
+					msg: e instanceof Error ? e.message : String(e),
 				});
 				return {
-					err: {
-						err: true,
-						c: 400,
-						msg: `String query parsing error: ${e.message}`,
-					},
+					err: new VQLParseError(
+						//
+						`String query parsing error: ${e instanceof Error ? e.message : String(e)}`,
+						{
+							context: {
+								query: q,
+							},
+							cause: e,
+						},
+					),
 				};
 			}
 
@@ -122,17 +138,17 @@ export class VQLProcessor {
 		query: VQL_Query,
 		user: any,
 		cfg: VQLConfig = this.config,
-	) {
+	): Promise<any> {
 		if ("r" in query) {
 			return await executeRelation(this, query, user, cfg);
 		} else if ("d" in query) {
 			return await executeQuery(this, query, user, cfg);
 		} else {
-			return {
-				err: true,
-				msg: "Invalid query",
-				c: 400,
-			};
+			throw new VQLParseError("Invalid query", {
+				context: {
+					query,
+				},
+			});
 		}
 	}
 }

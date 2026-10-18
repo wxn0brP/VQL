@@ -161,8 +161,4 @@ export type VQLUQ<T = any> =
 			query: string;
 	  } & VQL_Var);
 
-export interface VQLError {
-	err: true;
-	msg: string;
-	c: number;
-}
+export { VQLError } from "../errors";
