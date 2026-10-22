@@ -1,21 +1,21 @@
 {
-    "compilerOptions": {
-        "module": "ES2022",
-        "target": "ES2022",
-        "moduleResolution": "bundler",
-        "paths": {
-            "#*": [
-                "../src/*"
-            ]
-        },
-        "esModuleInterop": true,
-        "skipLibCheck": true,
-        "strict": false,
-        "types": [
-            "bun-types"
-        ]
-    },
-    "include": [
-        "."
-    ]
+	"compilerOptions": {
+		"module": "ES2022",
+		"target": "ES2022",
+		"moduleResolution": "bundler",
+		"paths": {
+			"#*": [
+				"../src/*"
+			]
+		},
+		"esModuleInterop": true,
+		"skipLibCheck": true,
+		"strict": false,
+		"types": [
+			"bun-types"
+		]
+	},
+	"include": [
+		"."
+	]
 }

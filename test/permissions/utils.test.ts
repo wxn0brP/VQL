@@ -3,171 +3,270 @@ import { extractPathsFromData, getHash, hashKey } from "#permissions/utils";
 import { describe, expect, it } from "bun:test";
 
 describe("Permissions/Utils", () => {
-    describe("getHash", () => {
-        it("1. should generate a valid SHA-256 hash", async () => {
-            const input = "test";
-            const hash = await getHash(input);
+	describe("getHash", () => {
+		it("1. should generate a valid SHA-256 hash", async () => {
+			const input = "test";
+			const hash = await getHash(input);
 
-            // SHA-256 produces a 64 character hex string
-            expect(hash).toHaveLength(64);
-            expect(hash).toMatch(/^[a-f0-9]+$/);
-        });
+			// SHA-256 produces a 64 character hex string
+			expect(hash).toHaveLength(64);
+			expect(hash).toMatch(/^[a-f0-9]+$/);
+		});
 
-        it("2. should generate consistent hash for the same input", async () => {
-            const input = "consistent-test";
-            const hash1 = await getHash(input);
-            const hash2 = await getHash(input);
+		it("2. should generate consistent hash for the same input", async () => {
+			const input = "consistent-test";
+			const hash1 = await getHash(input);
+			const hash2 = await getHash(input);
 
-            expect(hash1).toBe(hash2);
-        });
+			expect(hash1).toBe(hash2);
+		});
 
-        it("3. should generate different hashes for different inputs", async () => {
-            const hash1 = await getHash("input1");
-            const hash2 = await getHash("input2");
+		it("3. should generate different hashes for different inputs", async () => {
+			const hash1 = await getHash("input1");
+			const hash2 = await getHash("input2");
 
-            expect(hash1).not.toBe(hash2);
-        });
+			expect(hash1).not.toBe(hash2);
+		});
 
-        it("4. should handle empty string", async () => {
-            const hash = await getHash("");
-            expect(hash).toHaveLength(64);
-            expect(hash).toMatch(/^[a-f0-9]+$/);
-        });
-    });
+		it("4. should handle empty string", async () => {
+			const hash = await getHash("");
+			expect(hash).toHaveLength(64);
+			expect(hash).toMatch(/^[a-f0-9]+$/);
+		});
+	});
 
-    describe("hashKey", () => {
-        it("1. should hash the path when hidePath is true", async () => {
-            const config = new VQLConfig({ hidePath: true });
-            const path = ["db", "users", "profile"];
-            const result = await hashKey(config, path);
+	describe("hashKey", () => {
+		it("1. should hash the path when hidePath is true", async () => {
+			const config = new VQLConfig({
+				hidePath: true,
+			});
+			const path = [
+				"db",
+				"users",
+				"profile",
+			];
+			const result = await hashKey(config, path);
 
-            // Should return a hash (64 character hex string)
-            expect(result).toHaveLength(64);
-            expect(result).toMatch(/^[a-f0-9]+$/);
-        });
+			// Should return a hash (64 character hex string)
+			expect(result).toHaveLength(64);
+			expect(result).toMatch(/^[a-f0-9]+$/);
+		});
 
-        it("2. should return JSON string when hidePath is false", async () => {
-            const config = new VQLConfig({ hidePath: false });
-            const path = ["db", "users", "profile"];
-            const result = await hashKey(config, path);
+		it("2. should return JSON string when hidePath is false", async () => {
+			const config = new VQLConfig({
+				hidePath: false,
+			});
+			const path = [
+				"db",
+				"users",
+				"profile",
+			];
+			const result = await hashKey(config, path);
 
-            // Should return the JSON string representation
-            expect(result).toBe(JSON.stringify(path));
-        });
+			// Should return the JSON string representation
+			expect(result).toBe(JSON.stringify(path));
+		});
 
-        it("3. should handle complex nested paths", async () => {
-            const config = new VQLConfig({ hidePath: true });
-            const path = ["db", "users", { id: "123", field: "name" }];
-            const result = await hashKey(config, path);
+		it("3. should handle complex nested paths", async () => {
+			const config = new VQLConfig({
+				hidePath: true,
+			});
+			const path = [
+				"db",
+				"users",
+				{
+					id: "123",
+					field: "name",
+				},
+			];
+			const result = await hashKey(config, path);
 
-            // Should return a hash (64 character hex string)
-            expect(result).toHaveLength(64);
-            expect(result).toMatch(/^[a-f0-9]+$/);
-        });
-    });
+			// Should return a hash (64 character hex string)
+			expect(result).toHaveLength(64);
+			expect(result).toMatch(/^[a-f0-9]+$/);
+		});
+	});
 
-    describe("extractPathsFromData", () => {
-        it("1. should extract simple path from flat object", () => {
-            const data = { name: "John", age: 30 };
-            const paths = extractPathsFromData(data);
+	describe("extractPathsFromData", () => {
+		it("1. should extract simple path from flat object", () => {
+			const data = {
+				name: "John",
+				age: 30,
+			};
+			const paths = extractPathsFromData(data);
 
-            expect(paths).toEqual([
-                { path: [], key: "name" },
-                { path: [], key: "age" }
-            ]);
-        });
+			expect(paths).toEqual([
+				{
+					path: [],
+					key: "name",
+				},
+				{
+					path: [],
+					key: "age",
+				},
+			]);
+		});
 
-        it("2. should extract nested paths from object", () => {
-            const data = {
-                user: {
-                    profile: {
-                        name: "John"
-                    },
-                    settings: {
-                        theme: "dark"
-                    }
-                }
-            };
-            const paths = extractPathsFromData(data);
+		it("2. should extract nested paths from object", () => {
+			const data = {
+				user: {
+					profile: {
+						name: "John",
+					},
+					settings: {
+						theme: "dark",
+					},
+				},
+			};
+			const paths = extractPathsFromData(data);
 
-            expect(paths).toEqual([
-                { path: ["user", "profile"], key: "name" },
-                { path: ["user", "settings"], key: "theme" }
-            ]);
-        });
+			expect(paths).toEqual([
+				{
+					path: [
+						"user",
+						"profile",
+					],
+					key: "name",
+				},
+				{
+					path: [
+						"user",
+						"settings",
+					],
+					key: "theme",
+				},
+			]);
+		});
 
-        it("3. should handle mixed nested and flat properties", () => {
-            const data = {
-                name: "John",
-                profile: {
-                    age: 30,
-                    location: "NYC"
-                },
-                active: true
-            };
-            const paths = extractPathsFromData(data);
+		it("3. should handle mixed nested and flat properties", () => {
+			const data = {
+				name: "John",
+				profile: {
+					age: 30,
+					location: "NYC",
+				},
+				active: true,
+			};
+			const paths = extractPathsFromData(data);
 
-            expect(paths).toEqual([
-                { path: [], key: "name" },
-                { path: ["profile"], key: "age" },
-                { path: ["profile"], key: "location" },
-                { path: [], key: "active" }
-            ]);
-        });
+			expect(paths).toEqual([
+				{
+					path: [],
+					key: "name",
+				},
+				{
+					path: [
+						"profile",
+					],
+					key: "age",
+				},
+				{
+					path: [
+						"profile",
+					],
+					key: "location",
+				},
+				{
+					path: [],
+					key: "active",
+				},
+			]);
+		});
 
-        it("4. should handle arrays properly", () => {
-            const data = {
-                posts: [
-                    { title: "Post 1", content: "Content 1" },
-                    { title: "Post 2", content: "Content 2" }
-                ]
-            };
-            const paths = extractPathsFromData(data);
+		it("4. should handle arrays properly", () => {
+			const data = {
+				posts: [
+					{
+						title: "Post 1",
+						content: "Content 1",
+					},
+					{
+						title: "Post 2",
+						content: "Content 2",
+					},
+				],
+			};
+			const paths = extractPathsFromData(data);
 
-            expect(paths).toEqual([
-                { path: [], key: "posts" }
-            ]);
-        });
+			expect(paths).toEqual([
+				{
+					path: [],
+					key: "posts",
+				},
+			]);
+		});
 
-        it("5. should handle empty object", () => {
-            const data = {};
-            const paths = extractPathsFromData(data);
+		it("5. should handle empty object", () => {
+			const data = {};
+			const paths = extractPathsFromData(data);
 
-            expect(paths).toEqual([]);
-        });
+			expect(paths).toEqual([]);
+		});
 
-        it("6. should handle null and undefined values", () => {
-            const data = {
-                nullValue: null,
-                stringValue: "test"
-            };
-            const paths = extractPathsFromData(data);
+		it("6. should handle null and undefined values", () => {
+			const data = {
+				nullValue: null,
+				stringValue: "test",
+			};
+			const paths = extractPathsFromData(data);
 
-            expect(paths).toEqual([
-                { path: [], key: "nullValue" },
-                { path: [], key: "stringValue" }
-            ]);
-        });
+			expect(paths).toEqual([
+				{
+					path: [],
+					key: "nullValue",
+				},
+				{
+					path: [],
+					key: "stringValue",
+				},
+			]);
+		});
 
-        it("7. should handle various data types", () => {
-            const data = {
-                string: "test",
-                number: 42,
-                boolean: true,
-                nullValue: null,
-                array: [1, 2, 3],
-                object: { nested: "value" }
-            };
-            const paths = extractPathsFromData(data);
+		it("7. should handle various data types", () => {
+			const data = {
+				string: "test",
+				number: 42,
+				boolean: true,
+				nullValue: null,
+				array: [
+					1,
+					2,
+					3,
+				],
+				object: {
+					nested: "value",
+				},
+			};
+			const paths = extractPathsFromData(data);
 
-            expect(paths).toEqual([
-                { path: [], key: "string" },
-                { path: [], key: "number" },
-                { path: [], key: "boolean" },
-                { path: [], key: "nullValue" },
-                { path: [], key: "array" },
-                { path: ["object"], key: "nested" }
-            ]);
-        });
-    });
+			expect(paths).toEqual([
+				{
+					path: [],
+					key: "string",
+				},
+				{
+					path: [],
+					key: "number",
+				},
+				{
+					path: [],
+					key: "boolean",
+				},
+				{
+					path: [],
+					key: "nullValue",
+				},
+				{
+					path: [],
+					key: "array",
+				},
+				{
+					path: [
+						"object",
+					],
+					key: "nested",
+				},
+			]);
+		});
+	});
 });
