@@ -103,8 +103,9 @@ export function createVqlRouteHandler(
 				result,
 			};
 		} catch (e) {
-			res.status(500);
-			return toErrorResponse(e);
+			const body = toErrorResponse(e);
+			res.status(body.c);
+			return body;
 		}
 	};
 }
