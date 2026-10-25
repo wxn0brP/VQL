@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.14.0-alpha.0](https://github.com/wxn0brP/VQL/compare/v0.13.3...v0.14.0-alpha.0) (2026-10-25)
+
+
+### ⚠ BREAKING CHANGES
+
+* rebuild errors
+
+### Features
+
+* rebuild errors ([823bc72](https://github.com/wxn0brP/VQL/commit/823bc72b67f917d90421d1e69a7b1f4720983376))
+* support count & bulkAdd ([4c043c2](https://github.com/wxn0brP/VQL/commit/4c043c2370ebb9f58c984ae7e7af2ff8c5c26c9e))
+* update gui ([011d58d](https://github.com/wxn0brP/VQL/commit/011d58deaff5c2c61c9893483df167a7eba36b2d))
+
+
+### Bug Fixes
+
+* errors ([05dc409](https://github.com/wxn0brP/VQL/commit/05dc409a19e8af23d782f959f6d066cb085a4fd3))
+
 ### [0.13.3](https://github.com/wxn0brP/VQL/compare/v0.13.2...v0.13.3) (2026-10-11)
 
 ### [0.13.2](https://github.com/wxn0brP/VQL/compare/v0.13.1...v0.13.2) (2026-09-23)
