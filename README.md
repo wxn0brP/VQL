@@ -73,6 +73,7 @@ e.age = 1
 ## Documentation
 
 - [wxn0brp.github.io/VQL](https://wxn0brp.github.io/VQL).
+- [wxn0brp.github.io/VQL/types](https://wxn0brp.github.io/VQL/types).
 
 ## License
 
