@@ -1,6 +1,8 @@
 # VQL (Valthera Query Language)
 
-VQL (Valthera Query Language) is a comprehensive framework for interacting with ValtheraDB. It combines a flexible query language, a powerful permission management system, and a suite of tools to build secure and efficient data-driven applications.
+VQL is a query framework for [ValtheraDB](https://github.com/wxn0brP/ValtheraDB).
+It combines two query syntaxes, cross-database relations, an optional permission
+system, HTTP integration, and adapters for external data sources.
 
 [![npm version](https://img.shields.io/npm/v/@wxn0brp/vql)](https://www.npmjs.com/package/@wxn0brp/vql)
 [![License](https://img.shields.io/npm/l/@wxn0brp/vql)](./LICENSE)
@@ -8,82 +10,110 @@ VQL (Valthera Query Language) is a comprehensive framework for interacting with 
 ![CI](https://img.shields.io/github/actions/workflow/status/wxn0brP/VQL/build.yml?branch=master)
 ![bundle size](https://img.shields.io/bundlephobia/minzip/@wxn0brp/vql)
 
-## Key Features
+## Features
 
-- **Dual Query Syntax**: Choose between VQLR (a JSON-based object query language for programmatic use) and VQLS (a human-readable string-based language for simpler queries and scripts).
-- **Multi-Database Support**: Process queries across multiple ValtheraDB instances seamlessly.
-- **Cross-Platform**: Run VQL in both Node.js and modern web browsers.
-- **Dynamic Variables**: Use predefined (`_me`, `_now`, `_user`) or custom variables in your queries for dynamic, context-aware operations.
-- **Advanced Relation Queries**: Natively handle complex relationships not just between collections, but also across entire databases.
-- **Permission System**: Built-in, granular access control powered by Gate Warden. It's disabled by default and can be enabled when needed to enforce complex security rules.
-- **Configurable Behavior**: Customize VQL through `VQLConfig` -control permissions, field selection, path visibility, and more.
-- **Falcon Frame Integration**: Integrates with Falcon Frame for extended HTTP API capabilities.
+- **VQLS**: a compact string syntax for CLI tools, configs, and scripts.
+- **VQLR**: a JSON object syntax for application code and TypeScript.
+- **Multi-database**: query any number of named ValtheraDB instances.
+- **Relations**: joins across collections and databases, including nested and
+  many-to-many relations.
+- **Variables**: `_me`, `_user`, `_now`, `_nowShort`, `__now`, `__nowShort`, and
+  custom values.
+- **Permissions**: optional CRUD and field-level checks with result filtering.
+- **Adapters**: use HTTP APIs, custom SDKs, or per-collection handlers.
+- **HTTP API**: Falcon Frame endpoint with structured errors.
+- **Browser compatible**: run the processor against a remote backend.
 
-## Example Usage
+## Install
 
-Here is an example of how to use the `VQLProcessor` to execute a query:
-
-```typescript
-import VQLProcessor from "@wxn0brp/vql";
-import { Valthera } from "@wxn0brp/db";
-
-// Initialize database instances
-const dbInstances = {
-    myDatabase: new Valthera("path/to/database"),
-};
-
-// Create a VQLProcessor instance
-const processor = new VQLProcessor(dbInstances);
-
-// Define a query (VQLR)
-const query = {
-    db: "myDatabase",
-    d: {
-        find: {
-            collection: "users",
-            search: { $gt: { age: 18 } },
-            select: { name: 1, age: 1 },
-        },
-    },
-};
-
-// Or you can use a string query (VQLS):
-const vqls = `
-myDatabase users
-s.$gt.age = 18
-e.name = 1
-e.age = 1
-`;
-
-// Execute the query
-(async () => {
-    try {
-        const result = await processor.execute(query);
-        console.log("Query Result:", result);
-    } catch (error) {
-        console.error("Error executing query:", error);
-    }
-})();
+```bash
+bun add @wxn0brp/vql @wxn0brp/db
 ```
 
-## Development Tools
+Optional peers:
 
-- [VQL-dev](https://github.com/wxn0brP/VQL-dev) - Debugging and development query tools.
+```bash
+bun add @wxn0brp/falcon-frame   # HTTP endpoint
+bun add @wxn0brp/gate-warden    # permission backend
+```
+
+## Quick start
+
+```typescript
+import VQLProcessor, { isVQLError } from "@wxn0brp/vql";
+import { ValtheraCreate } from "@wxn0brp/db";
+
+const db = ValtheraCreate("./data/app");
+const processor = new VQLProcessor({ main: db });
+
+// VQLS
+const active = await processor.execute(
+    `main users s.status="active" e.name=1 e.email=1`
+);
+
+// VQLR
+const user = await processor.execute({
+    db: "main",
+    d: {
+        findOne: {
+            collection: "users",
+            search: { _id: "u1" },
+            select: ["name", "email"]
+        }
+    }
+});
+
+// Variables and user context
+const mine = await processor.execute(
+    { query: "main orders s.ownerId=$_me e._id=1 e.total=1", var: {} },
+    { _id: "u1", role: "user" }
+);
+
+if (isVQLError(active)) {
+    console.error(active.code, active.message);
+}
+```
+
+`execute()` returns either the result or a `VQLError`. See
+[Errors](https://wxn0brp.github.io/VQL/core/errors/).
 
 ## Documentation
 
-- [wxn0brp.github.io/VQL](https://wxn0brp.github.io/VQL).
-- [wxn0brp.github.io/VQL/types](https://wxn0brp.github.io/VQL/types).
+Full documentation: [wxn0brp.github.io/VQL](https://wxn0brp.github.io/VQL)
 
-## License
+- [Getting Started](https://wxn0brp.github.io/VQL/guide/getting_started/)
+- [VQLS](https://wxn0brp.github.io/VQL/lang/VQLS/)
+- [VQLR](https://wxn0brp.github.io/VQL/lang/VQLR/)
+- [Configuration](https://wxn0brp.github.io/VQL/core/configuration/)
+- [Relations](https://wxn0brp.github.io/VQL/core/relations/)
+- [Permissions](https://wxn0brp.github.io/VQL/core/permissions/)
+- [Adapters](https://wxn0brp.github.io/VQL/core/adapters/)
+- [HTTP Integration](https://wxn0brp.github.io/VQL/integration/http/)
+- [Browser Usage](https://wxn0brp.github.io/VQL/integration/browser/)
+- [Examples](https://wxn0brp.github.io/VQL/guide/examples/)
+- [Troubleshooting](https://wxn0brp.github.io/VQL/guide/troubleshooting/)
+- [Type definitions](https://wxn0brp.github.io/VQL/types)
 
-MIT License.
+## Development
 
-## Contributing
+```bash
+bun install
+bun test
+bun run build
+```
 
-Contributions are welcome! Please open an issue or submit a pull request for any improvements or bug fixes.
+The docs are built with MkDocs:
 
-## Powered by
+```bash
+mkdocs build --clean
+```
+
+## Related projects
 
 - [ValtheraDB](https://github.com/wxn0brP/ValtheraDB)
 - [Gate Warden](https://github.com/wxn0brP/gate-warden)
+- [VQL-dev](https://github.com/wxn0brP/VQL-dev)
+
+## License
+
+MIT. See [LICENSE](./LICENSE).

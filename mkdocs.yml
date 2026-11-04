@@ -11,14 +11,25 @@ theme:
 
 nav:
   - Home: index.md
-  - Getting Started: getting_started.md
-  - Languages:
+  - Guide:
+      - Getting Started: guide/getting_started.md
+      - Examples: guide/examples.md
+      - Troubleshooting: guide/troubleshooting.md
+  - Language:
       - Overview: lang/base.md
       - VQLS: lang/VQLS.md
       - VQLR: lang/VQLR.md
-  - Permissions: permissions.md
-  - HTTP API Integration: integration_http.md
+  - Core:
+      - Configuration: core/configuration.md
+      - Relations: core/relations.md
+      - Permissions: core/permissions.md
+      - Adapters: core/adapters.md
+      - Errors: core/errors.md
+  - Integration:
+      - HTTP API: integration/http.md
+      - Browser: integration/browser.md
 
 markdown_extensions:
+  - tables
   - pymdownx.highlight
   - pymdownx.superfences
