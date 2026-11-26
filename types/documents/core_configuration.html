@@ -1,0 +1,154 @@
+<!DOCTYPE html><html class="default" lang="en" data-base="../"><head><meta charset="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>core/configuration | @wxn0brp/vql</title><meta name="description" content="Documentation for @wxn0brp/vql"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="../assets/style.css"/><link rel="stylesheet" href="../assets/highlight.css"/><script defer src="../assets/main.js"></script><script async src="../assets/icons.js" id="tsd-icons-script"></script><script async src="../assets/search.js" id="tsd-search-script"></script><script async src="../assets/navigation.js" id="tsd-nav-script"></script><script async src="../assets/hierarchy.js" id="tsd-hierarchy-script"></script></head><body><script>document.documentElement.dataset.theme = localStorage.getItem("tsd-theme") || "os";document.body.style.display="none";setTimeout(() => window.app?app.showPage():document.body.style.removeProperty("display"),500)</script><header class="tsd-page-toolbar">
+<div class="tsd-toolbar-contents container"><a href="../index.html" class="title">@wxn0brp/vql</a>
+<div id="tsd-toolbar-links"></div><button id="tsd-search-trigger" class="tsd-widget" aria-label="Search"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-search"></use></svg></button><dialog id="tsd-search" aria-label="Search"><input role="combobox" id="tsd-search-input" aria-controls="tsd-search-results" aria-autocomplete="list" aria-expanded="true" autocapitalize="off" autocomplete="off" placeholder="Search the docs" maxLength="100"/>
+<ul role="listbox" id="tsd-search-results"></ul>
+<div id="tsd-search-status" aria-live="polite" aria-atomic="true">
+<div>Preparing search index...</div></div></dialog><a href="#" class="tsd-widget menu" id="tsd-toolbar-menu-trigger" data-toggle="menu" aria-label="Menu"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-menu"></use></svg></a></div></header>
+<div class="container container-main">
+<div class="col-content">
+<div class="tsd-page-title">
+<ul class="tsd-breadcrumb" aria-label="Breadcrumb">
+<li><a href="" aria-current="page">core/configuration</a></li></ul></div>
+<div class="tsd-panel tsd-typography"><h1 id="configuration" class="tsd-anchor-link">Configuration<a href="#configuration" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h1>
+<p><code>VQLConfig</code> controls validation, visibility, and permission behavior. Every value has a default, so a processor can be created without a config object.</p>
+<pre><code class="typescript"><span class="hl-4">import</span><span class="hl-1"> </span><span class="hl-5">VQLProcessor</span><span class="hl-1">, { </span><span class="hl-5">VQLConfig</span><span class="hl-1"> } </span><span class="hl-4">from</span><span class="hl-1"> </span><span class="hl-2">&quot;@wxn0brp/vql&quot;</span><span class="hl-1">;</span><br/><br/><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-7">processor</span><span class="hl-1"> = </span><span class="hl-6">new</span><span class="hl-1"> </span><span class="hl-0">VQLProcessor</span><span class="hl-1">(</span><span class="hl-5">dbInstances</span><span class="hl-1">, </span><span class="hl-6">new</span><span class="hl-1"> </span><span class="hl-0">VQLConfig</span><span class="hl-1">({</span><br/><span class="hl-1">    </span><span class="hl-5">noCheckPermissions:</span><span class="hl-1"> </span><span class="hl-6">false</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-5">strictSelect:</span><span class="hl-1"> </span><span class="hl-6">true</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-5">strictACL:</span><span class="hl-1"> </span><span class="hl-6">true</span><br/><span class="hl-1">}));</span>
+</code><button type="button">Copy</button></pre>
+
+<p>The constructor also accepts a plain object:</p>
+<pre><code class="typescript"><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-7">processor</span><span class="hl-1"> = </span><span class="hl-6">new</span><span class="hl-1"> </span><span class="hl-0">VQLProcessor</span><span class="hl-1">(</span><span class="hl-5">dbInstances</span><span class="hl-1">, {</span><br/><span class="hl-1">    </span><span class="hl-5">noCheckPermissions:</span><span class="hl-1"> </span><span class="hl-6">false</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-5">strictSelect:</span><span class="hl-1"> </span><span class="hl-6">true</span><br/><span class="hl-1">});</span>
+</code><button type="button">Copy</button></pre>
+
+<h2 id="options" class="tsd-anchor-link">Options<a href="#options" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>noCheckPermissions</code></td>
+<td><code>true</code></td>
+<td>Disables the permission layer entirely</td>
+</tr>
+<tr>
+<td><code>strictSelect</code></td>
+<td><code>false</code></td>
+<td>Required to be <code>true</code> when permissions are enabled</td>
+</tr>
+<tr>
+<td><code>strictACL</code></td>
+<td><code>false</code></td>
+<td>Disables fallback from a missing entity to its parent path</td>
+</tr>
+<tr>
+<td><code>hidePath</code></td>
+<td><code>false</code></td>
+<td>Hashes permission paths before passing them to <code>permValidFn</code></td>
+</tr>
+<tr>
+<td><code>permissionDeniedIfNoUser</code></td>
+<td><code>true</code></td>
+<td>Denies requests when the user context is falsy</td>
+</tr>
+<tr>
+<td><code>allowEmptyAdd</code></td>
+<td><code>true</code></td>
+<td>Allows <code>add</code> without a data payload</td>
+</tr>
+</tbody>
+</table>
+<h3 id="nocheckpermissions" class="tsd-anchor-link">noCheckPermissions<a href="#nocheckpermissions" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p>The permission layer is off by default. When set to <code>false</code>, every operation is checked by <code>permValidFn</code> before execution, and returned records are filtered per field. <code>LowAdapter</code> databases are an exception: their resolver runs before the permission layer, so authorize inside the resolver. See <a href="core_permissions.html">Permissions</a>.</p>
+<h3 id="strictselect" class="tsd-anchor-link">strictSelect<a href="#strictselect" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p>When permissions are enabled, <code>strictSelect</code> must be <code>true</code>. Constructing the config with <code>noCheckPermissions: false</code> and <code>strictSelect: false</code> throws <code>VQLConfigError</code>:</p>
+<pre><code class="text">strictSelect must be true when permissions are enabled (noCheckPermissions: false).
+Without strictSelect, nested fields without READ permission can be leaked.
+</code><button type="button">Copy</button></pre>
+
+<p>The flag makes selection intent explicit. Field redaction itself is performed by the permission filter. For CRUD, an empty or omitted selection still returns full records. For relation queries, an empty selection becomes <code>[]</code> when <code>strictSelect</code> is <code>true</code>, which removes every field from the result.</p>
+<h3 id="strictacl" class="tsd-anchor-link">strictACL<a href="#strictacl" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p>Permission results can report <code>reason: &quot;entity-404&quot;</code>, which means the path is not known to the permission backend.</p>
+<ul>
+<li><code>strictACL: false</code> (default): VQL retries the parent path, walking up from field to collection. The database-level retry applies to field paths only; collection operations such as <code>add</code> and <code>remove</code> have no parent fallback.</li>
+<li><code>strictACL: true</code>: the denial is final. No parent lookup is performed.</li>
+</ul>
+<p>Use <code>true</code> when every path is registered explicitly and a missing entry should always mean &quot;deny&quot;.</p>
+<h3 id="hidepath" class="tsd-anchor-link">hidePath<a href="#hidepath" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p>When <code>true</code>, the <code>field</code> passed to <code>permValidFn</code> is the SHA-256 hash of the JSON path instead of the JSON string itself:</p>
+<pre><code class="typescript"><span class="hl-3">// hidePath: false</span><br/><span class="hl-5">field</span><span class="hl-1"> = </span><span class="hl-2">&#39;[&quot;main&quot;,&quot;users&quot;,&quot;email&quot;]&#39;</span><span class="hl-1">;</span><br/><br/><span class="hl-3">// hidePath: true</span><br/><span class="hl-5">field</span><span class="hl-1"> = </span><span class="hl-2">&quot;a3f1...&quot;</span><span class="hl-1">;  </span><span class="hl-3">// sha256 of the JSON above</span>
+</code><button type="button">Copy</button></pre>
+
+<p>The original path is still available in <code>args.path</code>. Hashing keeps storage keys opaque but requires the permission backend to be populated with hashed keys.</p>
+<p>Hashing works in Node.js and in browsers with WebCrypto.</p>
+<h3 id="permissiondeniedifnouser" class="tsd-anchor-link">permissionDeniedIfNoUser<a href="#permissiondeniedifnouser" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p>When <code>true</code>, a falsy user context causes an immediate denial. Only <code>null</code> triggers the denial in practice: <code>execute()</code> replaces <code>undefined</code> with the placeholder <code>{ _id: &quot;null-null-null&quot; }</code>, so <code>undefined</code> continues with a fake identity. <code>FF_VQL</code> defaults the context to <code>{}</code> unless <code>getUser</code> is provided, and <code>{}</code> is truthy.</p>
+<p>Pass an explicit user object in real applications. Return <code>null</code> from <code>getUser</code> to deny anonymous requests.</p>
+<h3 id="allowemptyadd" class="tsd-anchor-link">allowEmptyAdd<a href="#allowemptyadd" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p>When <code>true</code> (default), <code>add</code> may omit <code>data</code> or use <code>{}</code>. When <code>false</code>, the validator requires a non-empty object:</p>
+<pre><code class="typescript"><span class="hl-6">new</span><span class="hl-1"> </span><span class="hl-0">VQLConfig</span><span class="hl-1">({ </span><span class="hl-5">allowEmptyAdd:</span><span class="hl-1"> </span><span class="hl-6">false</span><span class="hl-1"> });</span>
+</code><button type="button">Copy</button></pre>
+
+<h2 id="presets" class="tsd-anchor-link">Presets<a href="#presets" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p><strong>Development</strong></p>
+<pre><code class="typescript"><span class="hl-6">new</span><span class="hl-1"> </span><span class="hl-0">VQLConfig</span><span class="hl-1">({</span><br/><span class="hl-1">    </span><span class="hl-5">noCheckPermissions:</span><span class="hl-1"> </span><span class="hl-6">true</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-5">strictSelect:</span><span class="hl-1"> </span><span class="hl-6">false</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-5">strictACL:</span><span class="hl-1"> </span><span class="hl-6">false</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-5">hidePath:</span><span class="hl-1"> </span><span class="hl-6">false</span><br/><span class="hl-1">});</span>
+</code><button type="button">Copy</button></pre>
+
+<p><strong>Permission-aware</strong></p>
+<pre><code class="typescript"><span class="hl-6">new</span><span class="hl-1"> </span><span class="hl-0">VQLConfig</span><span class="hl-1">({</span><br/><span class="hl-1">    </span><span class="hl-5">noCheckPermissions:</span><span class="hl-1"> </span><span class="hl-6">false</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-5">strictSelect:</span><span class="hl-1"> </span><span class="hl-6">true</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-5">strictACL:</span><span class="hl-1"> </span><span class="hl-6">true</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-5">hidePath:</span><span class="hl-1"> </span><span class="hl-6">false</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-5">permissionDeniedIfNoUser:</span><span class="hl-1"> </span><span class="hl-6">true</span><br/><span class="hl-1">});</span>
+</code><button type="button">Copy</button></pre>
+
+<p><strong>Opaque paths</strong></p>
+<pre><code class="typescript"><span class="hl-6">new</span><span class="hl-1"> </span><span class="hl-0">VQLConfig</span><span class="hl-1">({</span><br/><span class="hl-1">    </span><span class="hl-5">noCheckPermissions:</span><span class="hl-1"> </span><span class="hl-6">false</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-5">strictSelect:</span><span class="hl-1"> </span><span class="hl-6">true</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-5">strictACL:</span><span class="hl-1"> </span><span class="hl-6">true</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-5">hidePath:</span><span class="hl-1"> </span><span class="hl-6">true</span><br/><span class="hl-1">});</span>
+</code><button type="button">Copy</button></pre>
+
+<h2 id="per-query-override" class="tsd-anchor-link">Per-query override<a href="#per-query-override" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p><code>execute()</code> accepts a third argument that overrides the processor config for a single query:</p>
+<pre><code class="typescript"><span class="hl-4">await</span><span class="hl-1"> </span><span class="hl-5">processor</span><span class="hl-1">.</span><span class="hl-0">execute</span><span class="hl-1">(</span><span class="hl-5">query</span><span class="hl-1">, </span><span class="hl-5">user</span><span class="hl-1">, </span><span class="hl-6">new</span><span class="hl-1"> </span><span class="hl-0">VQLConfig</span><span class="hl-1">({</span><br/><span class="hl-1">    </span><span class="hl-5">noCheckPermissions:</span><span class="hl-1"> </span><span class="hl-6">false</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-5">strictSelect:</span><span class="hl-1"> </span><span class="hl-6">true</span><br/><span class="hl-1">}));</span>
+</code><button type="button">Copy</button></pre>
+
+<p>The override is used as-is. Validation happens only in the <code>VQLConfig</code> constructor, so construct the config before passing it. A <code>VQLConfig</code> with permissions enabled and <code>strictSelect: false</code> throws before <code>execute()</code> is called. A plain object passed in this position is not validated.</p>
+<h2 id="errors" class="tsd-anchor-link">Errors<a href="#errors" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p>An invalid config produces a <code>VQLConfigError</code> with code <code>VQL_CONFIG_INVALID</code> and status code <code>500</code>. See <a href="core_errors.html">Errors</a>.</p>
+<h2 id="next-steps" class="tsd-anchor-link">Next steps<a href="#next-steps" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<ul>
+<li><a href="core_permissions.html">Permissions</a></li>
+</ul>
+</div></div>
+<div class="col-sidebar">
+<div class="page-menu">
+<div class="tsd-navigation settings">
+<details class="tsd-accordion"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg>
+<h3>Settings</h3></summary>
+<div class="tsd-accordion-details">
+<div class="tsd-filter-visibility"><span class="settings-label">Member Visibility</span>
+<ul id="tsd-filter-options">
+<li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-protected" name="protected"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Protected</span></label></li>
+<li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-inherited" name="inherited" checked/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Inherited</span></label></li>
+<li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-external" name="external"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>External</span></label></li></ul></div>
+<div class="tsd-theme-toggle"><label class="settings-label" for="tsd-theme">Theme</label><select id="tsd-theme"><option value="os">OS</option><option value="light">Light</option><option value="dark">Dark</option></select></div></div></details></div>
+<details open class="tsd-accordion tsd-page-navigation"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg>
+<h3>On This Page</h3></summary>
+<div class="tsd-accordion-details"><a href="#configuration"><span>Configuration</span></a>
+<ul>
+<li><a href="#options"><span>Options</span></a></li>
+<li>
+<ul>
+<li><a href="#nocheckpermissions"><span>no<wbr/>Check<wbr/>Permissions</span></a></li>
+<li><a href="#strictselect"><span>strict<wbr/>Select</span></a></li>
+<li><a href="#strictacl"><span>strict<wbr/>ACL</span></a></li>
+<li><a href="#hidepath"><span>hide<wbr/>Path</span></a></li>
+<li><a href="#permissiondeniedifnouser"><span>permission<wbr/>Denied<wbr/>If<wbr/>No<wbr/>User</span></a></li>
+<li><a href="#allowemptyadd"><span>allow<wbr/>Empty<wbr/>Add</span></a></li></ul></li>
+<li><a href="#presets"><span>Presets</span></a></li>
+<li><a href="#per-query-override"><span>Per-<wbr/>query override</span></a></li>
+<li><a href="#errors"><span>Errors</span></a></li>
+<li><a href="#next-steps"><span>Next steps</span></a></li></ul></div></details></div>
+<div class="site-menu">
+<nav class="tsd-navigation"><a href="../modules.html">@wxn0brp/vql</a>
+<ul class="tsd-small-nested-navigation" id="tsd-nav-container">
+<li>Loading...</li></ul></nav></div></div></div><footer>
+<p class="tsd-generator">Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p></footer>
+<div class="overlay"></div></body></html>

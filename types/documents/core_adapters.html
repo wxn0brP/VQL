@@ -1,0 +1,237 @@
+<!DOCTYPE html><html class="default" lang="en" data-base="../"><head><meta charset="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>core/adapters | @wxn0brp/vql</title><meta name="description" content="Documentation for @wxn0brp/vql"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="../assets/style.css"/><link rel="stylesheet" href="../assets/highlight.css"/><script defer src="../assets/main.js"></script><script async src="../assets/icons.js" id="tsd-icons-script"></script><script async src="../assets/search.js" id="tsd-search-script"></script><script async src="../assets/navigation.js" id="tsd-nav-script"></script><script async src="../assets/hierarchy.js" id="tsd-hierarchy-script"></script></head><body><script>document.documentElement.dataset.theme = localStorage.getItem("tsd-theme") || "os";document.body.style.display="none";setTimeout(() => window.app?app.showPage():document.body.style.removeProperty("display"),500)</script><header class="tsd-page-toolbar">
+<div class="tsd-toolbar-contents container"><a href="../index.html" class="title">@wxn0brp/vql</a>
+<div id="tsd-toolbar-links"></div><button id="tsd-search-trigger" class="tsd-widget" aria-label="Search"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-search"></use></svg></button><dialog id="tsd-search" aria-label="Search"><input role="combobox" id="tsd-search-input" aria-controls="tsd-search-results" aria-autocomplete="list" aria-expanded="true" autocapitalize="off" autocomplete="off" placeholder="Search the docs" maxLength="100"/>
+<ul role="listbox" id="tsd-search-results"></ul>
+<div id="tsd-search-status" aria-live="polite" aria-atomic="true">
+<div>Preparing search index...</div></div></dialog><a href="#" class="tsd-widget menu" id="tsd-toolbar-menu-trigger" data-toggle="menu" aria-label="Menu"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-menu"></use></svg></a></div></header>
+<div class="container container-main">
+<div class="col-content">
+<div class="tsd-page-title">
+<ul class="tsd-breadcrumb" aria-label="Breadcrumb">
+<li><a href="" aria-current="page">core/adapters</a></li></ul></div>
+<div class="tsd-panel tsd-typography"><h1 id="adapters" class="tsd-anchor-link">Adapters<a href="#adapters" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h1>
+<p>VQL executes against ValtheraDB instances and adapter objects it recognizes. That opens four integration paths. <code>LowAdapter</code> is a special case: it is not a <code>ValtheraCompatible</code> implementation, and VQL detects it at runtime.</p>
+<table>
+<thead>
+<tr>
+<th>Approach</th>
+<th>Use when</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Native ValtheraDB instance</td>
+<td>The data lives in ValtheraDB</td>
+</tr>
+<tr>
+<td><code>LowAdapter</code></td>
+<td>You want full control over CRUD queries</td>
+</tr>
+<tr>
+<td><code>createValtheraAdapter</code></td>
+<td>Backing store is an API or a custom SDK</td>
+</tr>
+<tr>
+<td><code>AdapterBuilder</code></td>
+<td>You want per-operation, per-collection handlers</td>
+</tr>
+</tbody>
+</table>
+<p>Databases are registered by name:</p>
+<pre><code class="typescript"><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-7">processor</span><span class="hl-1"> = </span><span class="hl-6">new</span><span class="hl-1"> </span><span class="hl-0">VQLProcessor</span><span class="hl-1">({</span><br/><span class="hl-1">    </span><span class="hl-5">main:</span><span class="hl-1"> </span><span class="hl-5">valtheraDb</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-5">remote:</span><span class="hl-1"> </span><span class="hl-5">apiAdapter</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-5">custom:</span><span class="hl-1"> </span><span class="hl-5">lowAdapter</span><br/><span class="hl-1">});</span>
+</code><button type="button">Copy</button></pre>
+
+<h2 id="lowadapter" class="tsd-anchor-link">LowAdapter<a href="#lowadapter" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p><code>LowAdapter</code> wraps a single resolver function and bypasses the CRUD executor:</p>
+<pre><code class="typescript"><span class="hl-4">import</span><span class="hl-1"> { </span><span class="hl-5">LowAdapter</span><span class="hl-1"> } </span><span class="hl-4">from</span><span class="hl-1"> </span><span class="hl-2">&quot;@wxn0brp/vql/helpers/lowAdapter&quot;</span><span class="hl-1">;</span><br/><br/><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-7">custom</span><span class="hl-1"> = </span><span class="hl-6">new</span><span class="hl-1"> </span><span class="hl-0">LowAdapter</span><span class="hl-1">(</span><span class="hl-6">async</span><span class="hl-1"> (</span><span class="hl-5">query</span><span class="hl-1">, </span><span class="hl-5">user</span><span class="hl-1">) </span><span class="hl-6">=&gt;</span><span class="hl-1"> {</span><br/><span class="hl-1">    </span><span class="hl-6">const</span><span class="hl-1"> [</span><span class="hl-7">operation</span><span class="hl-1">] = </span><span class="hl-5">Object</span><span class="hl-1">.</span><span class="hl-0">keys</span><span class="hl-1">(</span><span class="hl-5">query</span><span class="hl-1">.</span><span class="hl-5">d</span><span class="hl-1">);</span><br/><span class="hl-1">    </span><span class="hl-4">return</span><span class="hl-1"> {</span><br/><span class="hl-1">        </span><span class="hl-5">operation</span><span class="hl-1">,</span><br/><span class="hl-1">        </span><span class="hl-5">collection:</span><span class="hl-1"> </span><span class="hl-5">query</span><span class="hl-1">.</span><span class="hl-5">d</span><span class="hl-1">[</span><span class="hl-5">operation</span><span class="hl-1">].</span><span class="hl-5">collection</span><span class="hl-1">,</span><br/><span class="hl-1">        </span><span class="hl-5">user</span><br/><span class="hl-1">    };</span><br/><span class="hl-1">});</span><br/><br/><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-7">processor</span><span class="hl-1"> = </span><span class="hl-6">new</span><span class="hl-1"> </span><span class="hl-0">VQLProcessor</span><span class="hl-1">({ </span><span class="hl-5">custom</span><span class="hl-1"> });</span>
+</code><button type="button">Copy</button></pre>
+
+<p><code>LowAdapter</code> has only a <code>resolver</code> field. TypeScript expects <code>ValtheraCompatible</code> values in the constructor, so cast the entry when strict type checking is enabled: <code>new VQLProcessor({ custom: custom as any })</code>.</p>
+<p>The resolver receives the validated CRUD query and the user context.</p>
+<pre><code class="typescript"><span class="hl-6">type</span><span class="hl-1"> </span><span class="hl-8">LowResolver</span><span class="hl-1"> = (</span><span class="hl-5">query</span><span class="hl-1">: </span><span class="hl-8">VQL_Query_CRUD</span><span class="hl-1">, </span><span class="hl-5">user</span><span class="hl-1">: </span><span class="hl-8">any</span><span class="hl-1">) </span><span class="hl-6">=&gt;</span><span class="hl-1"> </span><span class="hl-8">Promise</span><span class="hl-1">&lt;</span><span class="hl-8">any</span><span class="hl-1">&gt; | </span><span class="hl-8">any</span><span class="hl-1">;</span>
+</code><button type="button">Copy</button></pre>
+
+<p>Important properties:</p>
+<ul>
+<li>Queries are still parsed, validated, and have variables expanded.</li>
+<li>The permission layer is <strong>not</strong> applied. Authorize inside the resolver.</li>
+<li>Relations are not routed through <code>LowAdapter</code>. Use a full <code>ValtheraCompatible</code> implementation for relation queries.</li>
+<li>The resolver owns the result shape. VQL does not post-process it.</li>
+</ul>
+<p>Use this for in-memory stores, proxies, or operations that do not map to a collection.</p>
+<h2 id="createvaltheraadapter" class="tsd-anchor-link">createValtheraAdapter<a href="#createvaltheraadapter" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p><code>createValtheraAdapter</code> turns a set of resolver methods into a <code>ValtheraCompatible</code> object. The adapter covers the methods in the resolver interface below. Methods such as <code>createIndex</code>, <code>removeIndex</code>, and <code>capabilities</code> are not implemented and are missing at runtime.</p>
+<pre><code class="typescript"><span class="hl-4">import</span><span class="hl-1"> { </span><span class="hl-5">createValtheraAdapter</span><span class="hl-1"> } </span><span class="hl-4">from</span><span class="hl-1"> </span><span class="hl-2">&quot;@wxn0brp/vql&quot;</span><span class="hl-1">;</span><br/><br/><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-7">apiAdapter</span><span class="hl-1"> = </span><span class="hl-0">createValtheraAdapter</span><span class="hl-1">({</span><br/><span class="hl-1">    </span><span class="hl-0">find</span><span class="hl-5">:</span><span class="hl-1"> </span><span class="hl-6">async</span><span class="hl-1"> </span><span class="hl-5">query</span><span class="hl-1"> </span><span class="hl-6">=&gt;</span><span class="hl-1"> {</span><br/><span class="hl-1">        </span><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-7">res</span><span class="hl-1"> = </span><span class="hl-4">await</span><span class="hl-1"> </span><span class="hl-0">fetch</span><span class="hl-1">(</span><span class="hl-2">`/api/</span><span class="hl-6">${</span><span class="hl-5">query</span><span class="hl-9">.</span><span class="hl-5">collection</span><span class="hl-6">}</span><span class="hl-2">?q=`</span><span class="hl-1"> + </span><span class="hl-0">encodeURIComponent</span><span class="hl-1">(</span><br/><span class="hl-1">            </span><span class="hl-7">JSON</span><span class="hl-1">.</span><span class="hl-0">stringify</span><span class="hl-1">(</span><span class="hl-5">query</span><span class="hl-1">.</span><span class="hl-5">search</span><span class="hl-1">)</span><br/><span class="hl-1">        ));</span><br/><span class="hl-1">        </span><span class="hl-4">return</span><span class="hl-1"> </span><span class="hl-4">await</span><span class="hl-1"> </span><span class="hl-5">res</span><span class="hl-1">.</span><span class="hl-0">json</span><span class="hl-1">();</span><br/><span class="hl-1">    },</span><br/><span class="hl-1">    </span><span class="hl-0">findOne</span><span class="hl-5">:</span><span class="hl-1"> </span><span class="hl-6">async</span><span class="hl-1"> </span><span class="hl-5">query</span><span class="hl-1"> </span><span class="hl-6">=&gt;</span><span class="hl-1"> {</span><br/><span class="hl-1">        </span><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-7">res</span><span class="hl-1"> = </span><span class="hl-4">await</span><span class="hl-1"> </span><span class="hl-0">fetch</span><span class="hl-1">(</span><span class="hl-2">`/api/</span><span class="hl-6">${</span><span class="hl-5">query</span><span class="hl-9">.</span><span class="hl-5">collection</span><span class="hl-6">}</span><span class="hl-2">/one?q=`</span><span class="hl-1"> + </span><span class="hl-0">encodeURIComponent</span><span class="hl-1">(</span><br/><span class="hl-1">            </span><span class="hl-7">JSON</span><span class="hl-1">.</span><span class="hl-0">stringify</span><span class="hl-1">(</span><span class="hl-5">query</span><span class="hl-1">.</span><span class="hl-5">search</span><span class="hl-1">)</span><br/><span class="hl-1">        ));</span><br/><span class="hl-1">        </span><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-7">data</span><span class="hl-1"> = </span><span class="hl-4">await</span><span class="hl-1"> </span><span class="hl-5">res</span><span class="hl-1">.</span><span class="hl-0">json</span><span class="hl-1">();</span><br/><span class="hl-1">        </span><span class="hl-4">return</span><span class="hl-1"> </span><span class="hl-5">Array</span><span class="hl-1">.</span><span class="hl-0">isArray</span><span class="hl-1">(</span><span class="hl-5">data</span><span class="hl-1">) ? (</span><span class="hl-5">data</span><span class="hl-1">[</span><span class="hl-10">0</span><span class="hl-1">] ?? </span><span class="hl-6">null</span><span class="hl-1">) : (</span><span class="hl-5">data</span><span class="hl-1"> ?? </span><span class="hl-6">null</span><span class="hl-1">);</span><br/><span class="hl-1">    },</span><br/><span class="hl-1">    </span><span class="hl-0">add</span><span class="hl-5">:</span><span class="hl-1"> </span><span class="hl-6">async</span><span class="hl-1"> </span><span class="hl-5">query</span><span class="hl-1"> </span><span class="hl-6">=&gt;</span><span class="hl-1"> {</span><br/><span class="hl-1">        </span><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-7">res</span><span class="hl-1"> = </span><span class="hl-4">await</span><span class="hl-1"> </span><span class="hl-0">fetch</span><span class="hl-1">(</span><span class="hl-2">`/api/</span><span class="hl-6">${</span><span class="hl-5">query</span><span class="hl-9">.</span><span class="hl-5">collection</span><span class="hl-6">}</span><span class="hl-2">`</span><span class="hl-1">, {</span><br/><span class="hl-1">            </span><span class="hl-5">method:</span><span class="hl-1"> </span><span class="hl-2">&quot;POST&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">            </span><span class="hl-5">headers:</span><span class="hl-1"> { </span><span class="hl-2">&quot;Content-Type&quot;</span><span class="hl-5">:</span><span class="hl-1"> </span><span class="hl-2">&quot;application/json&quot;</span><span class="hl-1"> },</span><br/><span class="hl-1">            </span><span class="hl-5">body:</span><span class="hl-1"> </span><span class="hl-7">JSON</span><span class="hl-1">.</span><span class="hl-0">stringify</span><span class="hl-1">(</span><span class="hl-5">query</span><span class="hl-1">.</span><span class="hl-5">data</span><span class="hl-1">)</span><br/><span class="hl-1">        });</span><br/><span class="hl-1">        </span><span class="hl-4">return</span><span class="hl-1"> </span><span class="hl-4">await</span><span class="hl-1"> </span><span class="hl-5">res</span><span class="hl-1">.</span><span class="hl-0">json</span><span class="hl-1">();</span><br/><span class="hl-1">    },</span><br/><span class="hl-1">    </span><span class="hl-0">count</span><span class="hl-5">:</span><span class="hl-1"> </span><span class="hl-6">async</span><span class="hl-1"> </span><span class="hl-5">query</span><span class="hl-1"> </span><span class="hl-6">=&gt;</span><span class="hl-1"> {</span><br/><span class="hl-1">        </span><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-7">rows</span><span class="hl-1"> = </span><span class="hl-4">await</span><span class="hl-1"> </span><span class="hl-5">apiAdapter</span><span class="hl-1">.</span><span class="hl-0">find</span><span class="hl-1">(</span><span class="hl-5">query</span><span class="hl-1">);</span><br/><span class="hl-1">        </span><span class="hl-4">return</span><span class="hl-1"> </span><span class="hl-5">rows</span><span class="hl-1">.</span><span class="hl-5">length</span><span class="hl-1">;</span><br/><span class="hl-1">    }</span><br/><span class="hl-1">});</span>
+</code><button type="button">Copy</button></pre>
+
+<h3 id="resolver-interface" class="tsd-anchor-link">Resolver interface<a href="#resolver-interface" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<pre><code class="typescript"><span class="hl-6">interface</span><span class="hl-1"> </span><span class="hl-8">ValtheraResolver</span><span class="hl-1"> {</span><br/><span class="hl-1">    </span><span class="hl-5">meta</span><span class="hl-1">?: {</span><br/><span class="hl-1">        </span><span class="hl-5">type</span><span class="hl-1">: </span><span class="hl-2">&quot;valthera&quot;</span><span class="hl-1"> | </span><span class="hl-2">&quot;api&quot;</span><span class="hl-1"> | </span><span class="hl-2">&quot;wrapper&quot;</span><span class="hl-1"> | (</span><span class="hl-8">string</span><span class="hl-1"> &amp; {});</span><br/><span class="hl-1">        </span><span class="hl-5">version</span><span class="hl-1">: </span><span class="hl-8">string</span><span class="hl-1">;</span><br/><span class="hl-1">        </span><span class="hl-5">description</span><span class="hl-1">?: </span><span class="hl-8">string</span><span class="hl-1">;</span><br/><span class="hl-1">        </span><span class="hl-5">id</span><span class="hl-1">?: </span><span class="hl-8">string</span><span class="hl-1">;</span><br/><span class="hl-1">        </span><span class="hl-5">displayName</span><span class="hl-1">?: </span><span class="hl-8">string</span><span class="hl-1">;</span><br/><span class="hl-1">        </span><span class="hl-5">tags</span><span class="hl-1">?: </span><span class="hl-8">string</span><span class="hl-1">[];</span><br/><span class="hl-1">    };</span><br/><br/><span class="hl-1">    </span><span class="hl-0">getCollections</span><span class="hl-1">?: () </span><span class="hl-6">=&gt;</span><span class="hl-1"> </span><span class="hl-8">Promise</span><span class="hl-1">&lt;</span><span class="hl-8">string</span><span class="hl-1">[]&gt;;</span><br/><span class="hl-1">    </span><span class="hl-0">issetCollection</span><span class="hl-1">?: (</span><span class="hl-5">collection</span><span class="hl-1">: </span><span class="hl-8">string</span><span class="hl-1">) </span><span class="hl-6">=&gt;</span><span class="hl-1"> </span><span class="hl-8">Promise</span><span class="hl-1">&lt;</span><span class="hl-8">boolean</span><span class="hl-1">&gt;;</span><br/><span class="hl-1">    </span><span class="hl-0">ensureCollection</span><span class="hl-1">?: (</span><span class="hl-5">collection</span><span class="hl-1">: </span><span class="hl-8">string</span><span class="hl-1">) </span><span class="hl-6">=&gt;</span><span class="hl-1"> </span><span class="hl-8">Promise</span><span class="hl-1">&lt;</span><span class="hl-8">boolean</span><span class="hl-1">&gt;;</span><br/><span class="hl-1">    </span><span class="hl-0">removeCollection</span><span class="hl-1">?: (</span><span class="hl-5">collection</span><span class="hl-1">: </span><span class="hl-8">string</span><span class="hl-1">) </span><span class="hl-6">=&gt;</span><span class="hl-1"> </span><span class="hl-8">Promise</span><span class="hl-1">&lt;</span><span class="hl-8">boolean</span><span class="hl-1">&gt;;</span><br/><br/><span class="hl-1">    </span><span class="hl-0">add</span><span class="hl-1">?: (</span><span class="hl-5">query</span><span class="hl-1">: </span><span class="hl-8">VQueryT</span><span class="hl-1">.</span><span class="hl-8">Add</span><span class="hl-1">) </span><span class="hl-6">=&gt;</span><span class="hl-1"> </span><span class="hl-8">Promise</span><span class="hl-1">&lt;</span><span class="hl-8">Object</span><span class="hl-1">&gt;;</span><br/><span class="hl-1">    </span><span class="hl-0">find</span><span class="hl-1">?: (</span><span class="hl-5">query</span><span class="hl-1">: </span><span class="hl-8">VQueryT</span><span class="hl-1">.</span><span class="hl-8">Find</span><span class="hl-1">) </span><span class="hl-6">=&gt;</span><span class="hl-1"> </span><span class="hl-8">Promise</span><span class="hl-1">&lt;</span><span class="hl-8">Object</span><span class="hl-1">[]&gt;;</span><br/><span class="hl-1">    </span><span class="hl-0">findOne</span><span class="hl-1">?: (</span><span class="hl-5">query</span><span class="hl-1">: </span><span class="hl-8">VQueryT</span><span class="hl-1">.</span><span class="hl-8">FindOne</span><span class="hl-1">) </span><span class="hl-6">=&gt;</span><span class="hl-1"> </span><span class="hl-8">Promise</span><span class="hl-1">&lt;</span><span class="hl-8">Object</span><span class="hl-1"> | </span><span class="hl-8">null</span><span class="hl-1">&gt;;</span><br/><br/><span class="hl-1">    </span><span class="hl-0">update</span><span class="hl-1">?: (</span><span class="hl-5">query</span><span class="hl-1">: </span><span class="hl-8">VQueryT</span><span class="hl-1">.</span><span class="hl-8">Update</span><span class="hl-1">) </span><span class="hl-6">=&gt;</span><span class="hl-1"> </span><span class="hl-8">Promise</span><span class="hl-1">&lt;</span><span class="hl-8">Object</span><span class="hl-1">[] | </span><span class="hl-8">null</span><span class="hl-1">&gt;;</span><br/><span class="hl-1">    </span><span class="hl-0">updateOne</span><span class="hl-1">?: (</span><span class="hl-5">query</span><span class="hl-1">: </span><span class="hl-8">VQueryT</span><span class="hl-1">.</span><span class="hl-8">Update</span><span class="hl-1">) </span><span class="hl-6">=&gt;</span><span class="hl-1"> </span><span class="hl-8">Promise</span><span class="hl-1">&lt;</span><span class="hl-8">Object</span><span class="hl-1"> | </span><span class="hl-8">null</span><span class="hl-1">&gt;;</span><br/><span class="hl-1">    </span><span class="hl-0">updateOneOrAdd</span><span class="hl-1">?: (</span><span class="hl-5">query</span><span class="hl-1">: </span><span class="hl-8">VQueryT</span><span class="hl-1">.</span><span class="hl-8">UpdateOneOrAdd</span><span class="hl-1">) </span><span class="hl-6">=&gt;</span><span class="hl-1"> </span><span class="hl-8">Promise</span><span class="hl-1">&lt;</span><span class="hl-8">UpdateOneOrAddResult</span><span class="hl-1">&gt;;</span><br/><span class="hl-1">    </span><span class="hl-0">toggleOne</span><span class="hl-1">?: (</span><span class="hl-5">query</span><span class="hl-1">: </span><span class="hl-8">VQueryT</span><span class="hl-1">.</span><span class="hl-8">ToggleOne</span><span class="hl-1">) </span><span class="hl-6">=&gt;</span><span class="hl-1"> </span><span class="hl-8">Promise</span><span class="hl-1">&lt;</span><span class="hl-8">ToggleOneResult</span><span class="hl-1">&gt;;</span><br/><br/><span class="hl-1">    </span><span class="hl-0">count</span><span class="hl-1">?: (</span><span class="hl-5">query</span><span class="hl-1">: </span><span class="hl-8">VQueryT</span><span class="hl-1">.</span><span class="hl-8">Count</span><span class="hl-1">) </span><span class="hl-6">=&gt;</span><span class="hl-1"> </span><span class="hl-8">Promise</span><span class="hl-1">&lt;</span><span class="hl-8">number</span><span class="hl-1">&gt;;</span><br/><span class="hl-1">    </span><span class="hl-0">bulkAdd</span><span class="hl-1">?: (</span><span class="hl-5">query</span><span class="hl-1">: </span><span class="hl-8">VQueryT</span><span class="hl-1">.</span><span class="hl-8">BulkAdd</span><span class="hl-1">) </span><span class="hl-6">=&gt;</span><span class="hl-1"> </span><span class="hl-8">Promise</span><span class="hl-1">&lt;</span><span class="hl-8">Object</span><span class="hl-1">[]&gt;;</span><br/><br/><span class="hl-1">    </span><span class="hl-0">remove</span><span class="hl-1">?: (</span><span class="hl-5">query</span><span class="hl-1">: </span><span class="hl-8">VQueryT</span><span class="hl-1">.</span><span class="hl-8">Remove</span><span class="hl-1">) </span><span class="hl-6">=&gt;</span><span class="hl-1"> </span><span class="hl-8">Promise</span><span class="hl-1">&lt;</span><span class="hl-8">Object</span><span class="hl-1"> | </span><span class="hl-8">null</span><span class="hl-1">&gt;;</span><br/><span class="hl-1">    </span><span class="hl-0">removeOne</span><span class="hl-1">?: (</span><span class="hl-5">query</span><span class="hl-1">: </span><span class="hl-8">VQueryT</span><span class="hl-1">.</span><span class="hl-8">Remove</span><span class="hl-1">) </span><span class="hl-6">=&gt;</span><span class="hl-1"> </span><span class="hl-8">Promise</span><span class="hl-1">&lt;</span><span class="hl-8">Object</span><span class="hl-1"> | </span><span class="hl-8">null</span><span class="hl-1">&gt;;</span><br/><span class="hl-1">}</span>
+</code><button type="button">Copy</button></pre>
+
+<p>Missing methods are safe to omit. Calling one throws <code>VQLOperationError</code> with code <code>VQL_OPERATION_NOT_FOUND</code> and the message <code>Unknown operation &quot;Unimplemented method&quot;</code>. The literal operation name is used because the adapter calls the shared missing-method guard.</p>
+<p>The adapter exposes <code>c(collection)</code> through a <code>Collection</code> wrapper, so VQL can call collection methods without knowing which operations are implemented.</p>
+<h3 id="extendedfind" class="tsd-anchor-link">extendedFind<a href="#extendedfind" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p><code>createValtheraAdapter(resolver, extendedFind)</code> accepts a second argument:</p>
+<pre><code class="typescript"><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-7">adapter</span><span class="hl-1"> = </span><span class="hl-0">createValtheraAdapter</span><span class="hl-1">(</span><span class="hl-5">resolver</span><span class="hl-1">, </span><span class="hl-6">true</span><span class="hl-1">);</span>
+</code><button type="button">Copy</button></pre>
+
+<p>When <code>extendedFind</code> is <code>true</code>, the adapter handles a subset of find options on the client side:</p>
+<ul>
+<li><code>dbFindOpts.reverse</code></li>
+<li><code>dbFindOpts.limit</code> (applied after reverse)</li>
+<li><code>findOpts.select</code>, <code>findOpts.exclude</code>, <code>findOpts.transform</code></li>
+</ul>
+<p>Other options such as <code>offset</code>, <code>sortBy</code>, aggregation, and grouping must be handled by the resolver itself.</p>
+<h3 id="metadata" class="tsd-anchor-link">Metadata<a href="#metadata" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p>If <code>resolver.meta</code> is omitted, the adapter reports:</p>
+<pre><code class="typescript"><span class="hl-1">{ </span><span class="hl-11">type</span><span class="hl-1">: </span><span class="hl-2">&quot;api&quot;</span><span class="hl-1">, </span><span class="hl-11">version</span><span class="hl-1">: </span><span class="hl-2">&quot;0.0.1&quot;</span><span class="hl-1"> }</span>
+</code><button type="button">Copy</button></pre>
+
+<p>Use <code>meta</code> for tooling and debugging:</p>
+<pre><code class="typescript"><span class="hl-0">createValtheraAdapter</span><span class="hl-1">({</span><br/><span class="hl-1">    </span><span class="hl-5">meta:</span><span class="hl-1"> {</span><br/><span class="hl-1">        </span><span class="hl-5">type:</span><span class="hl-1"> </span><span class="hl-2">&quot;api&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">        </span><span class="hl-5">version:</span><span class="hl-1"> </span><span class="hl-2">&quot;1.0.0&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">        </span><span class="hl-5">displayName:</span><span class="hl-1"> </span><span class="hl-2">&quot;Billing API&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">        </span><span class="hl-5">tags:</span><span class="hl-1"> [</span><span class="hl-2">&quot;billing&quot;</span><span class="hl-1">]</span><br/><span class="hl-1">    },</span><br/><span class="hl-1">    </span><span class="hl-0">find</span><span class="hl-5">:</span><span class="hl-1"> </span><span class="hl-6">async</span><span class="hl-1"> </span><span class="hl-5">query</span><span class="hl-1"> </span><span class="hl-6">=&gt;</span><span class="hl-1"> { </span><span class="hl-3">/* ... */</span><span class="hl-1"> }</span><br/><span class="hl-1">});</span>
+</code><button type="button">Copy</button></pre>
+
+<h2 id="adapterbuilder" class="tsd-anchor-link">AdapterBuilder<a href="#adapterbuilder" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p><code>AdapterBuilder</code> registers handlers per operation and collection:</p>
+<pre><code class="typescript"><span class="hl-4">import</span><span class="hl-1"> { </span><span class="hl-5">AdapterBuilder</span><span class="hl-1"> } </span><span class="hl-4">from</span><span class="hl-1"> </span><span class="hl-2">&quot;@wxn0brp/vql/helpers/apiAbstract&quot;</span><span class="hl-1">;</span><br/><br/><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-7">api</span><span class="hl-1"> = </span><span class="hl-6">new</span><span class="hl-1"> </span><span class="hl-0">AdapterBuilder</span><span class="hl-1">((</span><span class="hl-5">error</span><span class="hl-1">, </span><span class="hl-5">op</span><span class="hl-1">, </span><span class="hl-5">arg</span><span class="hl-1">) </span><span class="hl-6">=&gt;</span><span class="hl-1"> {</span><br/><span class="hl-1">    </span><span class="hl-5">console</span><span class="hl-1">.</span><span class="hl-0">error</span><span class="hl-1">(</span><span class="hl-2">`Adapter error in </span><span class="hl-6">${</span><span class="hl-5">op</span><span class="hl-6">}</span><span class="hl-2">`</span><span class="hl-1">, </span><span class="hl-5">error</span><span class="hl-1">);</span><br/><span class="hl-1">});</span><br/><br/><span class="hl-5">api</span><span class="hl-1">.</span><span class="hl-0">find</span><span class="hl-1">(</span><span class="hl-2">&quot;users&quot;</span><span class="hl-1">, </span><span class="hl-6">async</span><span class="hl-1"> </span><span class="hl-5">query</span><span class="hl-1"> </span><span class="hl-6">=&gt;</span><span class="hl-1"> {</span><br/><span class="hl-1">    </span><span class="hl-4">return</span><span class="hl-1"> </span><span class="hl-4">await</span><span class="hl-1"> </span><span class="hl-5">dbUsers</span><span class="hl-1">.</span><span class="hl-0">find</span><span class="hl-1">(</span><span class="hl-5">query</span><span class="hl-1">.</span><span class="hl-5">search</span><span class="hl-1">);</span><br/><span class="hl-1">});</span><br/><br/><span class="hl-5">api</span><span class="hl-1">.</span><span class="hl-0">findOne</span><span class="hl-1">(</span><span class="hl-2">&quot;users&quot;</span><span class="hl-1">, </span><span class="hl-6">async</span><span class="hl-1"> </span><span class="hl-5">query</span><span class="hl-1"> </span><span class="hl-6">=&gt;</span><span class="hl-1"> {</span><br/><span class="hl-1">    </span><span class="hl-4">return</span><span class="hl-1"> </span><span class="hl-4">await</span><span class="hl-1"> </span><span class="hl-5">dbUsers</span><span class="hl-1">.</span><span class="hl-0">findOne</span><span class="hl-1">(</span><span class="hl-5">query</span><span class="hl-1">.</span><span class="hl-5">search</span><span class="hl-1">);</span><br/><span class="hl-1">});</span><br/><br/><span class="hl-5">api</span><span class="hl-1">.</span><span class="hl-0">add</span><span class="hl-1">(</span><span class="hl-2">&quot;users&quot;</span><span class="hl-1">, </span><span class="hl-6">async</span><span class="hl-1"> </span><span class="hl-5">query</span><span class="hl-1"> </span><span class="hl-6">=&gt;</span><span class="hl-1"> {</span><br/><span class="hl-1">    </span><span class="hl-4">return</span><span class="hl-1"> </span><span class="hl-4">await</span><span class="hl-1"> </span><span class="hl-5">dbUsers</span><span class="hl-1">.</span><span class="hl-0">add</span><span class="hl-1">(</span><span class="hl-5">query</span><span class="hl-1">.</span><span class="hl-5">data</span><span class="hl-1">);</span><br/><span class="hl-1">});</span><br/><br/><span class="hl-3">// Wildcard fallback for every collection</span><br/><span class="hl-5">api</span><span class="hl-1">.</span><span class="hl-0">find</span><span class="hl-1">(</span><span class="hl-2">&quot;*&quot;</span><span class="hl-1">, </span><span class="hl-6">async</span><span class="hl-1"> </span><span class="hl-5">query</span><span class="hl-1"> </span><span class="hl-6">=&gt;</span><span class="hl-1"> {</span><br/><span class="hl-1">    </span><span class="hl-4">return</span><span class="hl-1"> </span><span class="hl-4">await</span><span class="hl-1"> </span><span class="hl-0">remoteSearch</span><span class="hl-1">(</span><span class="hl-5">query</span><span class="hl-1">.</span><span class="hl-5">collection</span><span class="hl-1">, </span><span class="hl-5">query</span><span class="hl-1">.</span><span class="hl-5">search</span><span class="hl-1">);</span><br/><span class="hl-1">});</span><br/><br/><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-7">adapter</span><span class="hl-1"> = </span><span class="hl-5">api</span><span class="hl-1">.</span><span class="hl-0">getAdapter</span><span class="hl-1">();</span><br/><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-7">processor</span><span class="hl-1"> = </span><span class="hl-6">new</span><span class="hl-1"> </span><span class="hl-0">VQLProcessor</span><span class="hl-1">({ </span><span class="hl-5">main:</span><span class="hl-1"> </span><span class="hl-5">adapter</span><span class="hl-1"> });</span>
+</code><button type="button">Copy</button></pre>
+
+<h3 id="methods" class="tsd-anchor-link">Methods<a href="#methods" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Operation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>register(op, collection, fn)</code></td>
+<td>Generic registration</td>
+</tr>
+<tr>
+<td><code>add(collection, fn)</code></td>
+<td><code>add</code></td>
+</tr>
+<tr>
+<td><code>find(collection, fn)</code></td>
+<td><code>find</code></td>
+</tr>
+<tr>
+<td><code>findOne(collection, fn)</code></td>
+<td><code>findOne</code></td>
+</tr>
+<tr>
+<td><code>update(collection, fn)</code></td>
+<td><code>update</code></td>
+</tr>
+<tr>
+<td><code>updateOne(collection, fn)</code></td>
+<td><code>updateOne</code></td>
+</tr>
+<tr>
+<td><code>updateOneOrAdd(collection, fn)</code></td>
+<td><code>updateOneOrAdd</code></td>
+</tr>
+<tr>
+<td><code>toggleOne(collection, fn)</code></td>
+<td><code>toggleOne</code></td>
+</tr>
+<tr>
+<td><code>count(collection, fn)</code></td>
+<td><code>count</code></td>
+</tr>
+<tr>
+<td><code>bulkAdd(collection, fn)</code></td>
+<td><code>bulkAdd</code></td>
+</tr>
+<tr>
+<td><code>remove(collection, fn)</code></td>
+<td><code>remove</code></td>
+</tr>
+<tr>
+<td><code>removeOne(collection, fn)</code></td>
+<td><code>removeOne</code></td>
+</tr>
+<tr>
+<td><code>removeCollection(collection, fn)</code></td>
+<td><code>removeCollection</code></td>
+</tr>
+</tbody>
+</table>
+<p><code>register</code> takes any CRUD operation name from the <code>Operation</code> union.</p>
+<h3 id="resolution-order" class="tsd-anchor-link">Resolution order<a href="#resolution-order" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p>For a request, the builder looks up:</p>
+<ol>
+<li><code>${operation}:${collection}</code></li>
+<li><code>${operation}:*</code></li>
+<li>throws <code>VQLHandlerMissingError</code> if neither exists</li>
+</ol>
+<p>If a handler throws, the builder calls the <code>catchCb</code> and resolves <code>undefined</code>. It does not rethrow. Make the callback log or rethrow deliberately if silent failures are not acceptable.</p>
+<h3 id="collection-management" class="tsd-anchor-link">Collection management<a href="#collection-management" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p><code>getAdapter()</code> synthesizes:</p>
+<ul>
+<li><code>getCollections()</code> from the set of collections passed to <code>register</code>.</li>
+<li><code>issetCollection()</code> against that set.</li>
+<li><code>ensureCollection()</code> by adding to that set.</li>
+</ul>
+<p><code>removeCollection</code> is not wired by the builder in the current implementation. Assign a handler directly on the returned adapter if you need it:</p>
+<pre><code class="typescript"><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-7">adapter</span><span class="hl-1"> = </span><span class="hl-5">api</span><span class="hl-1">.</span><span class="hl-0">getAdapter</span><span class="hl-1">();</span><br/><span class="hl-5">adapter</span><span class="hl-1">.</span><span class="hl-0">removeCollection</span><span class="hl-1"> = </span><span class="hl-6">async</span><span class="hl-1"> </span><span class="hl-5">collection</span><span class="hl-1"> </span><span class="hl-6">=&gt;</span><span class="hl-1"> {</span><br/><span class="hl-1">    </span><span class="hl-3">// remove the backing collection</span><br/><span class="hl-1">    </span><span class="hl-4">return</span><span class="hl-1"> </span><span class="hl-6">true</span><span class="hl-1">;</span><br/><span class="hl-1">};</span>
+</code><button type="button">Copy</button></pre>
+
+<h3 id="extendedfind-1" class="tsd-anchor-link">extendedFind<a href="#extendedfind-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p><code>getAdapter(extendedFind = true)</code> passes the flag to <code>createValtheraAdapter</code>. Pass <code>false</code> if the backing API already applies <code>reverse</code>, <code>limit</code>, and selection:</p>
+<pre><code class="typescript"><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-7">adapter</span><span class="hl-1"> = </span><span class="hl-5">api</span><span class="hl-1">.</span><span class="hl-0">getAdapter</span><span class="hl-1">(</span><span class="hl-6">false</span><span class="hl-1">);</span>
+</code><button type="button">Copy</button></pre>
+
+<h2 id="choosing-an-approach" class="tsd-anchor-link">Choosing an approach<a href="#choosing-an-approach" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<ul>
+<li>Use ValtheraDB directly when possible. It gives you the full option set, transactions, and indexes without extra work.</li>
+<li>Use <code>createValtheraAdapter</code> for a small, mostly read-only API.</li>
+<li>Use <code>AdapterBuilder</code> when different collections have different backends.</li>
+<li>Use <code>LowAdapter</code> only when you need to own the entire CRUD path and can handle permissions yourself.</li>
+</ul>
+<h2 id="next-steps" class="tsd-anchor-link">Next steps<a href="#next-steps" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<ul>
+<li><a href="core_permissions.html">Permissions</a></li>
+<li><a href="core_errors.html">Errors</a></li>
+</ul>
+</div></div>
+<div class="col-sidebar">
+<div class="page-menu">
+<div class="tsd-navigation settings">
+<details class="tsd-accordion"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg>
+<h3>Settings</h3></summary>
+<div class="tsd-accordion-details">
+<div class="tsd-filter-visibility"><span class="settings-label">Member Visibility</span>
+<ul id="tsd-filter-options">
+<li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-protected" name="protected"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Protected</span></label></li>
+<li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-inherited" name="inherited" checked/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Inherited</span></label></li>
+<li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-external" name="external"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>External</span></label></li></ul></div>
+<div class="tsd-theme-toggle"><label class="settings-label" for="tsd-theme">Theme</label><select id="tsd-theme"><option value="os">OS</option><option value="light">Light</option><option value="dark">Dark</option></select></div></div></details></div>
+<details open class="tsd-accordion tsd-page-navigation"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg>
+<h3>On This Page</h3></summary>
+<div class="tsd-accordion-details"><a href="#adapters"><span>Adapters</span></a>
+<ul>
+<li><a href="#lowadapter"><span>Low<wbr/>Adapter</span></a></li>
+<li><a href="#createvaltheraadapter"><span>create<wbr/>Valthera<wbr/>Adapter</span></a></li>
+<li>
+<ul>
+<li><a href="#resolver-interface"><span>Resolver interface</span></a></li>
+<li><a href="#extendedfind"><span>extended<wbr/>Find</span></a></li>
+<li><a href="#metadata"><span>Metadata</span></a></li></ul></li>
+<li><a href="#adapterbuilder"><span>Adapter<wbr/>Builder</span></a></li>
+<li>
+<ul>
+<li><a href="#methods"><span>Methods</span></a></li>
+<li><a href="#resolution-order"><span>Resolution order</span></a></li>
+<li><a href="#collection-management"><span>Collection management</span></a></li>
+<li><a href="#extendedfind-1"><span>extended<wbr/>Find</span></a></li></ul></li>
+<li><a href="#choosing-an-approach"><span>Choosing an approach</span></a></li>
+<li><a href="#next-steps"><span>Next steps</span></a></li></ul></div></details></div>
+<div class="site-menu">
+<nav class="tsd-navigation"><a href="../modules.html">@wxn0brp/vql</a>
+<ul class="tsd-small-nested-navigation" id="tsd-nav-container">
+<li>Loading...</li></ul></nav></div></div></div><footer>
+<p class="tsd-generator">Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p></footer>
+<div class="overlay"></div></body></html>

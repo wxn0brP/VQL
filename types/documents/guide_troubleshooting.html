@@ -1,0 +1,259 @@
+<!DOCTYPE html><html class="default" lang="en" data-base="../"><head><meta charset="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>guide/troubleshooting | @wxn0brp/vql</title><meta name="description" content="Documentation for @wxn0brp/vql"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="../assets/style.css"/><link rel="stylesheet" href="../assets/highlight.css"/><script defer src="../assets/main.js"></script><script async src="../assets/icons.js" id="tsd-icons-script"></script><script async src="../assets/search.js" id="tsd-search-script"></script><script async src="../assets/navigation.js" id="tsd-nav-script"></script><script async src="../assets/hierarchy.js" id="tsd-hierarchy-script"></script></head><body><script>document.documentElement.dataset.theme = localStorage.getItem("tsd-theme") || "os";document.body.style.display="none";setTimeout(() => window.app?app.showPage():document.body.style.removeProperty("display"),500)</script><header class="tsd-page-toolbar">
+<div class="tsd-toolbar-contents container"><a href="../index.html" class="title">@wxn0brp/vql</a>
+<div id="tsd-toolbar-links"></div><button id="tsd-search-trigger" class="tsd-widget" aria-label="Search"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-search"></use></svg></button><dialog id="tsd-search" aria-label="Search"><input role="combobox" id="tsd-search-input" aria-controls="tsd-search-results" aria-autocomplete="list" aria-expanded="true" autocapitalize="off" autocomplete="off" placeholder="Search the docs" maxLength="100"/>
+<ul role="listbox" id="tsd-search-results"></ul>
+<div id="tsd-search-status" aria-live="polite" aria-atomic="true">
+<div>Preparing search index...</div></div></dialog><a href="#" class="tsd-widget menu" id="tsd-toolbar-menu-trigger" data-toggle="menu" aria-label="Menu"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-menu"></use></svg></a></div></header>
+<div class="container container-main">
+<div class="col-content">
+<div class="tsd-page-title">
+<ul class="tsd-breadcrumb" aria-label="Breadcrumb">
+<li><a href="" aria-current="page">guide/troubleshooting</a></li></ul></div>
+<div class="tsd-panel tsd-typography"><h1 id="troubleshooting" class="tsd-anchor-link">Troubleshooting<a href="#troubleshooting" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h1>
+<h2 id="the-query-returns-an-error-object-instead-of-throwing" class="tsd-anchor-link">The query returns an error object instead of throwing<a href="#the-query-returns-an-error-object-instead-of-throwing" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p><code>VQLProcessor.execute()</code> never throws for query failures. It returns a <code>VQLError</code>. Check the result:</p>
+<pre><code class="typescript"><span class="hl-4">import</span><span class="hl-1"> { </span><span class="hl-5">isVQLError</span><span class="hl-1"> } </span><span class="hl-4">from</span><span class="hl-1"> </span><span class="hl-2">&quot;@wxn0brp/vql&quot;</span><span class="hl-1">;</span><br/><br/><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-7">result</span><span class="hl-1"> = </span><span class="hl-4">await</span><span class="hl-1"> </span><span class="hl-5">processor</span><span class="hl-1">.</span><span class="hl-0">execute</span><span class="hl-1">(</span><span class="hl-5">query</span><span class="hl-1">, </span><span class="hl-5">user</span><span class="hl-1">);</span><br/><span class="hl-4">if</span><span class="hl-1"> (</span><span class="hl-0">isVQLError</span><span class="hl-1">(</span><span class="hl-5">result</span><span class="hl-1">)) {</span><br/><span class="hl-1">    </span><span class="hl-5">console</span><span class="hl-1">.</span><span class="hl-0">error</span><span class="hl-1">(</span><span class="hl-5">result</span><span class="hl-1">.</span><span class="hl-5">code</span><span class="hl-1">, </span><span class="hl-5">result</span><span class="hl-1">.</span><span class="hl-5">message</span><span class="hl-1">, </span><span class="hl-5">result</span><span class="hl-1">.</span><span class="hl-5">suggestion</span><span class="hl-1">);</span><br/><span class="hl-1">}</span>
+</code><button type="button">Copy</button></pre>
+
+<p>See <a href="core_errors.html">Errors</a>.</p>
+<h2 id="database-x-not-found" class="tsd-anchor-link">Database &quot;x&quot; not found<a href="#database-x-not-found" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p>The first argument to <code>VQLProcessor</code> is a name map:</p>
+<pre><code class="typescript"><span class="hl-6">new</span><span class="hl-1"> </span><span class="hl-0">VQLProcessor</span><span class="hl-1">({</span><br/><span class="hl-1">    </span><span class="hl-5">main:</span><span class="hl-1"> </span><span class="hl-5">dbMain</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-5">analytics:</span><span class="hl-1"> </span><span class="hl-5">dbAnalytics</span><br/><span class="hl-1">});</span>
+</code><button type="button">Copy</button></pre>
+
+<p>Queries use those names exactly:</p>
+<pre><code class="text">main users
+</code><button type="button">Copy</button></pre>
+
+<p>Relation paths also use registered names: <code>path: [&quot;analytics&quot;, &quot;events&quot;]</code>.</p>
+<h2 id="invalid-vql-query-structure-must-contain-r-or-db-and-d" class="tsd-anchor-link">&quot;Invalid VQL query structure. Must contain 'r' or 'db' and 'd'.&quot;<a href="#invalid-vql-query-structure-must-contain-r-or-db-and-d" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p>The object has neither <code>r</code> nor a <code>db</code> + <code>d</code> pair.</p>
+<pre><code class="typescript"><span class="hl-3">// Invalid</span><br/><span class="hl-1">{ </span><span class="hl-11">db</span><span class="hl-1">: </span><span class="hl-2">&quot;main&quot;</span><span class="hl-1"> }</span><br/><br/><span class="hl-3">// Valid</span><br/><span class="hl-1">{ </span><span class="hl-11">db</span><span class="hl-1">: </span><span class="hl-2">&quot;main&quot;</span><span class="hl-1">, </span><span class="hl-11">d</span><span class="hl-1">: { </span><span class="hl-11">find</span><span class="hl-1">: { </span><span class="hl-11">collection</span><span class="hl-1">: </span><span class="hl-2">&quot;users&quot;</span><span class="hl-1"> } } }</span><br/><span class="hl-1">{ </span><span class="hl-11">r</span><span class="hl-1">: { </span><span class="hl-11">path</span><span class="hl-1">: [</span><span class="hl-2">&quot;main&quot;</span><span class="hl-1">, </span><span class="hl-2">&quot;users&quot;</span><span class="hl-1">], </span><span class="hl-11">search</span><span class="hl-1">: {}, </span><span class="hl-11">relations</span><span class="hl-1">: {} } }</span>
+</code><button type="button">Copy</button></pre>
+
+<h2 id="validation-errors" class="tsd-anchor-link">Validation errors<a href="#validation-errors" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<table>
+<thead>
+<tr>
+<th>Message</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>CRUD operation 'x' must specify a non-empty 'collection' string.</code></td>
+<td>Add a collection name</td>
+</tr>
+<tr>
+<td><code>'findOne' operation requires a 'search' object.</code></td>
+<td>Add <code>search: {}</code> even for a match-all</td>
+</tr>
+<tr>
+<td><code>'update' operation requires an 'updater' object.</code></td>
+<td>Add <code>updater</code></td>
+</tr>
+<tr>
+<td><code>'bulkAdd' operation requires a 'datas' array.</code></td>
+<td>Use an array</td>
+</tr>
+<tr>
+<td><code>'find' operation 'select' property must be an object or an array.</code></td>
+<td>Use <code>[&quot;name&quot;]</code> or <code>{ name: 1 }</code>. The operation name is part of the message</td>
+</tr>
+<tr>
+<td><code>Relation query 'r.search' must be an object.</code></td>
+<td>Add <code>search: {}</code></td>
+</tr>
+<tr>
+<td><code>Relation query 'r' must have a 'relations' object.</code></td>
+<td>Add <code>relations: {}</code></td>
+</tr>
+<tr>
+<td><code>Relation 'x' has an invalid 'select' property; it must be an array.</code></td>
+<td>Use <code>select: [&quot;name&quot;]</code></td>
+</tr>
+<tr>
+<td><code>Database &quot;x&quot; not found</code></td>
+<td>Register the name in the processor</td>
+</tr>
+</tbody>
+</table>
+<h2 id="query-returns-an-empty-array" class="tsd-anchor-link">Query returns an empty array<a href="#query-returns-an-empty-array" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p>Check the search shape. Some operators expect nested field objects:</p>
+<pre><code class="typescript"><span class="hl-3">// Wrong: this asks for a field called &quot;$gt&quot;</span><br/><span class="hl-1">{ </span><span class="hl-2">&quot;$gt&quot;</span><span class="hl-1">: </span><span class="hl-10">18</span><span class="hl-1"> }</span><br/><br/><span class="hl-3">// Right</span><br/><span class="hl-1">{ </span><span class="hl-11">$gt</span><span class="hl-1">: { </span><span class="hl-11">age</span><span class="hl-1">: </span><span class="hl-10">18</span><span class="hl-1"> } }</span>
+</code><button type="button">Copy</button></pre>
+
+<p>Other causes:</p>
+<ul>
+<li><code>s.age&gt;18</code> in VQLS becomes <code>{ $gt: { age: 18 } }</code>, not a plain equality.</li>
+<li>Numeric strings must be quoted: <code>s.externalId=&quot;123&quot;</code>.</li>
+<li><code>select</code> does not filter records, it only projects fields.</li>
+<li><code>options.limit</code> limits results. A top-level <code>limit</code> is ignored.</li>
+<li>If you sort with <code>sortBy</code> and also use <code>select</code>, include the sort field in the selection. Removing it can make the sort ineffective.</li>
+<li>A relation query with <code>many: false</code> returns one record or <code>null</code>.</li>
+</ul>
+<h2 id="fields-are-missing-from-the-result" class="tsd-anchor-link">Fields are missing from the result<a href="#fields-are-missing-from-the-result" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<ul>
+<li><code>select</code> keeps only the listed fields.</li>
+<li><code>searchOpts.exclude</code> removes fields.</li>
+<li>With permissions enabled, fields without <code>READ</code> are removed.</li>
+<li>VQLS <code>e.profile.city=1</code> selects the whole <code>profile</code> for CRUD operations. Use VQLR for a nested CRUD selection.</li>
+</ul>
+<h2 id="permission-denied" class="tsd-anchor-link">Permission denied<a href="#permission-denied" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p>Common causes:</p>
+<ol>
+<li><strong>No user context.</strong> <code>permissionDeniedIfNoUser</code> defaults to <code>true</code>. Only <code>null</code> is denied; <code>undefined</code> is replaced by the placeholder <code>{ _id: &quot;null-null-null&quot; }</code> and continues with a fake identity. Always pass a real user object.</li>
+<li><strong><code>strictSelect</code> missing.</strong> Enabling permissions without <code>strictSelect: true</code> throws <code>VQLConfigError</code> at construction.</li>
+<li><strong>Path mismatch.</strong> Permission paths are <code>[database, collection, ...field]</code>. Check the exact spelling and casing.</li>
+<li><strong><code>hidePath</code> mismatch.</strong> With <code>hidePath: true</code>, <code>args.field</code> is a SHA-256 hash. Rules registered with plain paths will not match.</li>
+<li><strong>No resolver match.</strong> <code>PermissionResolverEngine</code> denies when nothing matches. Add a <code>startsWith</code> or regex matcher, or use <code>createWithGw</code>.</li>
+<li><strong>Gate Warden user missing.</strong> <code>createGwValidFn</code> loads the user from the Gate Warden database. A missing user is reported as <code>user-404</code>.</li>
+<li><strong><code>entity-404</code> with <code>strictACL: true</code>.</strong> Register the exact path or disable strict ACL to allow parent fallback.</li>
+</ol>
+<p>Inspect the permission arguments:</p>
+<pre><code class="typescript"><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-0">permValidFn</span><span class="hl-1"> = </span><span class="hl-6">async</span><span class="hl-1"> </span><span class="hl-5">args</span><span class="hl-1"> </span><span class="hl-6">=&gt;</span><span class="hl-1"> {</span><br/><span class="hl-1">    </span><span class="hl-5">console</span><span class="hl-1">.</span><span class="hl-0">dir</span><span class="hl-1">(</span><span class="hl-5">args</span><span class="hl-1">);</span><br/><span class="hl-1">    </span><span class="hl-4">return</span><span class="hl-1"> { </span><span class="hl-5">granted:</span><span class="hl-1"> </span><span class="hl-6">false</span><span class="hl-1"> };</span><br/><span class="hl-1">};</span>
+</code><button type="button">Copy</button></pre>
+
+<h2 id="permission-checks-do-not-run" class="tsd-anchor-link">Permission checks do not run<a href="#permission-checks-do-not-run" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<ul>
+<li><code>noCheckPermissions</code> defaults to <code>true</code>. Set it to <code>false</code>.</li>
+<li><code>LowAdapter</code> resolvers bypass the permission layer. Authorize inside the resolver.</li>
+<li>If you pass a custom <code>permValidFn</code> that always returns <code>{ granted: true }</code>, every request is allowed.</li>
+</ul>
+<h2 id="relation-errors" class="tsd-anchor-link">Relation errors<a href="#relation-errors" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<ul>
+<li><code>path</code> must be exactly two strings: <code>[&quot;db&quot;, &quot;collection&quot;]</code>.</li>
+<li><code>search</code> and <code>relations</code> must exist, even when empty.</li>
+<li>Relation <code>select</code> is an array. In VQLS use JSON: <code>r.items.select=[&quot;name&quot;]</code>.</li>
+<li>A missing database in any relation <code>path</code> throws <code>VQLDBNotFoundError</code>. A bad <code>through.db</code> is not pre-checked and fails later with <code>VQLInternalError</code>.</li>
+<li><code>type: &quot;nm&quot;</code> requires <code>through.table</code>, <code>through.pk</code>, and <code>through.fk</code>.</li>
+</ul>
+<p>See <a href="core_relations.html">Relations</a>.</p>
+<h2 id="vqls-parsing-surprises" class="tsd-anchor-link">VQLS parsing surprises<a href="#vqls-parsing-surprises" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<table>
+<thead>
+<tr>
+<th>Input</th>
+<th>Result</th>
+<th>Reason</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>db removeOne users! s._id=&quot;1&quot;</code></td>
+<td>Collection <code>users!</code></td>
+<td>Explicit operations do not strip <code>!</code></td>
+</tr>
+<tr>
+<td><code>s.active=</code> followed by another key</td>
+<td>Wrong pair</td>
+<td>Empty value consumes the next token</td>
+</tr>
+<tr>
+<td><code>s.name=Alice</code></td>
+<td>String <code>&quot;Alice&quot;</code></td>
+<td>Unquoted values stay strings</td>
+</tr>
+<tr>
+<td><code>s.id=123</code></td>
+<td>Number <code>123</code></td>
+<td>Quote to keep as string</td>
+</tr>
+<tr>
+<td><code>s.date=null</code></td>
+<td>String <code>&quot;null&quot;</code></td>
+<td>Use JSON: <code>s={&quot;date&quot;:null}</code></td>
+</tr>
+<tr>
+<td><code>s.a.b&gt;1</code></td>
+<td><code>{ $gt: { a: { b: 1 } } }</code></td>
+<td>Operators are applied operator-first</td>
+</tr>
+<tr>
+<td><code>s={&quot;a&quot;: 1}</code></td>
+<td>Parsed incorrectly</td>
+<td>JSON values must be compact</td>
+</tr>
+<tr>
+<td><code>r.orders.search.status=&quot;pending&quot;</code></td>
+<td>Accepted but not applied</td>
+<td>The relation loader ignores per-relation <code>search</code></td>
+</tr>
+<tr>
+<td><code>e.profile.city=1</code></td>
+<td>Selects <code>profile</code></td>
+<td>CRUD selects collapse to top level</td>
+</tr>
+</tbody>
+</table>
+<p>Quoted values are needed for spaces, <code>=</code>, <code>&lt;</code>, and <code>&gt;</code>.</p>
+<h2 id="http-endpoint-returns-500" class="tsd-anchor-link">HTTP endpoint returns 500<a href="#http-endpoint-returns-500" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<ul>
+<li>The processor is returning a <code>VQLInternalError</code> from an unexpected exception. Enable logging at <code>DEBUG</code> and inspect the error.</li>
+<li>A custom adapter threw. <code>AdapterBuilder</code> swallows handler errors into <code>undefined</code>; pass a <code>catchCb</code> that logs.</li>
+<li>Falcon Frame did not parse the body. Make sure the request is JSON and the body uses the <code>query</code> key, or provide <code>getQuery</code>.</li>
+</ul>
+<p>A <code>501</code> means no adapter handler exists for that operation and collection. Register one or add a <code>&quot;*&quot;</code> handler.</p>
+<h2 id="typescript-cannot-find-vqluq-or-vql_query" class="tsd-anchor-link">TypeScript cannot find VQLUQ or VQL_Query<a href="#typescript-cannot-find-vqluq-or-vql_query" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p>Types are published under subpaths, not the package root:</p>
+<pre><code class="typescript"><span class="hl-4">import</span><span class="hl-1"> </span><span class="hl-4">type</span><span class="hl-1"> { </span><span class="hl-5">VQLUQ</span><span class="hl-1">, </span><span class="hl-5">VQL_Query</span><span class="hl-1"> } </span><span class="hl-4">from</span><span class="hl-1"> </span><span class="hl-2">&quot;@wxn0brp/vql/types/vql&quot;</span><span class="hl-1">;</span>
+</code><button type="button">Copy</button></pre>
+
+<p>Permission types:</p>
+<pre><code class="typescript"><span class="hl-4">import</span><span class="hl-1"> { </span><span class="hl-5">PermCRUD</span><span class="hl-1"> } </span><span class="hl-4">from</span><span class="hl-1"> </span><span class="hl-2">&quot;@wxn0brp/vql/types/perm&quot;</span><span class="hl-1">;</span>
+</code><button type="button">Copy</button></pre>
+
+<h2 id="debug-logging" class="tsd-anchor-link">Debug logging<a href="#debug-logging" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<pre><code class="typescript"><span class="hl-4">import</span><span class="hl-1"> { </span><span class="hl-5">VQLLogger</span><span class="hl-1">, </span><span class="hl-5">VQLLogLevel</span><span class="hl-1"> } </span><span class="hl-4">from</span><span class="hl-1"> </span><span class="hl-2">&quot;@wxn0brp/vql&quot;</span><span class="hl-1">;</span><br/><br/><span class="hl-5">VQLLogger</span><span class="hl-1">.</span><span class="hl-5">logLevel</span><span class="hl-1"> = </span><span class="hl-5">VQLLogLevel</span><span class="hl-1">.</span><span class="hl-7">DEBUG</span><span class="hl-1">;</span>
+</code><button type="button">Copy</button></pre>
+
+<p>The logger prints incoming queries, expanded queries, validation failures, and internal errors. It may include user data, so disable it in production.</p>
+<h2 id="still-stuck" class="tsd-anchor-link">Still stuck<a href="#still-stuck" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p>Capture the failing query, the config, and the user context. Run the query through <code>processor._preProcessQuery(query, user)</code> to see whether it fails before execution:</p>
+<pre><code class="typescript"><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-7">prepared</span><span class="hl-1"> = </span><span class="hl-5">processor</span><span class="hl-1">.</span><span class="hl-0">_preProcessQuery</span><span class="hl-1">(</span><span class="hl-5">query</span><span class="hl-1">, </span><span class="hl-5">user</span><span class="hl-1">);</span><br/><span class="hl-5">console</span><span class="hl-1">.</span><span class="hl-0">dir</span><span class="hl-1">(</span><span class="hl-5">prepared</span><span class="hl-1">, { </span><span class="hl-5">depth:</span><span class="hl-1"> </span><span class="hl-6">null</span><span class="hl-1"> });</span>
+</code><button type="button">Copy</button></pre>
+
+<h2 id="next-steps" class="tsd-anchor-link">Next steps<a href="#next-steps" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<ul>
+<li><a href="core_errors.html">Errors</a></li>
+<li><a href="core_configuration.html">Configuration</a></li>
+<li><a href="core_permissions.html">Permissions</a></li>
+</ul>
+</div></div>
+<div class="col-sidebar">
+<div class="page-menu">
+<div class="tsd-navigation settings">
+<details class="tsd-accordion"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg>
+<h3>Settings</h3></summary>
+<div class="tsd-accordion-details">
+<div class="tsd-filter-visibility"><span class="settings-label">Member Visibility</span>
+<ul id="tsd-filter-options">
+<li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-protected" name="protected"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Protected</span></label></li>
+<li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-inherited" name="inherited" checked/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Inherited</span></label></li>
+<li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-external" name="external"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>External</span></label></li></ul></div>
+<div class="tsd-theme-toggle"><label class="settings-label" for="tsd-theme">Theme</label><select id="tsd-theme"><option value="os">OS</option><option value="light">Light</option><option value="dark">Dark</option></select></div></div></details></div>
+<details open class="tsd-accordion tsd-page-navigation"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg>
+<h3>On This Page</h3></summary>
+<div class="tsd-accordion-details"><a href="#troubleshooting"><span>Troubleshooting</span></a>
+<ul>
+<li><a href="#the-query-returns-an-error-object-instead-of-throwing"><span>The query returns an error object instead of throwing</span></a></li>
+<li><a href="#database-x-not-found"><span>Database &quot;x&quot; not found</span></a></li>
+<li><a href="#invalid-vql-query-structure-must-contain-r-or-db-and-d"><span>&quot;<wbr/>Invalid <wbr/>VQL query structure. <wbr/>Must contain &#39;r&#39; or &#39;db&#39; and &#39;d&#39;.&quot;</span></a></li>
+<li><a href="#validation-errors"><span>Validation errors</span></a></li>
+<li><a href="#query-returns-an-empty-array"><span>Query returns an empty array</span></a></li>
+<li><a href="#fields-are-missing-from-the-result"><span>Fields are missing from the result</span></a></li>
+<li><a href="#permission-denied"><span>Permission denied</span></a></li>
+<li><a href="#permission-checks-do-not-run"><span>Permission checks do not run</span></a></li>
+<li><a href="#relation-errors"><span>Relation errors</span></a></li>
+<li><a href="#vqls-parsing-surprises"><span>VQLS parsing surprises</span></a></li>
+<li><a href="#http-endpoint-returns-500"><span>HTTP endpoint returns 500</span></a></li>
+<li><a href="#typescript-cannot-find-vqluq-or-vql_query"><span>Type<wbr/>Script cannot find <wbr/>VQLUQ or <wbr/>VQL_<wbr/>Query</span></a></li>
+<li><a href="#debug-logging"><span>Debug logging</span></a></li>
+<li><a href="#still-stuck"><span>Still stuck</span></a></li>
+<li><a href="#next-steps"><span>Next steps</span></a></li></ul></div></details></div>
+<div class="site-menu">
+<nav class="tsd-navigation"><a href="../modules.html">@wxn0brp/vql</a>
+<ul class="tsd-small-nested-navigation" id="tsd-nav-container">
+<li>Loading...</li></ul></nav></div></div></div><footer>
+<p class="tsd-generator">Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p></footer>
+<div class="overlay"></div></body></html>

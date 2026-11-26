@@ -9,45 +9,74 @@
 <div class="tsd-page-title">
 <h1>@wxn0brp/vql</h1></div>
 <div class="tsd-panel tsd-typography"><h1 id="vql-valthera-query-language" class="tsd-anchor-link">VQL (Valthera Query Language)<a href="#vql-valthera-query-language" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h1>
-<p>VQL (Valthera Query Language) is a comprehensive framework for interacting with ValtheraDB. It combines a flexible query language, a powerful permission management system, and a suite of tools to build secure and efficient data-driven applications.</p>
+<p>VQL is a query framework for <a href="https://github.com/wxn0brP/ValtheraDB">ValtheraDB</a>.
+It combines two query syntaxes, cross-database relations, an optional permission
+system, HTTP integration, and adapters for external data sources.</p>
 <p><a href="https://www.npmjs.com/package/@wxn0brp/vql"><img src="https://img.shields.io/npm/v/@wxn0brp/vql" alt="npm version"></a>
 <a href="./LICENSE"><img src="https://img.shields.io/npm/l/@wxn0brp/vql" alt="License"></a>
 <a href="https://www.npmjs.com/package/@wxn0brp/vql"><img src="https://img.shields.io/npm/dm/@wxn0brp/vql" alt="Downloads"></a>
 <img src="https://img.shields.io/github/actions/workflow/status/wxn0brP/VQL/build.yml?branch=master" alt="CI">
 <img src="https://img.shields.io/bundlephobia/minzip/@wxn0brp/vql" alt="bundle size"></p>
-<h2 id="key-features" class="tsd-anchor-link">Key Features<a href="#key-features" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<h2 id="features" class="tsd-anchor-link">Features<a href="#features" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
 <ul>
-<li><strong>Dual Query Syntax</strong>: Choose between VQLR (a JSON-based object query language for programmatic use) and VQLS (a human-readable string-based language for simpler queries and scripts).</li>
-<li><strong>Multi-Database Support</strong>: Process queries across multiple ValtheraDB instances seamlessly.</li>
-<li><strong>Cross-Platform</strong>: Run VQL in both Node.js and modern web browsers.</li>
-<li><strong>Dynamic Variables</strong>: Use predefined (<code>_me</code>, <code>_now</code>, <code>_user</code>) or custom variables in your queries for dynamic, context-aware operations.</li>
-<li><strong>Advanced Relation Queries</strong>: Natively handle complex relationships not just between collections, but also across entire databases.</li>
-<li><strong>Permission System</strong>: Built-in, granular access control powered by Gate Warden. It's disabled by default and can be enabled when needed to enforce complex security rules.</li>
-<li><strong>Configurable Behavior</strong>: Customize VQL through <code>VQLConfig</code> -control permissions, field selection, path visibility, and more.</li>
-<li><strong>Falcon Frame Integration</strong>: Integrates with Falcon Frame for extended HTTP API capabilities.</li>
+<li><strong>VQLS</strong>: a compact string syntax for CLI tools, configs, and scripts.</li>
+<li><strong>VQLR</strong>: a JSON object syntax for application code and TypeScript.</li>
+<li><strong>Multi-database</strong>: query any number of named ValtheraDB instances.</li>
+<li><strong>Relations</strong>: joins across collections and databases, including nested and
+many-to-many relations.</li>
+<li><strong>Variables</strong>: <code>_me</code>, <code>_user</code>, <code>_now</code>, <code>_nowShort</code>, <code>__now</code>, <code>__nowShort</code>, and
+custom values.</li>
+<li><strong>Permissions</strong>: optional CRUD and field-level checks with result filtering.</li>
+<li><strong>Adapters</strong>: use HTTP APIs, custom SDKs, or per-collection handlers.</li>
+<li><strong>HTTP API</strong>: Falcon Frame endpoint with structured errors.</li>
+<li><strong>Browser compatible</strong>: run the processor against a remote backend.</li>
 </ul>
-<h2 id="example-usage" class="tsd-anchor-link">Example Usage<a href="#example-usage" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
-<p>Here is an example of how to use the <code>VQLProcessor</code> to execute a query:</p>
-<pre><code class="typescript"><span class="hl-0">import</span><span class="hl-1"> </span><span class="hl-2">VQLProcessor</span><span class="hl-1"> </span><span class="hl-0">from</span><span class="hl-1"> </span><span class="hl-3">&quot;@wxn0brp/vql&quot;</span><span class="hl-1">;</span><br/><span class="hl-0">import</span><span class="hl-1"> { </span><span class="hl-2">Valthera</span><span class="hl-1"> } </span><span class="hl-0">from</span><span class="hl-1"> </span><span class="hl-3">&quot;@wxn0brp/db&quot;</span><span class="hl-1">;</span><br/><br/><span class="hl-4">// Initialize database instances</span><br/><span class="hl-5">const</span><span class="hl-1"> </span><span class="hl-6">dbInstances</span><span class="hl-1"> = {</span><br/><span class="hl-1">    </span><span class="hl-2">myDatabase:</span><span class="hl-1"> </span><span class="hl-5">new</span><span class="hl-1"> </span><span class="hl-7">Valthera</span><span class="hl-1">(</span><span class="hl-3">&quot;path/to/database&quot;</span><span class="hl-1">),</span><br/><span class="hl-1">};</span><br/><br/><span class="hl-4">// Create a VQLProcessor instance</span><br/><span class="hl-5">const</span><span class="hl-1"> </span><span class="hl-6">processor</span><span class="hl-1"> = </span><span class="hl-5">new</span><span class="hl-1"> </span><span class="hl-7">VQLProcessor</span><span class="hl-1">(</span><span class="hl-2">dbInstances</span><span class="hl-1">);</span><br/><br/><span class="hl-4">// Define a query (VQLR)</span><br/><span class="hl-5">const</span><span class="hl-1"> </span><span class="hl-6">query</span><span class="hl-1"> = {</span><br/><span class="hl-1">    </span><span class="hl-2">db:</span><span class="hl-1"> </span><span class="hl-3">&quot;myDatabase&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-2">d:</span><span class="hl-1"> {</span><br/><span class="hl-1">        </span><span class="hl-2">find:</span><span class="hl-1"> {</span><br/><span class="hl-1">            </span><span class="hl-2">collection:</span><span class="hl-1"> </span><span class="hl-3">&quot;users&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">            </span><span class="hl-2">search:</span><span class="hl-1"> { </span><span class="hl-2">$gt:</span><span class="hl-1"> { </span><span class="hl-2">age:</span><span class="hl-1"> </span><span class="hl-8">18</span><span class="hl-1"> } },</span><br/><span class="hl-1">            </span><span class="hl-2">select:</span><span class="hl-1"> { </span><span class="hl-2">name:</span><span class="hl-1"> </span><span class="hl-8">1</span><span class="hl-1">, </span><span class="hl-2">age:</span><span class="hl-1"> </span><span class="hl-8">1</span><span class="hl-1"> },</span><br/><span class="hl-1">        },</span><br/><span class="hl-1">    },</span><br/><span class="hl-1">};</span><br/><br/><span class="hl-4">// Or you can use a string query (VQLS):</span><br/><span class="hl-5">const</span><span class="hl-1"> </span><span class="hl-6">vqls</span><span class="hl-1"> = </span><span class="hl-3">`</span><br/><span class="hl-3">myDatabase users</span><br/><span class="hl-3">s.$gt.age = 18</span><br/><span class="hl-3">e.name = 1</span><br/><span class="hl-3">e.age = 1</span><br/><span class="hl-3">`</span><span class="hl-1">;</span><br/><br/><span class="hl-4">// Execute the query</span><br/><span class="hl-1">(</span><span class="hl-5">async</span><span class="hl-1"> () </span><span class="hl-5">=&gt;</span><span class="hl-1"> {</span><br/><span class="hl-1">    </span><span class="hl-0">try</span><span class="hl-1"> {</span><br/><span class="hl-1">        </span><span class="hl-5">const</span><span class="hl-1"> </span><span class="hl-6">result</span><span class="hl-1"> = </span><span class="hl-0">await</span><span class="hl-1"> </span><span class="hl-2">processor</span><span class="hl-1">.</span><span class="hl-7">execute</span><span class="hl-1">(</span><span class="hl-2">query</span><span class="hl-1">);</span><br/><span class="hl-1">        </span><span class="hl-2">console</span><span class="hl-1">.</span><span class="hl-7">log</span><span class="hl-1">(</span><span class="hl-3">&quot;Query Result:&quot;</span><span class="hl-1">, </span><span class="hl-2">result</span><span class="hl-1">);</span><br/><span class="hl-1">    } </span><span class="hl-0">catch</span><span class="hl-1"> (</span><span class="hl-2">error</span><span class="hl-1">) {</span><br/><span class="hl-1">        </span><span class="hl-2">console</span><span class="hl-1">.</span><span class="hl-7">error</span><span class="hl-1">(</span><span class="hl-3">&quot;Error executing query:&quot;</span><span class="hl-1">, </span><span class="hl-2">error</span><span class="hl-1">);</span><br/><span class="hl-1">    }</span><br/><span class="hl-1">})();</span>
+<h2 id="install" class="tsd-anchor-link">Install<a href="#install" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<pre><code class="bash"><span class="hl-0">bun</span><span class="hl-1"> </span><span class="hl-2">add</span><span class="hl-1"> </span><span class="hl-2">@wxn0brp/vql</span><span class="hl-1"> </span><span class="hl-2">@wxn0brp/db</span>
 </code><button type="button">Copy</button></pre>
 
-<h2 id="development-tools" class="tsd-anchor-link">Development Tools<a href="#development-tools" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
-<ul>
-<li><a href="https://github.com/wxn0brP/VQL-dev">VQL-dev</a> - Debugging and development query tools.</li>
-</ul>
+<p>Optional peers:</p>
+<pre><code class="bash"><span class="hl-0">bun</span><span class="hl-1"> </span><span class="hl-2">add</span><span class="hl-1"> </span><span class="hl-2">@wxn0brp/falcon-frame</span><span class="hl-1">   </span><span class="hl-3"># HTTP endpoint</span><br/><span class="hl-0">bun</span><span class="hl-1"> </span><span class="hl-2">add</span><span class="hl-1"> </span><span class="hl-2">@wxn0brp/gate-warden</span><span class="hl-1">    </span><span class="hl-3"># permission backend</span>
+</code><button type="button">Copy</button></pre>
+
+<h2 id="quick-start" class="tsd-anchor-link">Quick start<a href="#quick-start" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<pre><code class="typescript"><span class="hl-4">import</span><span class="hl-1"> </span><span class="hl-5">VQLProcessor</span><span class="hl-1">, { </span><span class="hl-5">isVQLError</span><span class="hl-1"> } </span><span class="hl-4">from</span><span class="hl-1"> </span><span class="hl-2">&quot;@wxn0brp/vql&quot;</span><span class="hl-1">;</span><br/><span class="hl-4">import</span><span class="hl-1"> { </span><span class="hl-5">ValtheraCreate</span><span class="hl-1"> } </span><span class="hl-4">from</span><span class="hl-1"> </span><span class="hl-2">&quot;@wxn0brp/db&quot;</span><span class="hl-1">;</span><br/><br/><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-7">db</span><span class="hl-1"> = </span><span class="hl-0">ValtheraCreate</span><span class="hl-1">(</span><span class="hl-2">&quot;./data/app&quot;</span><span class="hl-1">);</span><br/><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-7">processor</span><span class="hl-1"> = </span><span class="hl-6">new</span><span class="hl-1"> </span><span class="hl-0">VQLProcessor</span><span class="hl-1">({ </span><span class="hl-5">main:</span><span class="hl-1"> </span><span class="hl-5">db</span><span class="hl-1"> });</span><br/><br/><span class="hl-3">// VQLS</span><br/><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-7">active</span><span class="hl-1"> = </span><span class="hl-4">await</span><span class="hl-1"> </span><span class="hl-5">processor</span><span class="hl-1">.</span><span class="hl-0">execute</span><span class="hl-1">(</span><br/><span class="hl-1">    </span><span class="hl-2">`main users s.status=&quot;active&quot; e.name=1 e.email=1`</span><br/><span class="hl-1">);</span><br/><br/><span class="hl-3">// VQLR</span><br/><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-7">user</span><span class="hl-1"> = </span><span class="hl-4">await</span><span class="hl-1"> </span><span class="hl-5">processor</span><span class="hl-1">.</span><span class="hl-0">execute</span><span class="hl-1">({</span><br/><span class="hl-1">    </span><span class="hl-5">db:</span><span class="hl-1"> </span><span class="hl-2">&quot;main&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-5">d:</span><span class="hl-1"> {</span><br/><span class="hl-1">        </span><span class="hl-5">findOne:</span><span class="hl-1"> {</span><br/><span class="hl-1">            </span><span class="hl-5">collection:</span><span class="hl-1"> </span><span class="hl-2">&quot;users&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">            </span><span class="hl-5">search:</span><span class="hl-1"> { </span><span class="hl-5">_id:</span><span class="hl-1"> </span><span class="hl-2">&quot;u1&quot;</span><span class="hl-1"> },</span><br/><span class="hl-1">            </span><span class="hl-5">select:</span><span class="hl-1"> [</span><span class="hl-2">&quot;name&quot;</span><span class="hl-1">, </span><span class="hl-2">&quot;email&quot;</span><span class="hl-1">]</span><br/><span class="hl-1">        }</span><br/><span class="hl-1">    }</span><br/><span class="hl-1">});</span><br/><br/><span class="hl-3">// Variables and user context</span><br/><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-7">mine</span><span class="hl-1"> = </span><span class="hl-4">await</span><span class="hl-1"> </span><span class="hl-5">processor</span><span class="hl-1">.</span><span class="hl-0">execute</span><span class="hl-1">(</span><br/><span class="hl-1">    { </span><span class="hl-5">query:</span><span class="hl-1"> </span><span class="hl-2">&quot;main orders s.ownerId=$_me e._id=1 e.total=1&quot;</span><span class="hl-1">, </span><span class="hl-5">var:</span><span class="hl-1"> {} },</span><br/><span class="hl-1">    { </span><span class="hl-5">_id:</span><span class="hl-1"> </span><span class="hl-2">&quot;u1&quot;</span><span class="hl-1">, </span><span class="hl-5">role:</span><span class="hl-1"> </span><span class="hl-2">&quot;user&quot;</span><span class="hl-1"> }</span><br/><span class="hl-1">);</span><br/><br/><span class="hl-4">if</span><span class="hl-1"> (</span><span class="hl-0">isVQLError</span><span class="hl-1">(</span><span class="hl-5">active</span><span class="hl-1">)) {</span><br/><span class="hl-1">    </span><span class="hl-5">console</span><span class="hl-1">.</span><span class="hl-0">error</span><span class="hl-1">(</span><span class="hl-5">active</span><span class="hl-1">.</span><span class="hl-5">code</span><span class="hl-1">, </span><span class="hl-5">active</span><span class="hl-1">.</span><span class="hl-5">message</span><span class="hl-1">);</span><br/><span class="hl-1">}</span>
+</code><button type="button">Copy</button></pre>
+
+<p><code>execute()</code> returns either the result or a <code>VQLError</code>. See
+<a href="https://wxn0brp.github.io/VQL/core/errors/">Errors</a>.</p>
 <h2 id="documentation" class="tsd-anchor-link">Documentation<a href="#documentation" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p>Full documentation: <a href="https://wxn0brp.github.io/VQL">wxn0brp.github.io/VQL</a></p>
 <ul>
-<li><a href="https://wxn0brp.github.io/VQL">wxn0brp.github.io/VQL</a>.</li>
+<li><a href="https://wxn0brp.github.io/VQL/guide/getting_started/">Getting Started</a></li>
+<li><a href="https://wxn0brp.github.io/VQL/lang/VQLS/">VQLS</a></li>
+<li><a href="https://wxn0brp.github.io/VQL/lang/VQLR/">VQLR</a></li>
+<li><a href="https://wxn0brp.github.io/VQL/core/configuration/">Configuration</a></li>
+<li><a href="https://wxn0brp.github.io/VQL/core/relations/">Relations</a></li>
+<li><a href="https://wxn0brp.github.io/VQL/core/permissions/">Permissions</a></li>
+<li><a href="https://wxn0brp.github.io/VQL/core/adapters/">Adapters</a></li>
+<li><a href="https://wxn0brp.github.io/VQL/integration/http/">HTTP Integration</a></li>
+<li><a href="https://wxn0brp.github.io/VQL/integration/browser/">Browser Usage</a></li>
+<li><a href="https://wxn0brp.github.io/VQL/guide/examples/">Examples</a></li>
+<li><a href="https://wxn0brp.github.io/VQL/guide/troubleshooting/">Troubleshooting</a></li>
+<li><a href="https://wxn0brp.github.io/VQL/types">Type definitions</a></li>
 </ul>
-<h2 id="license" class="tsd-anchor-link">License<a href="#license" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
-<p>MIT License.</p>
-<h2 id="contributing" class="tsd-anchor-link">Contributing<a href="#contributing" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
-<p>Contributions are welcome! Please open an issue or submit a pull request for any improvements or bug fixes.</p>
-<h2 id="powered-by" class="tsd-anchor-link">Powered by<a href="#powered-by" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<h2 id="development" class="tsd-anchor-link">Development<a href="#development" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<pre><code class="bash"><span class="hl-0">bun</span><span class="hl-1"> </span><span class="hl-2">install</span><br/><span class="hl-0">bun</span><span class="hl-1"> </span><span class="hl-2">test</span><br/><span class="hl-0">bun</span><span class="hl-1"> </span><span class="hl-2">run</span><span class="hl-1"> </span><span class="hl-2">build</span>
+</code><button type="button">Copy</button></pre>
+
+<p>The docs are built with MkDocs:</p>
+<pre><code class="bash"><span class="hl-0">mkdocs</span><span class="hl-1"> </span><span class="hl-2">build</span><span class="hl-1"> </span><span class="hl-6">--clean</span>
+</code><button type="button">Copy</button></pre>
+
+<h2 id="related-projects" class="tsd-anchor-link">Related projects<a href="#related-projects" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
 <ul>
 <li><a href="https://github.com/wxn0brP/ValtheraDB">ValtheraDB</a></li>
 <li><a href="https://github.com/wxn0brP/gate-warden">Gate Warden</a></li>
+<li><a href="https://github.com/wxn0brP/VQL-dev">VQL-dev</a></li>
 </ul>
+<h2 id="license" class="tsd-anchor-link">License<a href="#license" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p>MIT. See <a href="media/LICENSE">LICENSE</a>.</p>
 </div></div>
 <div class="col-sidebar">
 <div class="page-menu">
@@ -65,13 +94,13 @@
 <h3>On This Page</h3></summary>
 <div class="tsd-accordion-details"><a href="#vql-valthera-query-language"><span>VQL (<wbr/>Valthera <wbr/>Query <wbr/>Language)</span></a>
 <ul>
-<li><a href="#key-features"><span>Key <wbr/>Features</span></a></li>
-<li><a href="#example-usage"><span>Example <wbr/>Usage</span></a></li>
-<li><a href="#development-tools"><span>Development <wbr/>Tools</span></a></li>
+<li><a href="#features"><span>Features</span></a></li>
+<li><a href="#install"><span>Install</span></a></li>
+<li><a href="#quick-start"><span>Quick start</span></a></li>
 <li><a href="#documentation"><span>Documentation</span></a></li>
-<li><a href="#license"><span>License</span></a></li>
-<li><a href="#contributing"><span>Contributing</span></a></li>
-<li><a href="#powered-by"><span>Powered by</span></a></li></ul></div></details></div>
+<li><a href="#development"><span>Development</span></a></li>
+<li><a href="#related-projects"><span>Related projects</span></a></li>
+<li><a href="#license"><span>License</span></a></li></ul></div></details></div>
 <div class="site-menu">
 <nav class="tsd-navigation"><a href="modules.html">@wxn0brp/vql</a>
 <ul class="tsd-small-nested-navigation" id="tsd-nav-container">

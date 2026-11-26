@@ -1,0 +1,282 @@
+<!DOCTYPE html><html class="default" lang="en" data-base="../"><head><meta charset="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>core/relations | @wxn0brp/vql</title><meta name="description" content="Documentation for @wxn0brp/vql"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="../assets/style.css"/><link rel="stylesheet" href="../assets/highlight.css"/><script defer src="../assets/main.js"></script><script async src="../assets/icons.js" id="tsd-icons-script"></script><script async src="../assets/search.js" id="tsd-search-script"></script><script async src="../assets/navigation.js" id="tsd-nav-script"></script><script async src="../assets/hierarchy.js" id="tsd-hierarchy-script"></script></head><body><script>document.documentElement.dataset.theme = localStorage.getItem("tsd-theme") || "os";document.body.style.display="none";setTimeout(() => window.app?app.showPage():document.body.style.removeProperty("display"),500)</script><header class="tsd-page-toolbar">
+<div class="tsd-toolbar-contents container"><a href="../index.html" class="title">@wxn0brp/vql</a>
+<div id="tsd-toolbar-links"></div><button id="tsd-search-trigger" class="tsd-widget" aria-label="Search"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-search"></use></svg></button><dialog id="tsd-search" aria-label="Search"><input role="combobox" id="tsd-search-input" aria-controls="tsd-search-results" aria-autocomplete="list" aria-expanded="true" autocapitalize="off" autocomplete="off" placeholder="Search the docs" maxLength="100"/>
+<ul role="listbox" id="tsd-search-results"></ul>
+<div id="tsd-search-status" aria-live="polite" aria-atomic="true">
+<div>Preparing search index...</div></div></dialog><a href="#" class="tsd-widget menu" id="tsd-toolbar-menu-trigger" data-toggle="menu" aria-label="Menu"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-menu"></use></svg></a></div></header>
+<div class="container container-main">
+<div class="col-content">
+<div class="tsd-page-title">
+<ul class="tsd-breadcrumb" aria-label="Breadcrumb">
+<li><a href="" aria-current="page">core/relations</a></li></ul></div>
+<div class="tsd-panel tsd-typography"><h1 id="relations" class="tsd-anchor-link">Relations<a href="#relations" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h1>
+<p>Relations let one query join records across collections and databases. VQL passes the relation description to ValtheraDB, which loads the related records and attaches them to each parent record under the relation key.</p>
+<h2 id="shape" class="tsd-anchor-link">Shape<a href="#shape" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p>A relation query has no <code>db</code> + <code>d</code> pair. It uses the <code>r</code> key directly:</p>
+<pre><code class="typescript"><span class="hl-1">{</span><br/><span class="hl-1">    </span><span class="hl-11">r</span><span class="hl-1">: {</span><br/><span class="hl-1">        </span><span class="hl-11">path</span><span class="hl-1">: [</span><span class="hl-2">&quot;orders_db&quot;</span><span class="hl-1">, </span><span class="hl-2">&quot;orders&quot;</span><span class="hl-1">],</span><br/><span class="hl-1">        </span><span class="hl-11">search</span><span class="hl-1">: { </span><span class="hl-11">status</span><span class="hl-1">: </span><span class="hl-2">&quot;pending&quot;</span><span class="hl-1"> },</span><br/><span class="hl-1">        </span><span class="hl-11">relations</span><span class="hl-1">: {</span><br/><span class="hl-1">            </span><span class="hl-11">customer</span><span class="hl-1">: {</span><br/><span class="hl-1">                </span><span class="hl-11">path</span><span class="hl-1">: [</span><span class="hl-2">&quot;users_db&quot;</span><span class="hl-1">, </span><span class="hl-2">&quot;users&quot;</span><span class="hl-1">],</span><br/><span class="hl-1">                </span><span class="hl-11">pk</span><span class="hl-1">: </span><span class="hl-2">&quot;customerId&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">                </span><span class="hl-11">fk</span><span class="hl-1">: </span><span class="hl-2">&quot;_id&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">                </span><span class="hl-11">select</span><span class="hl-1">: [</span><span class="hl-2">&quot;name&quot;</span><span class="hl-1">, </span><span class="hl-2">&quot;email&quot;</span><span class="hl-1">]</span><br/><span class="hl-1">            }</span><br/><span class="hl-1">        },</span><br/><span class="hl-1">        </span><span class="hl-11">many</span><span class="hl-1">: </span><span class="hl-6">true</span><span class="hl-1">,</span><br/><span class="hl-1">        </span><span class="hl-11">select</span><span class="hl-1">: [[</span><span class="hl-2">&quot;_id&quot;</span><span class="hl-1">], [</span><span class="hl-2">&quot;customer&quot;</span><span class="hl-1">, </span><span class="hl-2">&quot;name&quot;</span><span class="hl-1">]]</span><br/><span class="hl-1">    }</span><br/><span class="hl-1">}</span>
+</code><button type="button">Copy</button></pre>
+
+<p><code>path</code> is <code>[database, collection]</code> and must reference a database registered with the processor. <code>search</code> and <code>relations</code> are required objects. They may be empty, but they must be present.</p>
+<h2 id="relation-options" class="tsd-anchor-link">Relation options<a href="#relation-options" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p>Each entry in <code>relations</code> is keyed by the output field name and accepts:</p>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>path</code></td>
+<td>required</td>
+<td><code>[database, collection]</code> of the related records</td>
+</tr>
+<tr>
+<td><code>pk</code></td>
+<td><code>_id</code></td>
+<td>Field on the parent record used for the join</td>
+</tr>
+<tr>
+<td><code>fk</code></td>
+<td><code>_id</code></td>
+<td>Field on the related record used for the join</td>
+</tr>
+<tr>
+<td><code>type</code></td>
+<td><code>&quot;1&quot;</code></td>
+<td>Relation type: <code>1</code>, <code>11</code>, <code>1n</code>, <code>nm</code>, <code>n1</code></td>
+</tr>
+<tr>
+<td><code>as</code></td>
+<td>relation key</td>
+<td>Field name used for the joined output</td>
+</tr>
+<tr>
+<td><code>select</code></td>
+<td>all fields</td>
+<td>Fields to keep on the related record</td>
+</tr>
+<tr>
+<td><code>dbFindOpts</code></td>
+<td><code>{}</code></td>
+<td>Database find options for the related query</td>
+</tr>
+<tr>
+<td><code>relations</code></td>
+<td>none</td>
+<td>Nested relations on the related record</td>
+</tr>
+<tr>
+<td><code>through</code></td>
+<td>none</td>
+<td>Pivot table description for <code>nm</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="select" class="tsd-anchor-link">Select<a href="#select" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p><code>select</code> is an array of field names on the related record. The join field is added automatically and removed from the result unless it was selected explicitly.</p>
+<pre><code class="typescript"><span class="hl-11">customer</span><span class="hl-1">: {</span><br/><span class="hl-1">    </span><span class="hl-11">path</span><span class="hl-1">: [</span><span class="hl-2">&quot;users_db&quot;</span><span class="hl-1">, </span><span class="hl-2">&quot;users&quot;</span><span class="hl-1">],</span><br/><span class="hl-1">    </span><span class="hl-11">pk</span><span class="hl-1">: </span><span class="hl-2">&quot;customerId&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-11">fk</span><span class="hl-1">: </span><span class="hl-2">&quot;_id&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-11">select</span><span class="hl-1">: [</span><span class="hl-2">&quot;name&quot;</span><span class="hl-1">, </span><span class="hl-2">&quot;email&quot;</span><span class="hl-1">]</span><br/><span class="hl-1">}</span>
+</code><button type="button">Copy</button></pre>
+
+<h3 id="types" class="tsd-anchor-link">Types<a href="#types" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Meaning</th>
+<th>Output</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>1</code></td>
+<td>Parent <code>pk</code> matches one related <code>fk</code></td>
+<td>Object or <code>null</code></td>
+</tr>
+<tr>
+<td><code>11</code></td>
+<td>Same as <code>1</code>, looked up per parent with <code>findOne</code></td>
+<td>Object or <code>null</code></td>
+</tr>
+<tr>
+<td><code>1n</code></td>
+<td>Many related records share the parent <code>pk</code></td>
+<td>Array</td>
+</tr>
+<tr>
+<td><code>nm</code></td>
+<td>Many-to-many through a pivot collection</td>
+<td>Array</td>
+</tr>
+<tr>
+<td><code>n1</code></td>
+<td>Parent <code>pk</code> is an array of ids, first match wins</td>
+<td>Object or <code>null</code></td>
+</tr>
+</tbody>
+</table>
+<pre><code class="typescript"><span class="hl-3">// Order belongs to one customer: orders.customerId -&gt; users._id</span><br/><span class="hl-11">customer</span><span class="hl-1">: {</span><br/><span class="hl-1">    </span><span class="hl-11">path</span><span class="hl-1">: [</span><span class="hl-2">&quot;main&quot;</span><span class="hl-1">, </span><span class="hl-2">&quot;users&quot;</span><span class="hl-1">],</span><br/><span class="hl-1">    </span><span class="hl-11">type</span><span class="hl-1">: </span><span class="hl-2">&quot;1&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-11">pk</span><span class="hl-1">: </span><span class="hl-2">&quot;customerId&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-11">fk</span><span class="hl-1">: </span><span class="hl-2">&quot;_id&quot;</span><br/><span class="hl-1">}</span><br/><br/><span class="hl-3">// Order has many items: items.orderId -&gt; orders._id</span><br/><span class="hl-11">items</span><span class="hl-1">: {</span><br/><span class="hl-1">    </span><span class="hl-11">path</span><span class="hl-1">: [</span><span class="hl-2">&quot;main&quot;</span><span class="hl-1">, </span><span class="hl-2">&quot;items&quot;</span><span class="hl-1">],</span><br/><span class="hl-1">    </span><span class="hl-11">type</span><span class="hl-1">: </span><span class="hl-2">&quot;1n&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-11">pk</span><span class="hl-1">: </span><span class="hl-2">&quot;_id&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-11">fk</span><span class="hl-1">: </span><span class="hl-2">&quot;orderId&quot;</span><br/><span class="hl-1">}</span>
+</code><button type="button">Copy</button></pre>
+
+<h3 id="many-to-many" class="tsd-anchor-link">Many-to-many<a href="#many-to-many" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p><code>type: &quot;nm&quot;</code> requires <code>through</code>:</p>
+<pre><code class="typescript"><span class="hl-1">{</span><br/><span class="hl-1">    </span><span class="hl-11">path</span><span class="hl-1">: [</span><span class="hl-2">&quot;main&quot;</span><span class="hl-1">, </span><span class="hl-2">&quot;tags&quot;</span><span class="hl-1">],</span><br/><span class="hl-1">    </span><span class="hl-11">type</span><span class="hl-1">: </span><span class="hl-2">&quot;nm&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-11">pk</span><span class="hl-1">: </span><span class="hl-2">&quot;_id&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-11">fk</span><span class="hl-1">: </span><span class="hl-2">&quot;_id&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-11">through</span><span class="hl-1">: {</span><br/><span class="hl-1">        </span><span class="hl-11">table</span><span class="hl-1">: </span><span class="hl-2">&quot;post_tags&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">        </span><span class="hl-11">db</span><span class="hl-1">: </span><span class="hl-2">&quot;main&quot;</span><span class="hl-1">,       </span><span class="hl-3">// optional, defaults to the related collection&#39;s database</span><br/><span class="hl-1">        </span><span class="hl-11">pk</span><span class="hl-1">: </span><span class="hl-2">&quot;postId&quot;</span><span class="hl-1">,     </span><span class="hl-3">// parent id stored in the pivot</span><br/><span class="hl-1">        </span><span class="hl-11">fk</span><span class="hl-1">: </span><span class="hl-2">&quot;tagId&quot;</span><span class="hl-1">       </span><span class="hl-3">// related id stored in the pivot</span><br/><span class="hl-1">    }</span><br/><span class="hl-1">}</span>
+</code><button type="button">Copy</button></pre>
+
+<p>The pivot collection is queried for rows whose <code>through.pk</code> matches the parent <code>pk</code>. The <code>through.fk</code> values are then resolved against the related collection using <code>fk</code>.</p>
+<h3 id="nested-relations" class="tsd-anchor-link">Nested relations<a href="#nested-relations" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<pre><code class="typescript"><span class="hl-1">{</span><br/><span class="hl-1">    </span><span class="hl-11">r</span><span class="hl-1">: {</span><br/><span class="hl-1">        </span><span class="hl-11">path</span><span class="hl-1">: [</span><span class="hl-2">&quot;main&quot;</span><span class="hl-1">, </span><span class="hl-2">&quot;orders&quot;</span><span class="hl-1">],</span><br/><span class="hl-1">        </span><span class="hl-11">search</span><span class="hl-1">: {},</span><br/><span class="hl-1">        </span><span class="hl-11">relations</span><span class="hl-1">: {</span><br/><span class="hl-1">            </span><span class="hl-11">customer</span><span class="hl-1">: {</span><br/><span class="hl-1">                </span><span class="hl-11">path</span><span class="hl-1">: [</span><span class="hl-2">&quot;main&quot;</span><span class="hl-1">, </span><span class="hl-2">&quot;users&quot;</span><span class="hl-1">],</span><br/><span class="hl-1">                </span><span class="hl-11">pk</span><span class="hl-1">: </span><span class="hl-2">&quot;customerId&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">                </span><span class="hl-11">relations</span><span class="hl-1">: {</span><br/><span class="hl-1">                    </span><span class="hl-11">company</span><span class="hl-1">: {</span><br/><span class="hl-1">                        </span><span class="hl-11">path</span><span class="hl-1">: [</span><span class="hl-2">&quot;main&quot;</span><span class="hl-1">, </span><span class="hl-2">&quot;companies&quot;</span><span class="hl-1">],</span><br/><span class="hl-1">                        </span><span class="hl-11">pk</span><span class="hl-1">: </span><span class="hl-2">&quot;companyId&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">                        </span><span class="hl-11">fk</span><span class="hl-1">: </span><span class="hl-2">&quot;_id&quot;</span><br/><span class="hl-1">                    }</span><br/><span class="hl-1">                }</span><br/><span class="hl-1">            }</span><br/><span class="hl-1">        }</span><br/><span class="hl-1">    }</span><br/><span class="hl-1">}</span>
+</code><button type="button">Copy</button></pre>
+
+<p>Nested relation output is attached to the related record. Top-level <code>select</code> paths address it through the relation key: <code>[&quot;customer&quot;, &quot;company&quot;, &quot;name&quot;]</code>.</p>
+<h3 id="multi-database" class="tsd-anchor-link">Multi-database<a href="#multi-database" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p>Every <code>path</code> selects its own database. <code>through.db</code> selects the database for a pivot collection and defaults to the database in the relation <code>path</code>. Only the databases in <code>path</code> are checked before execution. An unregistered <code>through.db</code> fails later during the pivot lookup instead of raising <code>VQLDBNotFoundError</code>.</p>
+<h2 id="top-level-query-options" class="tsd-anchor-link">Top-level query options<a href="#top-level-query-options" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>many</code></td>
+<td><code>true</code> runs <code>find</code>, <code>false</code> (default) runs <code>findOne</code></td>
+</tr>
+<tr>
+<td><code>options</code></td>
+<td><code>DbFindOpts</code> for the parent query</td>
+</tr>
+<tr>
+<td><code>select</code></td>
+<td>Field paths to keep, as an array of segment arrays (<code>string[][]</code>)</td>
+</tr>
+</tbody>
+</table>
+<p><code>select</code> accepts nested paths for joined objects:</p>
+<pre><code class="typescript"><span class="hl-11">select</span><span class="hl-1">: [[</span><span class="hl-2">&quot;_id&quot;</span><span class="hl-1">], [</span><span class="hl-2">&quot;customer&quot;</span><span class="hl-1">, </span><span class="hl-2">&quot;name&quot;</span><span class="hl-1">], [</span><span class="hl-2">&quot;items&quot;</span><span class="hl-1">]]</span>
+</code><button type="button">Copy</button></pre>
+
+<p>For array relations such as <code>1n</code> and <code>nm</code>, select the relation key as a whole. Field picking does not traverse arrays, so <code>[&quot;items&quot;, &quot;price&quot;]</code> would produce undefined fields instead of filtering each item.</p>
+<p>Top-level relation <code>select</code> must use segment arrays, as shown above. The validator also accepts an object, but the relation engine does not convert it in VQLR: the object is flattened to top-level keys and the lookup throws <code>VQLInternalError</code>. Build the query in VQLS, where <code>e.</code> is converted before execution.</p>
+<h2 id="vqls-syntax" class="tsd-anchor-link">VQLS syntax<a href="#vqls-syntax" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p>In VQLS, a relation query starts when the body contains an <code>r.</code> key. The relation path defaults to <code>[current database, relation name]</code>:</p>
+<pre><code class="text">db orders s.status=&quot;pending&quot;
+r.customer.path=[&quot;users_db&quot;,&quot;users&quot;]
+r.customer.pk=&quot;customerId&quot;
+r.customer.fk=&quot;_id&quot;
+r.customer.select=[&quot;name&quot;,&quot;email&quot;]
+r.items.path=[&quot;orders_db&quot;,&quot;items&quot;]
+r.items.type=&quot;1n&quot;
+r.items.pk=&quot;_id&quot;
+r.items.fk=&quot;orderId&quot;
+many=true
+e._id=1 e.customer.name=1 e.items=1
+</code><button type="button">Copy</button></pre>
+
+<p>The <code>db</code> and <code>c</code> keys are shorthand for the two path segments:</p>
+<pre><code class="text">r.customer.db=&quot;users_db&quot; r.customer.c=&quot;users&quot;
+</code><button type="button">Copy</button></pre>
+
+<p><code>r.x.select</code> must be a JSON array. A dotted object such as <code>r.customer.select.name=1</code> fails validation because relation selects are arrays.</p>
+<p>Root relation options use their plain names:</p>
+<pre><code class="text">many=true
+options.limit=10
+</code><button type="button">Copy</button></pre>
+
+<p>Do not write <code>r.many=true</code> or <code>r.options.limit=10</code>. The <code>r.</code> prefix always creates a relation entry, so those keys would be interpreted as relations named <code>many</code> and <code>options</code>.</p>
+<p>Top-level relation select keeps nested paths:</p>
+<pre><code class="text">e._id=1 e.customer.name=1 e.items=1
+</code><button type="button">Copy</button></pre>
+
+<h2 id="permissions" class="tsd-anchor-link">Permissions<a href="#permissions" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p>When permissions are enabled, relation queries are checked before execution:</p>
+<ul>
+<li>The relation <code>path</code> requires <code>READ</code>.</li>
+<li>Every search field requires <code>READ</code>.</li>
+<li>Every selected field requires <code>READ</code>.</li>
+<li>Nested relations are checked recursively with the same rules, except that their own <code>search</code> is replaced with <code>{}</code> during the recursive check, so nested search fields are not checked.</li>
+</ul>
+<p>The permission path is built as <code>[database, collection, ...fieldPath]</code> for flat string paths. Segment-array selects such as <code>[[&quot;customer&quot;, &quot;name&quot;]]</code> are passed as a single array element instead of being flattened, so prefer flat field paths when permissions are enabled. See <a href="core_permissions.html">Permissions</a>.</p>
+<h2 id="validation" class="tsd-anchor-link">Validation<a href="#validation" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p>Typical validation errors:</p>
+<table>
+<thead>
+<tr>
+<th>Message</th>
+<th>Cause</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Relation query 'r' must have a 'path' property with an array of two strings.</code></td>
+<td>Missing or malformed <code>path</code></td>
+</tr>
+<tr>
+<td><code>Relation query 'r.search' must be an object.</code></td>
+<td>Missing <code>search</code></td>
+</tr>
+<tr>
+<td><code>Relation query 'r' must have a 'relations' object.</code></td>
+<td>Missing <code>relations</code></td>
+</tr>
+<tr>
+<td><code>Relation 'x' must have a 'path' property with an array of two strings.</code></td>
+<td>Bad nested path</td>
+</tr>
+<tr>
+<td><code>Relation 'x' has an invalid 'select' property; it must be an array.</code></td>
+<td>Object select on a relation</td>
+</tr>
+<tr>
+<td><code>Database &quot;x&quot; not found</code></td>
+<td>Unregistered database in a path</td>
+</tr>
+</tbody>
+</table>
+<h2 id="next-steps" class="tsd-anchor-link">Next steps<a href="#next-steps" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<ul>
+<li><a href="lang_VQLR.html">VQLR</a></li>
+<li><a href="lang_VQLS.html">VQLS</a></li>
+<li><a href="core_permissions.html">Permissions</a></li>
+</ul>
+</div></div>
+<div class="col-sidebar">
+<div class="page-menu">
+<div class="tsd-navigation settings">
+<details class="tsd-accordion"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg>
+<h3>Settings</h3></summary>
+<div class="tsd-accordion-details">
+<div class="tsd-filter-visibility"><span class="settings-label">Member Visibility</span>
+<ul id="tsd-filter-options">
+<li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-protected" name="protected"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Protected</span></label></li>
+<li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-inherited" name="inherited" checked/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Inherited</span></label></li>
+<li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-external" name="external"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>External</span></label></li></ul></div>
+<div class="tsd-theme-toggle"><label class="settings-label" for="tsd-theme">Theme</label><select id="tsd-theme"><option value="os">OS</option><option value="light">Light</option><option value="dark">Dark</option></select></div></div></details></div>
+<details open class="tsd-accordion tsd-page-navigation"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg>
+<h3>On This Page</h3></summary>
+<div class="tsd-accordion-details"><a href="#relations"><span>Relations</span></a>
+<ul>
+<li><a href="#shape"><span>Shape</span></a></li>
+<li><a href="#relation-options"><span>Relation options</span></a></li>
+<li>
+<ul>
+<li><a href="#select"><span>Select</span></a></li>
+<li><a href="#types"><span>Types</span></a></li>
+<li><a href="#many-to-many"><span>Many-<wbr/>to-<wbr/>many</span></a></li>
+<li><a href="#nested-relations"><span>Nested relations</span></a></li>
+<li><a href="#multi-database"><span>Multi-<wbr/>database</span></a></li></ul></li>
+<li><a href="#top-level-query-options"><span>Top-<wbr/>level query options</span></a></li>
+<li><a href="#vqls-syntax"><span>VQLS syntax</span></a></li>
+<li><a href="#permissions"><span>Permissions</span></a></li>
+<li><a href="#validation"><span>Validation</span></a></li>
+<li><a href="#next-steps"><span>Next steps</span></a></li></ul></div></details></div>
+<div class="site-menu">
+<nav class="tsd-navigation"><a href="../modules.html">@wxn0brp/vql</a>
+<ul class="tsd-small-nested-navigation" id="tsd-nav-container">
+<li>Loading...</li></ul></nav></div></div></div><footer>
+<p class="tsd-generator">Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p></footer>
+<div class="overlay"></div></body></html>
