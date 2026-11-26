@@ -3,8 +3,8 @@ import { ValtheraCompatible } from "@wxn0brp/db-core";
 import { Collection } from "@wxn0brp/db-core/helpers/collection";
 import { Data } from "@wxn0brp/db-core/types/data";
 import { VQueryT } from "@wxn0brp/db-core/types/query";
-import { updateFindObject } from "@wxn0brp/db-core/utils/updateFindObject";
-import { VQLOperationError, VQLHandlerMissingError } from "../errors";
+import { updateFindObject } from "@wxn0brp/db-core/utils/projection";
+import { VQLHandlerMissingError, VQLOperationError } from "../errors";
 
 export type ResolverFn<TArg = any, TReturn = any> = (
 	query: TArg,
@@ -29,25 +29,25 @@ export interface ValtheraResolver {
 	ensureCollection?: ResolverFn<string, boolean>;
 
 	add?: ResolverFn<VQueryT.Add, Object>;
-	find?: ResolverFn<VQueryT.Find<Data, false>, Object[]>;
-	findOne?: ResolverFn<VQueryT.FindOne<Data, false>, Object | null>;
+	find?: ResolverFn<VQueryT.Find<Data>, Object[]>;
+	findOne?: ResolverFn<VQueryT.FindOne<Data>, Object | null>;
 
-	update?: ResolverFn<VQueryT.Update<Data, false>, Object[] | null>;
-	updateOne?: ResolverFn<VQueryT.Update<Data, false>, Object | null>;
+	update?: ResolverFn<VQueryT.Update<Data>, Object[] | null>;
+	updateOne?: ResolverFn<VQueryT.Update<Data>, Object | null>;
 	updateOneOrAdd?: ResolverFn<
-		VQueryT.UpdateOneOrAdd<Data, false>,
+		VQueryT.UpdateOneOrAdd<Data>,
 		VQueryT.UpdateOneOrAddResult<Object>
 	>;
 	toggleOne?: ResolverFn<
-		VQueryT.ToggleOne<Data, false>,
+		VQueryT.ToggleOne<Data>,
 		VQueryT.ToggleOneResult<Object>
 	>;
 
 	count?: ResolverFn<VQueryT.Count, number>;
 	bulkAdd?: ResolverFn<VQueryT.BulkAdd, Object[]>;
 
-	remove?: ResolverFn<VQueryT.Remove<Data, false>, Object | null>;
-	removeOne?: ResolverFn<VQueryT.Remove<Data, false>, Object | null>;
+	remove?: ResolverFn<VQueryT.Remove<Data>, Object | null>;
+	removeOne?: ResolverFn<VQueryT.Remove<Data>, Object | null>;
 
 	removeCollection?: ResolverFn<string, boolean>;
 }

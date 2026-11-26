@@ -1,18 +1,18 @@
 import { VQLConfig } from "#helpers/config";
 import { LowAdapter } from "#helpers/lowAdapter";
-import { UpdateOneOrAdd } from "@wxn0brp/db-core/types/collection";
-import { updateFindObject } from "@wxn0brp/db-core/utils/updateFindObject";
+import { UpdateOneOrAdd } from "@wxn0brp/db-core/types/updateOneOrAdd";
+import { updateFindObject } from "@wxn0brp/db-core/utils/projection";
+import {
+	VQLDBNotFoundError,
+	VQLOperationError,
+	VQLPermissionDeniedError,
+} from "../errors";
 import {
 	checkRequestPermission,
 	filterObjectByPermissions,
 	filterObjectsByPermissions,
 } from "../permissions";
 import { VQLProcessor } from "../processor";
-import {
-	VQLDBNotFoundError,
-	VQLOperationError,
-	VQLPermissionDeniedError,
-} from "../errors";
 import {
 	VQL_OP_Add,
 	VQL_OP_BulkAdd,

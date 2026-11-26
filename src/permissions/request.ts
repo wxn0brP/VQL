@@ -1,3 +1,4 @@
+import { updateFindObject } from "@wxn0brp/db-core/utils/projection";
 import { VQLConfig } from "../helpers/config";
 import { PermCRUD, PermValidFn } from "../types/perm";
 import {
@@ -10,7 +11,6 @@ import {
 	VQL_Query_CRUD_Keys,
 } from "../types/vql";
 import { extractPathsFromData, hashKey } from "./utils";
-import { updateFindObject } from "@wxn0brp/db-core/utils/updateFindObject";
 
 export async function extractPaths(
 	config: VQLConfig,
