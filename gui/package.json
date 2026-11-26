@@ -17,7 +17,7 @@
         "typescript": "^7"
     },
     "dependencies": {
-        "@wxn0brp/db": "^0.120.3",
+        "@wxn0brp/db": "^0.130.0",
         "@wxn0brp/falcon-frame": "^0.9.6",
         "@wxn0brp/gate-warden": "^0.7.1"
     }
