@@ -53,7 +53,7 @@
         "@types/node": "*",
         "@wxn0brp/biome": "*",
         "@wxn0brp/db": "^0.120.6",
-        "@wxn0brp/db-core": "^0.12.17",
+        "@wxn0brp/db-core": "^0.13.0",
         "@wxn0brp/falcon-frame": "^0.9.10",
         "@wxn0brp/gate-warden": "^0.7.1",
         "esbuild": "^0.28",
