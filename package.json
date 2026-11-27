@@ -8,7 +8,7 @@
     "scripts": {
         "build": "tsc && tsc-alias",
         "test": "bun run src/tests/index.ts",
-        "types": "api-extractor run --config config/api-extractor.json && sed -i -E 's/^([[:space:]]*)declare([[:space:]]|\\(|;|$)/\\1export declare\\2/' dist/vql.d.ts"
+        "types": "bash config/types.sh"
     },
     "description": "VQL - Valthera Query Language",
     "homepage": "https://github.com/wxn0brP/VQL",
