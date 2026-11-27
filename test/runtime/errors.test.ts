@@ -581,7 +581,7 @@ describe("Errors/HTTP route", () => {
 				body: {},
 			} as any,
 			res as any,
-			() => {},
+			async () => {},
 		);
 
 		expect(body).toMatchObject({
@@ -610,7 +610,7 @@ describe("Errors/HTTP route", () => {
 				body: {},
 			} as any,
 			res as any,
-			() => {},
+			async () => {},
 		);
 
 		expect(body).toMatchObject({
