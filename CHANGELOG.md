@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.14.1](https://github.com/wxn0brP/VQL/compare/v0.14.0...v0.14.1) (2026-11-27)
+
+
+### Features
+
+* bump deps ([375ba5d](https://github.com/wxn0brP/VQL/commit/375ba5dd4a844ddbafd2c30b155154425bb6ac91))
+
 ## [0.14.0](https://github.com/wxn0brP/VQL/compare/v0.14.0-alpha.0...v0.14.0) (2026-10-28)
 
 ## [0.14.0-alpha.0](https://github.com/wxn0brP/VQL/compare/v0.13.3...v0.14.0-alpha.0) (2026-10-25)
